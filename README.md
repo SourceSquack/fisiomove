@@ -8,7 +8,7 @@ FisioMove es una aplicación web completa para la gestión de consultorios de fi
 
 ### Frontend (Angular)
 
-- **Framework**: Angular + Angular Material + RxJS
+- **Framework**: Angular + RxJS
 - **Componentes principales**:
   - Página pública (homepage, login)
   - Frontend protegido para administración, fisioterapeutas y pacientes
@@ -21,7 +21,7 @@ FisioMove es una aplicación web completa para la gestión de consultorios de fi
 
 ### Backend (FastAPI)
 
-- **Stack**: FastAPI + Python 3.11 + PostgreSQL + SQLAlchemy/Alembic + Pydantic
+- **Stack**: FastAPI + Python 3.13 + PostgreSQL + SQLAlchemy/Alembic + Pydantic
 - **Estructura modular**:
   - Módulos: auth, citas, pacientes, historial, notificaciones, core, dashboard
 - **Características**:
@@ -35,8 +35,8 @@ FisioMove es una aplicación web completa para la gestión de consultorios de fi
 
 ### Prerrequisitos
 
-- Node.js (v18+)
-- Python 3.11+
+- Node.js (v20+)
+- Python 3.13+
 - PostgreSQL
 - Git
 
