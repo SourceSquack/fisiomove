@@ -132,6 +132,40 @@ def validate_api_key() -> bool:
         return False
 
 
+# ==== Updates de usuario ====
+
+def update_user_self(access_token: str, *, new_email: Optional[str] = None, new_password: Optional[str] = None,
+                     full_name: Optional[str] = None) -> Dict[str, Any]:
+    """Actualiza el usuario autenticado (email/password/metadata)."""
+    url = f"{BASE_URL}/auth/v1/user"
+    headers = {
+        "apikey": API_KEY,
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+    }
+    payload: Dict[str, Any] = {}
+    if new_email:
+        payload["email"] = new_email
+    if new_password:
+        payload["password"] = new_password
+    metadata: Dict[str, Any] = {}
+    if full_name is not None:
+        metadata["full_name"] = full_name
+    if metadata:
+        payload["data"] = metadata
+    if not payload:
+        return get_user_from_token(access_token)
+
+    resp = requests.patch(url, json=payload, headers=headers, timeout=15)
+    if resp.status_code >= 400:
+        try:
+            detail = resp.json()
+        except Exception:
+            detail = {"message": resp.text}
+        raise ValueError({"status": resp.status_code, "detail": detail})
+    return resp.json()
+
+
 def admin_confirm_user(user_id: str) -> bool:
     """Confirma por admin un usuario (requiere service_role)."""
     if not ADMIN_HEADERS:
@@ -207,3 +241,42 @@ def admin_create_user(email: str, password: str, *, full_name: Optional[str] = N
     if resp.status_code >= 400:
         return None
     return resp.json()
+
+
+def admin_update_user(user_id: str, *, email: Optional[str] = None, email_confirm: Optional[bool] = None,
+                      password: Optional[str] = None, full_name: Optional[str] = None,
+                      role: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    """Actualiza atributos del usuario por Admin API."""
+    if not ADMIN_HEADERS:
+        return None
+    url = f"{BASE_URL}/auth/v1/admin/users/{user_id}"
+    payload: Dict[str, Any] = {}
+    if email is not None:
+        payload["email"] = email
+    if email_confirm is not None:
+        payload["email_confirm"] = email_confirm
+    if password is not None:
+        payload["password"] = password
+    meta: Dict[str, Any] = {}
+    if full_name is not None:
+        meta["full_name"] = full_name
+    if role is not None:
+        meta["role"] = role
+    if meta:
+        payload["user_metadata"] = meta
+    if not payload:
+        return None
+    resp = requests.patch(url, json=payload, headers=ADMIN_HEADERS, timeout=15)
+    if resp.status_code >= 400:
+        return None
+    return resp.json()
+
+
+def admin_update_user_by_email(email: str, **kwargs) -> Optional[Dict[str, Any]]:
+    user = admin_get_user_by_email(email)
+    if not user:
+        return None
+    uid = user.get("id") or (user.get("user") or {}).get("id")
+    if not uid:
+        return None
+    return admin_update_user(uid, **kwargs)
