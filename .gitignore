@@ -514,3 +514,6 @@ backups/
 #================================================
 postman/
 
+# Supabase
+backend/supabase/config.json
+
