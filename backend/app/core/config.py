@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "FisioMove API"
     API_V1_STR: str = "/api/v1"
 
+    # Environment
+    ENV: str = Field(default="development")  # development | staging | production
+
     # CORS
     CORS_ORIGINS: List[AnyHttpUrl] | List[str] = ["http://localhost:4200"]
 
@@ -38,7 +41,12 @@ class Settings(BaseSettings):
     SUPABASE_PROJECT_NAME: str | None = None
     SUPABASE_URL: AnyHttpUrl = Field(validation_alias=AliasChoices("SUPABASE_URL", "SUPABASE_PROJECT_URL", "NEXT_PUBLIC_SUPABASE_URL"))
     SUPABASE_API_KEY: str = Field(validation_alias=AliasChoices("SUPABASE_API_KEY", "SUPABASE_ANON_KEY", "NEXT_PUBLIC_SUPABASE_ANON_KEY"))
+    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = Field(default=None, validation_alias=AliasChoices("SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_SERVICE_ROLE", "SERVICE_ROLE_KEY", "SUPABASE_SERVICE_KEY"))
     SUPABASE_PASSWORD: Optional[str] = None
+
+    # Dev-only: bypass email confirmation for selected users
+    DEV_BYPASS_EMAIL_CONFIRM: bool = True
+    DEV_BYPASS_EMAILS: str = ""  # CSV en .env (p.ej. admin@x.com,user@y.com)
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod

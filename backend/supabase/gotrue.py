@@ -10,12 +10,21 @@ from app.core.config import settings
 
 BASE_URL = str(settings.SUPABASE_URL).strip().rstrip("/")
 API_KEY = str(settings.SUPABASE_API_KEY).strip()
+SERVICE_ROLE_KEY = (settings.SUPABASE_SERVICE_ROLE_KEY or "").strip()
 
 # Para endpoints públicos (signup/login) basta con enviar 'apikey'
 PUBLIC_HEADERS = {
     "apikey": API_KEY,
     "Content-Type": "application/json",
 }
+
+ADMIN_HEADERS = None
+if SERVICE_ROLE_KEY:
+    ADMIN_HEADERS = {
+        "apikey": SERVICE_ROLE_KEY,
+        "Authorization": f"Bearer {SERVICE_ROLE_KEY}",
+        "Content-Type": "application/json",
+    }
 
 
 def sign_up_user(email: str, password: str, *, full_name: Optional[str] = None, role: Optional[str] = None,
@@ -121,3 +130,80 @@ def validate_api_key() -> bool:
         return resp.status_code == 200
     except Exception:
         return False
+
+
+def admin_confirm_user(user_id: str) -> bool:
+    """Confirma por admin un usuario (requiere service_role)."""
+    if not ADMIN_HEADERS:
+        return False
+    url = f"{BASE_URL}/auth/v1/admin/users/{user_id}"
+    payload = {"email_confirm": True}
+    resp = requests.patch(url, json=payload, headers=ADMIN_HEADERS, timeout=15)
+    return resp.status_code < 400
+
+
+def admin_get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
+    """Obtiene usuario por email usando admin (requiere service_role)."""
+    if not ADMIN_HEADERS:
+        return None
+    url = f"{BASE_URL}/auth/v1/admin/users"
+    params = {"email": email}
+    resp = requests.get(url, headers=ADMIN_HEADERS, params=params, timeout=15)
+    if resp.status_code >= 400:
+        return None
+    data = resp.json()
+    # API devuelve {users:[...]} o un user directo según versión; manejamos ambos
+    if isinstance(data, dict) and "users" in data:
+        return (data.get("users") or [None])[0]
+    return data or None
+
+
+def admin_confirm_user_by_email(email: str) -> bool:
+    user = admin_get_user_by_email(email)
+    if not user:
+        return False
+    uid = user.get("id") or user.get("user", {}).get("id")
+    if not uid:
+        return False
+    return admin_confirm_user(uid)
+
+
+def admin_delete_user(user_id: str) -> bool:
+    if not ADMIN_HEADERS:
+        return False
+    url = f"{BASE_URL}/auth/v1/admin/users/{user_id}"
+    resp = requests.delete(url, headers=ADMIN_HEADERS, timeout=15)
+    return resp.status_code < 400
+
+
+def admin_delete_user_by_email(email: str) -> bool:
+    user = admin_get_user_by_email(email)
+    if not user:
+        return False
+    uid = user.get("id") or (user.get("user") or {}).get("id")
+    if not uid:
+        return False
+    return admin_delete_user(uid)
+
+
+def admin_create_user(email: str, password: str, *, full_name: Optional[str] = None, role: Optional[str] = None,
+                       email_confirm: bool = True) -> Optional[Dict[str, Any]]:
+    if not ADMIN_HEADERS:
+        return None
+    url = f"{BASE_URL}/auth/v1/admin/users"
+    payload: Dict[str, Any] = {
+        "email": email,
+        "password": password,
+        "email_confirm": email_confirm,
+    }
+    data: Dict[str, Any] = {}
+    if full_name:
+        data["full_name"] = full_name
+    if role:
+        data["role"] = role
+    if data:
+        payload["user_metadata"] = data
+    resp = requests.post(url, json=payload, headers=ADMIN_HEADERS, timeout=15)
+    if resp.status_code >= 400:
+        return None
+    return resp.json()
