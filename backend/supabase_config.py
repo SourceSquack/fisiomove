@@ -2,11 +2,15 @@
 Configuración de Supabase para FisioMove Backend
 """
 import os
+from dotenv import load_dotenv
 from supabase import create_client, Client
+
+# Cargar variables de entorno
+load_dotenv()
 
 # Configuración de Supabase Cloud
 SUPABASE_URL = os.getenv("SUPABASE_URL", "your-project-url")
-SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY", "your-anon-key")
+SUPABASE_KEY = os.getenv("SUPABASE_API_KEY", "your-anon-key")
 
 def get_supabase() -> Client:
     """

@@ -1,7 +1,7 @@
 """
 Script para configurar la base de datos en Supabase
 """
-from supabase.client import supabase_client as supabase
+from supabase_config import supabase
 
 def setup_database():
     """

@@ -5,7 +5,7 @@ from typing import Literal
 from app.schemas.auth import UserCreate
 from app.services.auth import get_current_user, require_roles, reuseable_oauth
 from app.core.config import settings
-from supabase.gotrue import (
+from supabase_utils.gotrue import (
     sign_up_user, sign_in_user, refresh_session, logout,
     admin_get_user_by_email, admin_confirm_user_by_email, admin_create_user,
     update_user_self, admin_update_user_by_email,

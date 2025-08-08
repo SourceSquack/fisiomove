@@ -1,4 +1,4 @@
-from supabase.client import supabase_client as supabase
+from supabase_config import supabase
 
 def create_user(email, password):
     return supabase.table("users").insert({"email": email, "password": password}).execute()

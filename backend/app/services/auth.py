@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from supabase.gotrue import get_user_from_token
+from supabase_utils.gotrue import get_user_from_token
 
 from app.core.config import settings
 from app.db.session import get_db
