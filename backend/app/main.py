@@ -3,10 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.routers.api_v1 import api_router
+from app.db.session import engine
+from app.db.base import Base
+import app.models  # noqa: F401 ensure models are imported
 
 app = FastAPI(title="FisioMove API", version="1.0.0")
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception:
+    pass
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[str(origin).strip() for origin in settings.CORS_ORIGINS],

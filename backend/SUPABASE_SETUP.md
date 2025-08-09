@@ -94,6 +94,17 @@ supabase db push
 4. Configurar autenticación
 5. Deploy del backend
 
+## Citas (Appointments)
+
+Se agregó un módulo de citas con API:
+- POST /api/v1/citas
+- GET /api/v1/citas?date=YYYY-MM-DD&user_id=uuid
+- PUT /api/v1/citas/{id}
+- DELETE /api/v1/citas/{id}
+
+Modelo en SQLAlchemy: `app.models.appointment.Appointment` con estado (`programada`, `cancelada`, `completada`).
+Se valida conflicto de horario por fisioterapeuta en la misma franja.
+
 ## ⚡ Comandos rápidos:
 
 ```bash
