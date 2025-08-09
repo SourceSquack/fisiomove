@@ -1,11 +1,17 @@
 from __future__ import annotations
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
 from app.models.appointment import Appointment, AppointmentStatus
+
+
+def _naive_utc(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        return dt
+    return dt.astimezone(timezone.utc).replace(tzinfo=None)
 
 
 def has_conflict(
@@ -16,7 +22,11 @@ def has_conflict(
     end: datetime,
     exclude_id: Optional[int] = None,
 ) -> bool:
-    day_start = start.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(
+    # Normalize to naive UTC for consistent comparisons across backends (e.g., SQLite)
+    start_n = _naive_utc(start)
+    end_n = _naive_utc(end)
+
+    day_start = start_n.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(
         days=1
     )
     day_end = day_start + timedelta(days=3)
@@ -29,8 +39,9 @@ def has_conflict(
         q = q.filter(Appointment.id != exclude_id)
     candidates = q.all()
     for ap in candidates:
-        ap_end = ap.start_time + timedelta(minutes=ap.duration_minutes)
-        if start < ap_end and end > ap.start_time:
+        ap_start = _naive_utc(ap.start_time)
+        ap_end = ap_start + timedelta(minutes=ap.duration_minutes)
+        if start_n < ap_end and end_n > ap_start:
             return True
     return False
 

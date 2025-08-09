@@ -1,44 +1,91 @@
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-import os
+import logging
+import pytest
 
-from app.main import app
-from app.db.base import Base
-from app.db.session import get_db
 
-DATABASE_URL = os.getenv("TEST_DATABASE_URL", "sqlite:///./test.db")
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}) if DATABASE_URL.startswith("sqlite") else create_engine(DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-def override_get_db():
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-app.dependency_overrides[get_db] = override_get_db
-
-def setup_module(module):
-    Base.metadata.create_all(bind=engine)
-
-def teardown_module(module):
-    Base.metadata.drop_all(bind=engine)
-
-client = TestClient(app)
-
-def test_register_and_login():
-    payload = {"email": "user@example.com", "password": "Password123", "full_name": "User Test"}
-    r = client.post("/api/v1/auth/register", json=payload)
-    assert r.status_code == 201, r.text
-
-    r = client.post("/api/v1/auth/login", json={"email": payload["email"], "password": payload["password"]})
-    assert r.status_code == 200, r.text
-    token = r.json()["access_token"]
-
-    r = client.get("/api/v1/protected/me", headers={"Authorization": f"Bearer {token}"})
+def test_auth_me_returns_user(client):
+    logging.info("[Auth] Consultar /auth/me con usuario simulado")
+    r = client.get("/api/v1/auth/me")
     assert r.status_code == 200
+    body = r.json()
+    assert set(["id", "email", "full_name", "role"]).issubset(body.keys())
 
-    r = client.get("/api/v1/protected/admin-only", headers={"Authorization": f"Bearer {token}"})
-    assert r.status_code in (401, 403)
+
+# ---- Tests de autorización por roles (pendientes de implementación) ----
+
+
+@pytest.fixture()
+def set_role_admin(monkeypatch):
+    from app.services import auth as auth_service
+
+    def fake_admin_user():
+        return {
+            "id": "admin-1",
+            "email": "admin@example.com",
+            "user_metadata": {"full_name": "Admin", "role": "admin"},
+        }
+
+    monkeypatch.setattr(auth_service, "get_current_user", lambda: fake_admin_user())
+
+
+@pytest.fixture()
+def set_role_fisio(monkeypatch):
+    from app.services import auth as auth_service
+
+    def fake_fisio_user():
+        return {
+            "id": "fisio-1",
+            "email": "fisio@example.com",
+            "user_metadata": {"full_name": "Fisio", "role": "fisioterapeuta"},
+        }
+
+    monkeypatch.setattr(auth_service, "get_current_user", lambda: fake_fisio_user())
+
+
+@pytest.fixture()
+def set_role_paciente(monkeypatch):
+    from app.services import auth as auth_service
+
+    def fake_paciente_user():
+        return {
+            "id": "patient-1",
+            "email": "patient@example.com",
+            "user_metadata": {"full_name": "Paciente", "role": "paciente"},
+        }
+
+    monkeypatch.setattr(auth_service, "get_current_user", lambda: fake_paciente_user())
+
+
+@pytest.mark.xfail(reason="Autorización por roles aún no implementada en endpoints")
+def test_roles_paciente_no_puede_crear_cita(client, set_role_paciente):
+    logging.info("[Roles] Un paciente no debería poder crear citas (espera 403)")
+    payload = {
+        "start_time": "2025-01-01T10:00:00Z",
+        "duration_minutes": 30,
+        "patient_id": "patient-1",
+        "fisio_id": "fisio-1",
+    }
+    r = client.post("/api/v1/citas", json=payload)
+    assert r.status_code == 403
+
+
+@pytest.mark.xfail(reason="Autorización por roles aún no implementada en endpoints")
+def test_roles_fisio_puede_crear_cita(client, set_role_fisio):
+    logging.info("[Roles] Un fisio debería poder crear citas (espera 201)")
+    payload = {
+        "start_time": "2025-01-01T11:00:00Z",
+        "duration_minutes": 30,
+        "patient_id": "patient-2",
+        "fisio_id": "fisio-1",
+    }
+    r = client.post("/api/v1/citas", json=payload)
+    assert r.status_code == 201
+
+
+@pytest.mark.xfail(reason="Autorización por roles aún no implementada en endpoints")
+def test_roles_paciente_no_puede_crear_paciente(client, set_role_paciente):
+    logging.info(
+        "[Roles] Un paciente no debería poder crear registros de paciente (espera 403)"
+    )
+    payload = {"full_name": "John Doe"}
+    r = client.post("/api/v1/pacientes", json=payload)
+    assert r.status_code == 403

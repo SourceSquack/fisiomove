@@ -3,6 +3,7 @@ from datetime import date, datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
+
 class PatientBase(BaseModel):
     auth_user_id: Optional[str] = None
     email: Optional[EmailStr] = None
@@ -16,11 +17,14 @@ class PatientBase(BaseModel):
     weight_kg: Optional[float] = Field(default=None, ge=0, le=500)
     blood_type: Optional[str] = Field(default=None, pattern=r"^(A|B|AB|O)[+-]$")
 
+
 class PatientCreate(PatientBase):
     full_name: str = Field(min_length=1)
 
+
 class PatientUpdate(PatientBase):
     pass
+
 
 class PatientRead(PatientBase):
     id: int
