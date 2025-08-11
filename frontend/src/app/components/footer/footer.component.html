@@ -9,28 +9,25 @@
         Comprometidos con tu bienestar y recuperación integral.
       </p>
       <div class="social">
-        <a href="https://facebook.com" target="_blank" aria-label="Facebook">
-          <i class="fab fa-facebook"></i>
+        @for (social of footerOptionsSocial; track social) {
+        <a
+          href="{{ social.route }}"
+          target="_blank"
+          [attr.aria-label]="social.name"
+        >
+          <i class="fab {{ social.icon }}"></i>
         </a>
-        <a href="https://instagram.com" target="_blank" aria-label="Instagram">
-          <i class="fab fa-instagram"></i>
-        </a>
-        <a href="https://tiktok.com" target="_blank" aria-label="TikTok">
-          <i class="fab fa-tiktok"></i>
-        </a>
-        <a href="https://wa.me" target="_blank" aria-label="WhatsApp">
-          <i class="fab fa-whatsapp"></i>
-        </a>
+        }
       </div>
     </div>
     <div class="footer-section footer-links">
       <h3>Enlaces Rápidos</h3>
       <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Servicios</a></li>
-        <li><a href="#">Nosotros</a></li>
-        <li><a href="#">Ubicación</a></li>
-        <li><a href="#">Contacto</a></li>
+        @for (option of footerOptions; track option) {
+        <li>
+          <a href="{{ option.route }}">{{ option.label }}</a>
+        </li>
+        }
       </ul>
     </div>
     <div class="footer-section footer-contact">
@@ -44,8 +41,6 @@
   </div>
   <hr class="footer-separator" />
   <div class="footer-bottom">
-    <p>
-      &copy; 2025 FisioMove. Todos los derechos reservados. |
-    </p>
+    <p>&copy; 2025 FisioMove. Todos los derechos reservados. |</p>
   </div>
 </footer>

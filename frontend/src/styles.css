@@ -1,32 +1,28 @@
-/* Global styles */
 :root {
-  --primary-color: #007aff; /* Azul principal */
-  --text-color: #000000; /* Negro */
-  --background-color: #f8f8f8; /* Blanco suave */
-  --footer-text-color: #ffffff; /* Blanco para texto en footer */
+  --primary-color: #007aff;
+  --text-color: #000000;
+  --background-color: #f8f8f8;
+  --footer-text-color: #ffffff;
 }
 
-/* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary-color: #007aff; /* Azul principal permanece igual */
-    --text-color: #f8f8f8; /* Blanco suave para texto */
-    --background-color: #000000; /* Negro para fondo */
-    --footer-text-color: #f8f8f8; /* Blanco suave para texto en footer */
+    --primary-color: #007aff;
+    --text-color: #f8f8f8;
+    --background-color: #000000;
+    --footer-text-color: #f8f8f8;
   }
 }
 
-/* General resets */
 body {
   margin: 0;
   padding: 0;
   font-family: "Inter", sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
-  min-height: 100vh; /* Asegura que el cuerpo ocupe al menos un viewport */
+  min-height: 100vh;
 }
 
-/* Utility classes */
 .text-primary {
   color: var(--primary-color);
 }
@@ -37,7 +33,6 @@ body {
   color: var(--footer-text-color);
 }
 
-/* Footer styles */
 footer {
   background-color: var(--primary-color);
   color: var(--footer-text-color);
