@@ -1,0 +1,16 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-navbar',
+  imports: [],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent {
+  navOptions = [
+    { name: 'Home', route: '/' },
+    { name: 'Login', route: '/login' },
+    { name: 'Register', route: '/register' },
+    { name: 'Contact', route: '/contact' },
+  ];
+}
