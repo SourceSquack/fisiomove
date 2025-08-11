@@ -1,1 +1,5 @@
-<p>navbar works!</p>
+<nav class="mx-auto p-2" style="width: 50%">
+  @for (option of navOptions; track option) {
+  <a href="{{ option.route }}">| {{ option.name }} |</a>
+  }
+</nav>
