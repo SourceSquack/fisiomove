@@ -56,3 +56,9 @@ footer .social a {
 footer .social a:hover {
   color: var(--text-color);
 }
+
+.test {
+  height: 2rem;
+  width: 2rem;
+  background-color: red;
+}

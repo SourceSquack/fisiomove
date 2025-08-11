@@ -10,7 +10,6 @@ export class NavbarComponent {
   navOptions = [
     { name: 'Home', route: '/' },
     { name: 'Login', route: '/login' },
-    { name: 'Register', route: '/register' },
-    { name: 'Contact', route: '/contact' },
+    // { name: 'Contact', route: '/contact' },
   ];
 }
