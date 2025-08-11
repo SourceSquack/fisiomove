@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-
+  navOptions = [
+    { name: 'Home', route: '/' },
+    { name: 'Login', route: '/login' },
+    { name: 'Register', route: '/register' },
+    { name: 'Contact', route: '/contact' },
+  ];
 }
