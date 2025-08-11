@@ -1,29 +1,52 @@
-<div class="landing-page">
-  <div class="home hero">
-    <h1>Tu Bienestar Está a <span class="highlight">Un Movimiento</span></h1>
-    <p>
-      En FisioMove ofrecemos tratamientos especializados de fisioterapia con un
-      enfoque integral y personalizado. Nuestro equipo de profesionales te
-      acompañará en tu camino hacia la recuperación completa.
-    </p>
-    <div class="hero-buttons">
-      <button class="btn-primary">Contactar Ahora</button>
-      <button class="btn-secondary">Conocer Más</button>
+<div class="home">
+  <div class="landing-page">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>
+            Tu Bienestar Está a <span class="highlight">Un Movimiento</span>
+          </h1>
+          <p>
+            En FisioMove ofrecemos tratamientos especializados de fisioterapia
+            con un enfoque integral y personalizado. Nuestro equipo de
+            profesionales te acompañará en tu camino hacia la recuperación
+            completa.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn-primary">
+              <i class="fas fa-phone"></i> Contactar Ahora
+            </button>
+            <button class="btn-secondary">
+              <i class="fas fa-info-circle"></i> Conocer Más
+            </button>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img
+            src="images/referencia.avif"
+            alt="Consultorio de Fisioterapia FisioMove"
+            class="consultorio-image"
+          />
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="specialized-services">
-  <h2>Nuestros Servicios Especializados</h2>
-  <p>
-    Ofrecemos una amplia gama de tratamientos de fisioterapia adaptados a tus
-    necesidades específicas
-  </p>
-  <div class="services-grid">
-    <div class="service-card" *ngFor="let service of specializedServices; trackBy: trackByService">
-      <i class="icon" [ngClass]="service.icon"></i>
-      <h3>{{ service.title }}</h3>
-      <p>{{ service.description }}</p>
+  <div class="specialized-services">
+    <h2>Nuestros Servicios Especializados</h2>
+    <p>
+      Ofrecemos una amplia gama de tratamientos de fisioterapia adaptados a tus
+      necesidades específicas
+    </p>
+    <div class="services-grid">
+      <div
+        class="service-card"
+        *ngFor="let service of specializedServices; trackBy: trackByService"
+      >
+        <i class="icon" [ngClass]="service.icon"></i>
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description }}</p>
+      </div>
     </div>
   </div>
 </div>
