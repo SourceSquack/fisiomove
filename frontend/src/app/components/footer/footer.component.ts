@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 export interface FooterOption {
   label: string;
@@ -21,10 +22,26 @@ export interface FooterSocialOption {
 })
 export class FooterComponent {
   footerOptionsSocial: FooterSocialOption[] = [
-    { name: 'Facebook', icon: 'fa-facebook', route: '' },
-    { name: 'Instagram', icon: 'fa-instagram', route: '' },
-    { name: 'TikTok', icon: 'fa-tiktok', route: '' },
-    { name: 'WhatsApp', icon: 'fa-whatsapp', route: '' },
+    {
+      name: 'Facebook',
+      icon: 'fa-facebook',
+      route: environment.FOOTER_SOCIAL_FACEBOOK,
+    },
+    {
+      name: 'Instagram',
+      icon: 'fa-instagram',
+      route: environment.FOOTER_SOCIAL_INSTAGRAM,
+    },
+    {
+      name: 'TikTok',
+      icon: 'fa-tiktok',
+      route: environment.FOOTER_SOCIAL_TIKTOK,
+    },
+    {
+      name: 'WhatsApp',
+      icon: 'fa-whatsapp',
+      route: environment.FOOTER_SOCIAL_WHATSAPP,
+    },
   ];
 
   footerOptions: FooterOption[] = [
