@@ -1,16 +1,29 @@
-<!-- <div class="home">
-  <p>home works!</p>
-</div> -->
+<div class="landing-page">
+  <div class="home hero">
+    <h1>Tu Bienestar Está a <span class="highlight">Un Movimiento</span></h1>
+    <p>
+      En FisioMove ofrecemos tratamientos especializados de fisioterapia con un
+      enfoque integral y personalizado. Nuestro equipo de profesionales te
+      acompañará en tu camino hacia la recuperación completa.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn-primary">Contactar Ahora</button>
+      <button class="btn-secondary">Conocer Más</button>
+    </div>
+  </div>
+</div>
 
-<h1>
-  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis
-  consequatur aliquam minus recusandae aliquid reprehenderit, culpa quisquam
-  itaque quos eaque vero id. Libero fugiat accusantium id aperiam nisi iste
-  sapiente? Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
-  quibusdam, voluptatibus vel dolorem commodi nisi quam eos eaque architecto a
-  autem sed pariatur explicabo? Nesciunt laudantium corrupti aspernatur animi
-  magnam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
-  possimus, necessitatibus, dolores accusantium aliquam sunt qui, unde labore
-  ipsam eveniet natus a? Iste, in deleniti. Labore atque expedita ducimus
-  facere.
-</h1>
+<div class="specialized-services">
+  <h2>Nuestros Servicios Especializados</h2>
+  <p>
+    Ofrecemos una amplia gama de tratamientos de fisioterapia adaptados a tus
+    necesidades específicas
+  </p>
+  <div class="services-grid">
+    <div class="service-card" *ngFor="let service of specializedServices; trackBy: trackByService">
+      <i class="icon" [ngClass]="service.icon"></i>
+      <h3>{{ service.title }}</h3>
+      <p>{{ service.description }}</p>
+    </div>
+  </div>
+</div>
