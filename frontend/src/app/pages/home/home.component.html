@@ -84,4 +84,71 @@
       </div>
     </div>
   </div>
+
+  <!-- Sección Sobre FisioMove -->
+  <div class="about-section">
+    <div class="about-container">
+      <div class="about-content">
+        <div class="about-text">
+          <h2>Sobre FisioMove</h2>
+          <p class="about-description">
+            Con más de 10 años de experiencia en el sector de la fisioterapia,
+            FisioMove se ha consolidado como un centro de referencia en
+            tratamientos de rehabilitación y bienestar físico.
+          </p>
+          <p class="about-description">
+            Nuestro compromiso es brindar atención personalizada y de calidad,
+            utilizando las técnicas más avanzadas y un enfoque integral que
+            considera tanto los aspectos físicos como emocionales de nuestros
+            pacientes.
+          </p>
+
+          <div class="stats-container">
+            <div class="stat-item">
+              <h3>{{ companyStats.patients }}</h3>
+              <p>Pacientes Atendidos</p>
+            </div>
+            <div class="stat-item">
+              <h3>{{ companyStats.experience }}</h3>
+              <p>Años de Experiencia</p>
+            </div>
+          </div>
+
+          <button class="btn-primary">
+            <i class="fas fa-users"></i>
+            Conocer Nuestro Equipo
+          </button>
+        </div>
+
+        <div class="about-image">
+          <img
+            src="/images/referencia3.jpg"
+            alt="Equipo FisioMove"
+            class="team-photo"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Nuestro Equipo -->
+  <div class="team-section">
+    <div class="team-container">
+      <h2>Nuestro Equipo Profesional</h2>
+
+      <div class="team-grid">
+        <div
+          class="team-card"
+          *ngFor="let member of teamMembers; trackBy: trackByTeamMember"
+        >
+          <div class="team-member-avatar">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <h3>{{ member.name }}</h3>
+          <p class="member-title">{{ member.title }}</p>
+          <p class="member-experience">{{ member.experience }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

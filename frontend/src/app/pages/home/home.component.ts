@@ -11,6 +11,20 @@ export interface SpecializedService {
   imageUrl: string;
 }
 
+export interface TeamMember {
+  id: string;
+  name: string;
+  title: string;
+  specialty: string;
+  experience: string;
+  imageUrl: string;
+}
+
+export interface CompanyStats {
+  patients: string;
+  experience: string;
+}
+
 @Component({
   selector: 'app-home',
   imports: [CommonModule],
@@ -19,6 +33,40 @@ export interface SpecializedService {
 })
 export class HomeComponent implements OnInit {
   selectedService: SpecializedService | null = null;
+
+  // Estadísticas de la empresa
+  companyStats: CompanyStats = {
+    patients: '500+',
+    experience: '10+',
+  };
+
+  // Equipo profesional
+  teamMembers: TeamMember[] = [
+    {
+      id: '1',
+      name: 'Andrés Felipe Osorio López',
+      title: 'Fisioterapeuta Senior',
+      specialty: 'Fisioterapeuta',
+      experience: '15 años de experiencia',
+      imageUrl: '/images/team-member-1.jpg',
+    },
+    {
+      id: '2',
+      name: 'Dr. Carlos Rodríguez',
+      title: 'Especialista Deportivo',
+      specialty: 'Especialista Deportivo',
+      experience: '12 años de experiencia',
+      imageUrl: '/images/team-member-2.jpg',
+    },
+    {
+      id: '3',
+      name: 'Dra. Ana Martínez',
+      title: 'Rehabilitación Neurológica',
+      specialty: 'Rehabilitación Neurológica',
+      experience: '10 años de experiencia',
+      imageUrl: '/images/team-member-3.jpg',
+    },
+  ];
 
   specializedServices: SpecializedService[] = [
     {
@@ -97,5 +145,9 @@ export class HomeComponent implements OnInit {
 
   trackByService(index: number, service: SpecializedService): string {
     return service.id;
+  }
+
+  trackByTeamMember(index: number, member: TeamMember): string {
+    return member.id;
   }
 }
