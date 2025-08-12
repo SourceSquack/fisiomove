@@ -117,3 +117,48 @@
   color: #888;
   font-size: 0.8rem;
 }
+
+/* Estilos para errores y validaciones */
+.error-message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.field-error {
+  color: #c33;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
+.input-group input.error {
+  border-color: #c33;
+  box-shadow: 0 0 0 2px rgba(204, 51, 51, 0.1);
+}
+
+/* Estilos para estado de loading */
+.btn-login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-login.loading {
+  background-color: #5a67d8;
+}
+
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

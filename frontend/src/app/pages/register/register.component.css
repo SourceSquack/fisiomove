@@ -151,3 +151,76 @@
 .login-link a:hover {
   text-decoration: underline;
 }
+
+/* Estilos para errores y validaciones */
+.error-message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.success-message {
+  background-color: #efe;
+  border: 1px solid #cfc;
+  color: #3c3;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.field-error {
+  color: #c33;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
+.input-group input.error {
+  border-color: #c33;
+  box-shadow: 0 0 0 2px rgba(204, 51, 51, 0.1);
+}
+
+.form-group label.error {
+  color: #c33;
+}
+
+/* Funcionalidad de mostrar/ocultar contraseña */
+.input-icon-right {
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.input-icon-right:hover {
+  color: var(--primary-color);
+}
+
+/* Estilos para estado de loading */
+.btn-register:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-register.loading {
+  background-color: #5a67d8;
+}
+
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

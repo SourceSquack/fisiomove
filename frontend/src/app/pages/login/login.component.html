@@ -3,16 +3,41 @@
     <img src="assets/logo.png" alt="Fisiomove Logo" class="login-logo" />
     <h2>Bienvenido a Fisiomove</h2>
     <p>¡A un movimiento de tu bienestar!</p>
-    <form>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Mostrar mensaje de error si existe -->
+      @if (errorMessage) {
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ errorMessage }}
+        </div>
+      }
+
       <div class="form-group">
         <label for="email">Correo electrónico</label>
         <div class="input-group">
           <span class="input-icon">
             <i class="fas fa-envelope"></i>
           </span>
-          <input type="email" id="email" placeholder="tu@email.com" required />
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="tu@email.com" 
+            [class.error]="email?.invalid && email?.touched"
+          />
         </div>
+        @if (email?.invalid && email?.touched) {
+          <div class="field-error">
+            @if (email?.errors?.['required']) {
+              El correo electrónico es requerido
+            }
+            @if (email?.errors?.['email']) {
+              Ingresa un correo electrónico válido
+            }
+          </div>
+        }
       </div>
+
       <div class="form-group">
         <label for="password">Contraseña</label>
         <div class="input-group">
@@ -22,20 +47,46 @@
           <input
             type="password"
             id="password"
+            formControlName="password"
             placeholder="********"
-            required
+            [class.error]="password?.invalid && password?.touched"
           />
         </div>
+        @if (password?.invalid && password?.touched) {
+          <div class="field-error">
+            @if (password?.errors?.['required']) {
+              La contraseña es requerida
+            }
+            @if (password?.errors?.['minlength']) {
+              La contraseña debe tener al menos 6 caracteres
+            }
+          </div>
+        }
       </div>
+
       <div class="form-group">
-        <input type="checkbox" id="remember" />
+        <input type="checkbox" id="remember" formControlName="remember" />
         <label for="remember">Recordarme</label>
       </div>
-      <button type="submit" class="btn-login">Iniciar sesión</button>
+
+      <button 
+        type="submit" 
+        class="btn-login"
+        [disabled]="isLoading"
+        [class.loading]="isLoading"
+      >
+        @if (isLoading) {
+          <i class="fas fa-spinner fa-spin"></i>
+          Iniciando sesión...
+        } @else {
+          Iniciar sesión
+        }
+      </button>
+
       <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
     </form>
     <p class="register-link">
-      ¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>
+      ¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a>
     </p>
     <p class="terms">
       Al iniciar sesión, aceptas nuestros términos de servicio y política de
