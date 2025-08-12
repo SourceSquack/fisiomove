@@ -1,0 +1,25 @@
+<div class="appointments-card">
+  <div class="card-header">
+    <h2>Próximas Citas</h2>
+    <button class="btn-add"><i class="fas fa-plus"></i> Nueva Cita</button>
+  </div>
+  <ul class="appointments-list">
+    <li *ngFor="let app of appointments" class="appointment-item">
+      <div class="patient-info">
+        <div class="patient-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="patient-details">
+          <span class="patient-name">{{ app.name }}</span>
+          <span class="appointment-type">{{ app.type }}</span>
+        </div>
+      </div>
+      <div class="appointment-details">
+        <span class="appointment-time">{{ app.time }}</span>
+        <span class="appointment-status" [ngClass]="app.status">{{
+          app.status
+        }}</span>
+      </div>
+    </li>
+  </ul>
+</div>
