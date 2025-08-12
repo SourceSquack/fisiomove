@@ -4,7 +4,8 @@
     <button class="btn-add"><i class="fas fa-plus"></i> Nueva Cita</button>
   </div>
   <ul class="appointments-list">
-    <li *ngFor="let app of appointments" class="appointment-item">
+    @for (app of appointments; track app.name) {
+    <li class="appointment-item">
       <div class="patient-info">
         <div class="patient-avatar">
           <i class="fas fa-user"></i>
@@ -21,5 +22,6 @@
         }}</span>
       </div>
     </li>
+    }
   </ul>
 </div>
