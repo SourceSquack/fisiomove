@@ -3,30 +3,95 @@
     <img src="assets/logo.png" alt="Fisiomove Logo" class="register-logo" />
     <h2>Únete a Fisiomove</h2>
     <p class="subtitle">Comienza tu camino hacia el bienestar</p>
-    <form>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Mostrar mensajes de error o éxito -->
+      @if (errorMessage) {
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ errorMessage }}
+        </div>
+      }
+      
+      @if (successMessage) {
+        <div class="success-message">
+          <i class="fas fa-check-circle"></i>
+          {{ successMessage }}
+        </div>
+      }
+
       <div class="name-group">
         <div class="form-group">
           <label for="firstName">Nombre</label>
           <div class="input-group">
             <span class="input-icon"><i class="fas fa-user"></i></span>
-            <input type="text" id="firstName" placeholder="Juan" required />
+            <input 
+              type="text" 
+              id="firstName" 
+              formControlName="firstName"
+              placeholder="Juan" 
+              [class.error]="firstName?.invalid && firstName?.touched"
+            />
           </div>
+          @if (firstName?.invalid && firstName?.touched) {
+            <div class="field-error">
+              @if (firstName?.errors?.['required']) {
+                El nombre es requerido
+              }
+              @if (firstName?.errors?.['minlength']) {
+                El nombre debe tener al menos 2 caracteres
+              }
+            </div>
+          }
         </div>
         <div class="form-group">
           <label for="lastName">Apellido</label>
           <div class="input-group">
             <span class="input-icon"><i class="fas fa-user"></i></span>
-            <input type="text" id="lastName" placeholder="Pérez" required />
+            <input 
+              type="text" 
+              id="lastName" 
+              formControlName="lastName"
+              placeholder="Pérez" 
+              [class.error]="lastName?.invalid && lastName?.touched"
+            />
           </div>
+          @if (lastName?.invalid && lastName?.touched) {
+            <div class="field-error">
+              @if (lastName?.errors?.['required']) {
+                El apellido es requerido
+              }
+              @if (lastName?.errors?.['minlength']) {
+                El apellido debe tener al menos 2 caracteres
+              }
+            </div>
+          }
         </div>
       </div>
+
       <div class="form-group">
         <label for="email">Correo electrónico</label>
         <div class="input-group">
           <span class="input-icon"><i class="fas fa-envelope"></i></span>
-          <input type="email" id="email" placeholder="tu@email.com" required />
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="tu@email.com" 
+            [class.error]="email?.invalid && email?.touched"
+          />
         </div>
+        @if (email?.invalid && email?.touched) {
+          <div class="field-error">
+            @if (email?.errors?.['required']) {
+              El correo electrónico es requerido
+            }
+            @if (email?.errors?.['email']) {
+              Ingresa un correo electrónico válido
+            }
+          </div>
+        }
       </div>
+
       <div class="form-group">
         <label for="phone">Teléfono</label>
         <div class="input-group">
@@ -34,48 +99,108 @@
           <input
             type="tel"
             id="phone"
+            formControlName="phone"
             placeholder="+57 300 123 4567"
-            required
+            [class.error]="phone?.invalid && phone?.touched"
           />
         </div>
+        @if (phone?.invalid && phone?.touched) {
+          <div class="field-error">
+            @if (phone?.errors?.['required']) {
+              El teléfono es requerido
+            }
+            @if (phone?.errors?.['pattern']) {
+              Ingresa un número de teléfono válido
+            }
+          </div>
+        }
       </div>
+
       <div class="form-group">
         <label for="password">Contraseña</label>
         <div class="input-group">
           <span class="input-icon"><i class="fas fa-lock"></i></span>
           <input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             id="password"
+            formControlName="password"
             placeholder="********"
-            required
+            [class.error]="password?.invalid && password?.touched"
           />
-          <span class="input-icon-right"><i class="fas fa-eye"></i></span>
+          <span class="input-icon-right" (click)="togglePasswordVisibility()">
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </span>
         </div>
+        @if (password?.invalid && password?.touched) {
+          <div class="field-error">
+            @if (password?.errors?.['required']) {
+              La contraseña es requerida
+            }
+            @if (password?.errors?.['minlength']) {
+              La contraseña debe tener al menos 8 caracteres
+            }
+          </div>
+        }
       </div>
+
       <div class="form-group">
         <label for="confirmPassword">Confirmar contraseña</label>
         <div class="input-group">
           <span class="input-icon"><i class="fas fa-lock"></i></span>
           <input
-            type="password"
+            [type]="showConfirmPassword ? 'text' : 'password'"
             id="confirmPassword"
+            formControlName="confirmPassword"
             placeholder="********"
-            required
+            [class.error]="(confirmPassword?.invalid && confirmPassword?.touched) || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)"
           />
-          <span class="input-icon-right"><i class="fas fa-eye"></i></span>
+          <span class="input-icon-right" (click)="toggleConfirmPasswordVisibility()">
+            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </span>
         </div>
+        @if (confirmPassword?.invalid && confirmPassword?.touched) {
+          <div class="field-error">
+            @if (confirmPassword?.errors?.['required']) {
+              Confirma tu contraseña
+            }
+          </div>
+        }
+        @if (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched) {
+          <div class="field-error">
+            Las contraseñas no coinciden
+          </div>
+        }
       </div>
+
       <div class="form-group terms-group">
-        <input type="checkbox" id="terms" />
-        <label for="terms"
-          >Acepto los <a href="#">términos de servicio</a> y la
-          <a href="#">política de privacidad</a></label
-        >
+        <input type="checkbox" id="terms" formControlName="terms" />
+        <label for="terms" [class.error]="terms?.invalid && terms?.touched">
+          Acepto los <a href="#" target="_blank">términos de servicio</a> y la
+          <a href="#" target="_blank">política de privacidad</a>
+        </label>
+        @if (terms?.invalid && terms?.touched) {
+          <div class="field-error">
+            Debes aceptar los términos y condiciones
+          </div>
+        }
       </div>
-      <button type="submit" class="btn-register">Crear cuenta</button>
+
+      <button 
+        type="submit" 
+        class="btn-register"
+        [disabled]="isLoading"
+        [class.loading]="isLoading"
+      >
+        @if (isLoading) {
+          <i class="fas fa-spinner fa-spin"></i>
+          Creando cuenta...
+        } @else {
+          Crear cuenta
+        }
+      </button>
     </form>
     <p class="login-link">
-      ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
+      ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a>
     </p>
   </div>
 </div>
