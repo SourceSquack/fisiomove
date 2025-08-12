@@ -45,33 +45,68 @@ class LoginPayload(BaseModel):
 
 @router.get("/me", response_model=dict)
 def read_me(user: dict = Depends(get_current_user)):
-    return {
+    # Debug: Log the complete user structure
+    print("🔍 Complete user data from Supabase:", user)
+
+    user_metadata = user.get("user_metadata") or {}
+    print("📊 User metadata:", user_metadata)
+
+    # Try to get data from different possible locations
+    full_name = (
+        user_metadata.get("full_name")
+        or user.get("full_name")
+        or user_metadata.get("name")
+        or ""
+    )
+
+    role = user_metadata.get("role") or user.get("role") or "paciente"  # default role
+
+    result = {
         "id": user.get("id"),
         "email": user.get("email"),
-        "full_name": (user.get("user_metadata") or {}).get("full_name"),
-        "role": (user.get("user_metadata") or {}).get("role"),
+        "full_name": full_name,
+        "role": role,
+        "is_active": True,  # Supabase users are active by default
+        "phone": user_metadata.get("phone") or user.get("phone"),
     }
+
+    print("📤 Sending user data to frontend:", result)
+    return result
 
 
 @router.post("/register", response_model=dict, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate):
+    print(f"📝 Registration attempt for email: {user_in.email}")
+    print(
+        f"📊 User data: {{email: '{user_in.email}', full_name: '{user_in.full_name}', role: '{user_in.role}'}}"
+    )
+    print(f"🔧 Environment: {settings.ENV}")
+    print(f"🛡️ DEV_BYPASS_EMAIL_CONFIRM: {settings.DEV_BYPASS_EMAIL_CONFIRM}")
+
     try:
         normalized_email = user_in.email.strip().lower()
+        print(f"✅ Normalized email: {normalized_email}")
 
         # En dev, si está habilitado el bypass, crear/confirmar por Admin API (sin pedir confirmación de correo)
         if settings.ENV != "production" and settings.DEV_BYPASS_EMAIL_CONFIRM:
+            print("🔓 Using DEV bypass mode - Admin API")
+
             if not settings.SUPABASE_SERVICE_ROLE_KEY:
+                print("❌ Missing SUPABASE_SERVICE_ROLE_KEY")
                 raise HTTPException(
                     status_code=400,
                     detail={"message": "Falta SUPABASE_SERVICE_ROLE_KEY para bypass"},
                 )
 
+            print(f"🔍 Checking if user exists: {normalized_email}")
             existing = admin_get_user_by_email(normalized_email)
             if existing:
+                print(f"👤 User already exists: {existing.get('email', 'unknown')}")
                 # Confirmar si existe y devolverlo
                 admin_confirm_user_by_email(normalized_email)
                 return {"message": "Usuario existente confirmado", "user": existing}
 
+            print(f"🚀 Creating new user via Admin API: {normalized_email}")
             created = admin_create_user(
                 normalized_email,
                 user_in.password,
@@ -79,22 +114,29 @@ def register(user_in: UserCreate):
                 role=user_in.role,
                 email_confirm=True,
             )
+            print(f"📝 Admin API result: {created}")
+
             if not created:
+                print("❌ Failed to create user via Admin API")
                 raise HTTPException(
                     status_code=400,
                     detail={"message": "No se pudo crear usuario vía Admin API"},
                 )
+            print("✅ User created successfully via Admin API")
             return created
 
         # Flujo normal (producción): signup público que requiere confirmación de email
+        print("🔐 Using normal signup flow")
         result = sign_up_user(
             email=normalized_email,
             password=user_in.password,
             full_name=(user_in.full_name or "").strip(),
             role=user_in.role,
         )
+        print(f"📝 Signup result: {result}")
         return result
     except ValueError as e:
+        print(f"❌ Registration failed with ValueError: {e}")
         detail = e.args[0] if e.args else {"message": "Error en registro"}
         code = detail.get("status", 400) if isinstance(detail, dict) else 400
         raise HTTPException(status_code=code, detail=detail)
@@ -102,17 +144,29 @@ def register(user_in: UserCreate):
 
 @router.post("/login", response_model=dict)
 def login(form: LoginPayload):
+    print(f"🔐 Login attempt with email: {form.email}")
+
     email = form.email.strip().lower()
     password = form.password
+
+    print(f"📧 Normalized email: {email}")
+    print(f"🔑 Password length: {len(password) if password else 0}")
+
     if not email or not password:
+        print("❌ Missing email or password")
         raise HTTPException(
             status_code=400, detail={"message": "Credenciales inválidas"}
         )
     try:
+        print(f"🚀 Attempting sign_in_user for: {email}")
         result = sign_in_user(email, password)
+        print(f"✅ Login successful for: {email}")
         return result
     except ValueError as e:
+        print(f"❌ Login failed for {email}: {e}")
         detail = e.args[0] if e.args else {"message": "Error de autenticación"}
+        print(f"📝 Error detail: {detail}")
+
         # Si el motivo es email_not_confirmed y está permitido el bypass, intentamos confirmar y reintentar
         if (
             isinstance(detail, dict)
@@ -127,10 +181,12 @@ def login(form: LoginPayload):
             ]
             if email in set(bypass_list):
                 try:
+                    print(f"🔄 Attempting email confirmation bypass for: {email}")
                     admin_confirm_user_by_email(email)
                     # Reintentar login una vez
                     return sign_in_user(email, password)
-                except Exception:
+                except Exception as retry_e:
+                    print(f"❌ Bypass retry failed: {retry_e}")
                     pass
         code = detail.get("status", 401) if isinstance(detail, dict) else 401
         raise HTTPException(status_code=code, detail=detail)
