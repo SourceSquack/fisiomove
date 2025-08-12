@@ -1,0 +1,245 @@
+/* Overlay principal */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.loader-overlay.fullscreen {
+  position: fixed;
+}
+
+.loader-overlay:not(.fullscreen) {
+  position: absolute;
+  border-radius: 12px;
+}
+
+/* Container principal */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* Spinner con logo */
+.loader-spinner {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Anillos giratorios */
+.spinner-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.spinner-ring-2 {
+  width: 90%;
+  height: 90%;
+  top: 5%;
+  left: 5%;
+  border-top: 3px solid #0056b3;
+  animation: spin 2s linear infinite reverse;
+}
+
+/* Contenido del loader */
+.loader-content {
+  text-align: center;
+  max-width: 300px;
+}
+
+.loader-message {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 0 16px 0;
+  letter-spacing: 0.5px;
+}
+
+/* Dots animados */
+.loader-dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.loader-dots span {
+  width: 8px;
+  height: 8px;
+  background: #007bff;
+  border-radius: 50%;
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+.loader-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loader-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Variantes de tamaño */
+.loader-overlay[data-size="small"] .loader-spinner {
+  width: 80px;
+  height: 80px;
+}
+
+.loader-overlay[data-size="small"] .loader-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.loader-overlay[data-size="large"] .loader-spinner {
+  width: 160px;
+  height: 160px;
+}
+
+.loader-overlay[data-size="large"] .loader-logo {
+  width: 80px;
+  height: 80px;
+}
+
+/* Efectos adicionales */
+.loader-spinner::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 123, 255, 0.1),
+    rgba(0, 86, 179, 0.1)
+  );
+  animation: rotate 3s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .loader-spinner {
+    width: 100px;
+    height: 100px;
+  }
+
+  .loader-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .loader-message {
+    font-size: 14px;
+  }
+}
+
+/* Tema oscuro */
+@media (prefers-color-scheme: dark) {
+  .loader-overlay {
+    background: rgba(26, 26, 26, 0.95);
+  }
+
+  .loader-message {
+    color: #e1e1e1;
+  }
+}
+
+/* Estados de carga */
+.loader-overlay.loading-success {
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.loader-overlay.loading-error {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.loader-overlay.loading-success .spinner-ring {
+  border-top-color: #28a745;
+}
+
+.loader-overlay.loading-error .spinner-ring {
+  border-top-color: #dc3545;
+}
