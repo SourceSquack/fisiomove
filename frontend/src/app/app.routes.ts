@@ -14,5 +14,9 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
 
   // Rutas protegidas
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] }
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard],
+  },
 ];

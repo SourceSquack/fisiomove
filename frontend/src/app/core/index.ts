@@ -5,16 +5,16 @@ export * from './services/patients.service';
 export * from './services/appointments.service';
 
 // Models (export types explicitly)
-export type { 
-  BaseModel, 
-  PaginatedResponse, 
-  User, 
-  Patient, 
-  Appointment, 
-  LoginRequest, 
-  LoginResponse, 
+export type {
+  BaseModel,
+  PaginatedResponse,
+  User,
+  Patient,
+  Appointment,
+  LoginRequest,
+  LoginResponse,
   RegisterRequest,
-  ApiResponse
+  ApiResponse,
 } from './models/api.models';
 
 // Interceptors

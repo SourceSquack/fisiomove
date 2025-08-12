@@ -6,17 +6,15 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <!-- Mostrar mensajes de error o éxito -->
       @if (errorMessage) {
-        <div class="error-message">
-          <i class="fas fa-exclamation-triangle"></i>
-          {{ errorMessage }}
-        </div>
-      }
-      
-      @if (successMessage) {
-        <div class="success-message">
-          <i class="fas fa-check-circle"></i>
-          {{ successMessage }}
-        </div>
+      <div class="error-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ errorMessage }}
+      </div>
+      } @if (successMessage) {
+      <div class="success-message">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage }}
+      </div>
       }
 
       <div class="name-group">
@@ -24,46 +22,40 @@
           <label for="firstName">Nombre</label>
           <div class="input-group">
             <span class="input-icon"><i class="fas fa-user"></i></span>
-            <input 
-              type="text" 
-              id="firstName" 
+            <input
+              type="text"
+              id="firstName"
               formControlName="firstName"
-              placeholder="Juan" 
+              placeholder="Juan"
               [class.error]="firstName?.invalid && firstName?.touched"
             />
           </div>
           @if (firstName?.invalid && firstName?.touched) {
-            <div class="field-error">
-              @if (firstName?.errors?.['required']) {
-                El nombre es requerido
-              }
-              @if (firstName?.errors?.['minlength']) {
-                El nombre debe tener al menos 2 caracteres
-              }
-            </div>
+          <div class="field-error">
+            @if (firstName?.errors?.['required']) { El nombre es requerido } @if
+            (firstName?.errors?.['minlength']) { El nombre debe tener al menos 2
+            caracteres }
+          </div>
           }
         </div>
         <div class="form-group">
           <label for="lastName">Apellido</label>
           <div class="input-group">
             <span class="input-icon"><i class="fas fa-user"></i></span>
-            <input 
-              type="text" 
-              id="lastName" 
+            <input
+              type="text"
+              id="lastName"
               formControlName="lastName"
-              placeholder="Pérez" 
+              placeholder="Pérez"
               [class.error]="lastName?.invalid && lastName?.touched"
             />
           </div>
           @if (lastName?.invalid && lastName?.touched) {
-            <div class="field-error">
-              @if (lastName?.errors?.['required']) {
-                El apellido es requerido
-              }
-              @if (lastName?.errors?.['minlength']) {
-                El apellido debe tener al menos 2 caracteres
-              }
-            </div>
+          <div class="field-error">
+            @if (lastName?.errors?.['required']) { El apellido es requerido }
+            @if (lastName?.errors?.['minlength']) { El apellido debe tener al
+            menos 2 caracteres }
+          </div>
           }
         </div>
       </div>
@@ -72,23 +64,20 @@
         <label for="email">Correo electrónico</label>
         <div class="input-group">
           <span class="input-icon"><i class="fas fa-envelope"></i></span>
-          <input 
-            type="email" 
-            id="email" 
+          <input
+            type="email"
+            id="email"
             formControlName="email"
-            placeholder="tu@email.com" 
+            placeholder="tu@email.com"
             [class.error]="email?.invalid && email?.touched"
           />
         </div>
         @if (email?.invalid && email?.touched) {
-          <div class="field-error">
-            @if (email?.errors?.['required']) {
-              El correo electrónico es requerido
-            }
-            @if (email?.errors?.['email']) {
-              Ingresa un correo electrónico válido
-            }
-          </div>
+        <div class="field-error">
+          @if (email?.errors?.['required']) { El correo electrónico es requerido
+          } @if (email?.errors?.['email']) { Ingresa un correo electrónico
+          válido }
+        </div>
         }
       </div>
 
@@ -105,14 +94,10 @@
           />
         </div>
         @if (phone?.invalid && phone?.touched) {
-          <div class="field-error">
-            @if (phone?.errors?.['required']) {
-              El teléfono es requerido
-            }
-            @if (phone?.errors?.['pattern']) {
-              Ingresa un número de teléfono válido
-            }
-          </div>
+        <div class="field-error">
+          @if (phone?.errors?.['required']) { El teléfono es requerido } @if
+          (phone?.errors?.['pattern']) { Ingresa un número de teléfono válido }
+        </div>
         }
       </div>
 
@@ -132,14 +117,11 @@
           </span>
         </div>
         @if (password?.invalid && password?.touched) {
-          <div class="field-error">
-            @if (password?.errors?.['required']) {
-              La contraseña es requerida
-            }
-            @if (password?.errors?.['minlength']) {
-              La contraseña debe tener al menos 8 caracteres
-            }
-          </div>
+        <div class="field-error">
+          @if (password?.errors?.['required']) { La contraseña es requerida }
+          @if (password?.errors?.['minlength']) { La contraseña debe tener al
+          menos 8 caracteres }
+        </div>
         }
       </div>
 
@@ -154,21 +136,22 @@
             placeholder="********"
             [class.error]="(confirmPassword?.invalid && confirmPassword?.touched) || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)"
           />
-          <span class="input-icon-right" (click)="toggleConfirmPasswordVisibility()">
-            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          <span
+            class="input-icon-right"
+            (click)="toggleConfirmPasswordVisibility()"
+          >
+            <i
+              [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+            ></i>
           </span>
         </div>
         @if (confirmPassword?.invalid && confirmPassword?.touched) {
-          <div class="field-error">
-            @if (confirmPassword?.errors?.['required']) {
-              Confirma tu contraseña
-            }
-          </div>
-        }
-        @if (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched) {
-          <div class="field-error">
-            Las contraseñas no coinciden
-          </div>
+        <div class="field-error">
+          @if (confirmPassword?.errors?.['required']) { Confirma tu contraseña }
+        </div>
+        } @if (registerForm.errors?.['passwordMismatch'] &&
+        confirmPassword?.touched) {
+        <div class="field-error">Las contraseñas no coinciden</div>
         }
       </div>
 
@@ -179,24 +162,19 @@
           <a href="#" target="_blank">política de privacidad</a>
         </label>
         @if (terms?.invalid && terms?.touched) {
-          <div class="field-error">
-            Debes aceptar los términos y condiciones
-          </div>
+        <div class="field-error">Debes aceptar los términos y condiciones</div>
         }
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="btn-register"
         [disabled]="isLoading"
         [class.loading]="isLoading"
       >
         @if (isLoading) {
-          <i class="fas fa-spinner fa-spin"></i>
-          Creando cuenta...
-        } @else {
-          Crear cuenta
-        }
+        <i class="fas fa-spinner fa-spin"></i>
+        Creando cuenta... } @else { Crear cuenta }
       </button>
     </form>
     <p class="login-link">

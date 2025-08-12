@@ -31,7 +31,7 @@ app.add_middleware(
         "Pragma",
         "User-Agent",
         "DNT",
-        "If-Modified-Since"
+        "If-Modified-Since",
     ],
     expose_headers=["*"],
 )
@@ -44,9 +44,13 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 async def healthcheck():
     return {"status": "ok"}
 
-@app.options("/api/v1/auth/login", tags=["cors"])  # Explicit OPTIONS handler for testing
+
+@app.options(
+    "/api/v1/auth/login", tags=["cors"]
+)  # Explicit OPTIONS handler for testing
 async def options_login():
     return {"status": "ok"}
+
 
 @app.get("/cors-test", tags=["cors"])  # Simple CORS test endpoint
 async def cors_test():

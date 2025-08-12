@@ -10,9 +10,19 @@
       </div>
     </div>
     <div class="nav-options">
-      @for (option of navOptions; track option) {
-      <a class="nav-link" href="{{ option.route }}"> {{ option.name }} </a>
-      }
+      @if (!isAuthenticated()) {
+      <a class="nav-link" routerLink="/home">Home</a>
+      <a class="nav-link" routerLink="/login">Login</a>
+      <a class="nav-link" routerLink="/register">Register</a>
+      } @if (isAuthenticated()) {
+      <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+
+      @if (currentUser$ | async; as user) {
+      <div class="user-dropdown">
+        <span class="user-name">{{ user.full_name }}</span>
+        <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+      </div>
+      } }
     </div>
   </div>
 </div>

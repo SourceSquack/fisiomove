@@ -12,7 +12,7 @@ export interface ApiResponse<T> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpClientService {
   private readonly http = inject(HttpClient);
@@ -22,56 +22,56 @@ export class HttpClientService {
    * GET request
    */
   get<T>(endpoint: string, params?: HttpParams): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}${endpoint}`, {
-      params,
-      headers: this.getHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .get<T>(`${this.baseUrl}${endpoint}`, {
+        params,
+        headers: this.getHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * POST request
    */
   post<T>(endpoint: string, body: any): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, {
-      headers: this.getHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post<T>(`${this.baseUrl}${endpoint}`, body, {
+        headers: this.getHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * PUT request
    */
   put<T>(endpoint: string, body: any): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, {
-      headers: this.getHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .put<T>(`${this.baseUrl}${endpoint}`, body, {
+        headers: this.getHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * DELETE request
    */
   delete<T>(endpoint: string): Observable<T> {
-    return this.http.delete<T>(`${this.baseUrl}${endpoint}`, {
-      headers: this.getHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .delete<T>(`${this.baseUrl}${endpoint}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * PATCH request
    */
   patch<T>(endpoint: string, body: any): Observable<T> {
-    return this.http.patch<T>(`${this.baseUrl}${endpoint}`, body, {
-      headers: this.getHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .patch<T>(`${this.baseUrl}${endpoint}`, body, {
+        headers: this.getHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -80,7 +80,7 @@ export class HttpClientService {
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      Accept: 'application/json',
     });
   }
 
@@ -97,7 +97,8 @@ export class HttpClientService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Server-side error
-      errorMessage = error.error?.message || error.message || `Error ${error.status}`;
+      errorMessage =
+        error.error?.message || error.message || `Error ${error.status}`;
     }
 
     return throwError(() => new Error(errorMessage));

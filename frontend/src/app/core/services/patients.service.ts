@@ -22,7 +22,7 @@ export interface CreatePatientRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PatientsService {
   private readonly httpClient = inject(HttpClientService);
@@ -30,9 +30,11 @@ export class PatientsService {
   /**
    * Obtener lista de pacientes con filtros
    */
-  getPatients(filters?: PatientFilters): Observable<ApiResponse<PaginatedResponse<Patient>>> {
+  getPatients(
+    filters?: PatientFilters
+  ): Observable<ApiResponse<PaginatedResponse<Patient>>> {
     let params = new HttpParams();
-    
+
     if (filters) {
       if (filters.search) params = params.set('search', filters.search);
       if (filters.gender) params = params.set('gender', filters.gender);
@@ -40,7 +42,10 @@ export class PatientsService {
       if (filters.size) params = params.set('size', filters.size.toString());
     }
 
-    return this.httpClient.get<ApiResponse<PaginatedResponse<Patient>>>('patients', params);
+    return this.httpClient.get<ApiResponse<PaginatedResponse<Patient>>>(
+      'patients',
+      params
+    );
   }
 
   /**
@@ -53,15 +58,23 @@ export class PatientsService {
   /**
    * Crear nuevo paciente
    */
-  createPatient(patientData: CreatePatientRequest): Observable<ApiResponse<Patient>> {
+  createPatient(
+    patientData: CreatePatientRequest
+  ): Observable<ApiResponse<Patient>> {
     return this.httpClient.post<ApiResponse<Patient>>('patients', patientData);
   }
 
   /**
    * Actualizar paciente
    */
-  updatePatient(id: string, patientData: Partial<CreatePatientRequest>): Observable<ApiResponse<Patient>> {
-    return this.httpClient.put<ApiResponse<Patient>>(`patients/${id}`, patientData);
+  updatePatient(
+    id: string,
+    patientData: Partial<CreatePatientRequest>
+  ): Observable<ApiResponse<Patient>> {
+    return this.httpClient.put<ApiResponse<Patient>>(
+      `patients/${id}`,
+      patientData
+    );
   }
 
   /**
@@ -76,6 +89,9 @@ export class PatientsService {
    */
   searchPatients(query: string): Observable<ApiResponse<Patient[]>> {
     const params = new HttpParams().set('search', query);
-    return this.httpClient.get<ApiResponse<Patient[]>>('patients/search', params);
+    return this.httpClient.get<ApiResponse<Patient[]>>(
+      'patients/search',
+      params
+    );
   }
 }

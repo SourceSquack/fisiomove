@@ -2,21 +2,96 @@
   <button class="mobile-menu-btn" (click)="toggleSidebar()">
     <i class="fas fa-bars"></i>
   </button>
+
   <div class="search-bar">
     <i class="fas fa-search"></i>
     <input type="text" placeholder="Buscar pacientes, citas..." />
   </div>
+
   <div class="user-menu">
     <div class="notifications">
       <i class="fas fa-bell"></i>
       <span class="notification-badge">4</span>
     </div>
-    <div class="user-profile">
-      <div class="avatar-icon">
-        <i class="fas fa-user-md"></i>
+
+    <div class="user-profile-container">
+      <div
+        class="user-profile"
+        (click)="toggleDropdown()"
+        [class.active]="isDropdownOpen"
+      >
+        @if (isLoading) {
+        <div class="loading-avatar">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        } @else {
+        <div class="avatar-icon">
+          @if (currentUser?.avatar) {
+          <img
+            [src]="currentUser?.avatar"
+            [alt]="getUserDisplayName()"
+            class="avatar-image"
+          />
+          } @else {
+          <span class="avatar-initials">{{ getUserInitials() }}</span>
+          }
+        </div>
+        }
+
+        <span class="user-name">
+          @if (isLoading) {
+          <span class="loading-text">Cargando...</span>
+          } @else {
+          {{ getUserDisplayName() }}
+          }
+        </span>
+
+        <i class="fas fa-chevron-down" [class.rotated]="isDropdownOpen"></i>
       </div>
-      <span class="user-name">Dr. Osorio</span>
-      <i class="fas fa-chevron-down"></i>
+
+      <!-- Dropdown Menu -->
+      @if (isDropdownOpen) {
+      <div class="dropdown-menu" (click)="$event.stopPropagation()">
+        <div class="dropdown-header">
+          <div class="user-info">
+            <div class="avatar-icon-large">
+              @if (currentUser?.avatar) {
+              <img
+                [src]="currentUser?.avatar"
+                [alt]="getUserDisplayName()"
+                class="avatar-image"
+              />
+              } @else {
+              <span class="avatar-initials">{{ getUserInitials() }}</span>
+              }
+            </div>
+            <div class="user-details">
+              <div class="user-name-large">{{ getUserDisplayName() }}</div>
+              <div class="user-email">{{ currentUser?.email }}</div>
+              <div class="user-role">{{ currentUser?.role || "paciente" }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <div class="dropdown-items">
+          <button class="dropdown-item" (click)="goToProfile()">
+            <i class="fas fa-user"></i>
+            <span>Mi Perfil</span>
+          </button>
+
+          <button class="dropdown-item" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+      }
     </div>
   </div>
 </nav>
+
+@if (isDropdownOpen) {
+<div class="dropdown-overlay" (click)="closeDropdown()"></div>
+}

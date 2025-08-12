@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../core/models/api.models';
@@ -27,11 +32,12 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      remember: [false]
+      remember: [false],
     });
 
     // Obtener la URL de retorno de los query params
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+    this.returnUrl =
+      this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   onSubmit(): void {
@@ -41,7 +47,7 @@ export class LoginComponent {
 
       const loginData: LoginRequest = {
         email: this.loginForm.value.email,
-        password: this.loginForm.value.password
+        password: this.loginForm.value.password,
       };
 
       console.log('Enviando datos de login:', loginData);
@@ -61,7 +67,7 @@ export class LoginComponent {
         error: (error) => {
           this.isLoading = false;
           console.error('Login error:', error);
-          
+
           // Extraer mensaje de error más específico
           if (error.error?.message) {
             this.errorMessage = error.error.message;
@@ -72,7 +78,7 @@ export class LoginComponent {
           } else {
             this.errorMessage = 'Error de conexión. Intenta nuevamente.';
           }
-        }
+        },
       });
     } else {
       this.markFormGroupTouched();
@@ -80,13 +86,17 @@ export class LoginComponent {
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.loginForm.controls).forEach(key => {
+    Object.keys(this.loginForm.controls).forEach((key) => {
       const control = this.loginForm.get(key);
       control?.markAsTouched();
     });
   }
 
   // Getters para facilitar el acceso en el template
-  get email() { return this.loginForm.get('email'); }
-  get password() { return this.loginForm.get('password'); }
+  get email() {
+    return this.loginForm.get('email');
+  }
+  get password() {
+    return this.loginForm.get('password');
+  }
 }

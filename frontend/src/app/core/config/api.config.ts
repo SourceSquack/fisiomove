@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment.development';
 
 export const API_CONFIG = {
   BASE_URL: environment.API_URL,
-  
+
   // Endpoints de autenticación
   AUTH: {
     LOGIN: 'auth/login',
@@ -10,7 +10,7 @@ export const API_CONFIG = {
     ME: 'auth/me',
     LOGOUT: 'auth/logout',
     CHANGE_PASSWORD: 'auth/change-password',
-    VERIFY_TOKEN: 'auth/verify-token'
+    VERIFY_TOKEN: 'auth/verify-token',
   },
 
   // Endpoints de pacientes
@@ -20,7 +20,7 @@ export const API_CONFIG = {
     CREATE: 'patients',
     UPDATE: (id: string) => `patients/${id}`,
     DELETE: (id: string) => `patients/${id}`,
-    SEARCH: 'patients/search'
+    SEARCH: 'patients/search',
   },
 
   // Endpoints de citas
@@ -34,7 +34,7 @@ export const API_CONFIG = {
     COMPLETE: (id: string) => `appointments/${id}/complete`,
     TODAY: 'appointments/today',
     WEEK: 'appointments/week',
-    UPCOMING: 'appointments/upcoming'
+    UPCOMING: 'appointments/upcoming',
   },
 
   // Endpoints de usuarios
@@ -43,6 +43,6 @@ export const API_CONFIG = {
     DETAIL: (id: string) => `users/${id}`,
     CREATE: 'users',
     UPDATE: (id: string) => `users/${id}`,
-    DELETE: (id: string) => `users/${id}`
-  }
+    DELETE: (id: string) => `users/${id}`,
+  },
 } as const;

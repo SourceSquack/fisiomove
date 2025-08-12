@@ -2,19 +2,25 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { HttpClientService } from './http-client.service';
 import { StorageService } from './storage.service';
-import { LoginRequest, LoginResponse, RegisterRequest, User, ApiResponse } from '../models/api.models';
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  User,
+  ApiResponse,
+} from '../models/api.models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly httpClient = inject(HttpClientService);
   private readonly storageService = inject(StorageService);
-  
+
   // Estado del usuario autenticado
   private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
   public readonly currentUser$ = this.currentUserSubject.asObservable();
-  
+
   // Claves para localStorage
   private readonly TOKEN_KEY = 'fisiomove_token';
   private readonly USER_KEY = 'fisiomove_user';
@@ -28,14 +34,13 @@ export class AuthService {
    * Login de usuario
    */
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.httpClient.post<LoginResponse>('auth/login', credentials)
-      .pipe(
-        tap(response => {
-          if (response.access_token && response.user) {
-            this.setAuthData(response.access_token, response.user);
-          }
-        })
-      );
+    return this.httpClient.post<LoginResponse>('auth/login', credentials).pipe(
+      tap((response) => {
+        if (response.access_token && response.user) {
+          this.setAuthData(response.access_token, response.user);
+        }
+      })
+    );
   }
 
   /**
@@ -69,7 +74,10 @@ export class AuthService {
   /**
    * Cambiar contraseña
    */
-  changePassword(data: { current_password: string; new_password: string }): Observable<any> {
+  changePassword(data: {
+    current_password: string;
+    new_password: string;
+  }): Observable<any> {
     return this.httpClient.put<any>('auth/password', data);
   }
 
@@ -102,7 +110,7 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
-    
+
     // Verificar si el token no ha expirado
     return !this.isTokenExpiredPrivate(token);
   }
@@ -161,7 +169,7 @@ export class AuthService {
 
     const token = this.getToken();
     const userStr = this.storageService.getItem(this.USER_KEY);
-    
+
     if (token && userStr && !this.isTokenExpiredPrivate(token)) {
       try {
         const user = JSON.parse(userStr);

@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     # CORS - Configuración más amplia para desarrollo
     CORS_ORIGINS: List[AnyHttpUrl] | List[str] = [
         "http://localhost:4200",
-        "http://localhost:4201", 
+        "http://localhost:4201",
         "http://localhost:4202",
         "http://localhost:4203",
         "http://localhost:3000",
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:4202",
         "http://127.0.0.1:4203",
         "http://127.0.0.1:3000",
-        "*"  # Permitir todos los orígenes en desarrollo
+        "*",  # Permitir todos los orígenes en desarrollo
     ]
 
     # Database (puede omitirse si no se usa)
@@ -51,9 +51,25 @@ class Settings(BaseSettings):
 
     # Supabase Configuration
     SUPABASE_PROJECT_NAME: str | None = None
-    SUPABASE_URL: AnyHttpUrl = Field(validation_alias=AliasChoices("SUPABASE_URL", "SUPABASE_PROJECT_URL", "NEXT_PUBLIC_SUPABASE_URL"))
-    SUPABASE_API_KEY: str = Field(validation_alias=AliasChoices("SUPABASE_API_KEY", "SUPABASE_ANON_KEY", "NEXT_PUBLIC_SUPABASE_ANON_KEY"))
-    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = Field(default=None, validation_alias=AliasChoices("SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_SERVICE_ROLE", "SERVICE_ROLE_KEY", "SUPABASE_SERVICE_KEY"))
+    SUPABASE_URL: AnyHttpUrl = Field(
+        validation_alias=AliasChoices(
+            "SUPABASE_URL", "SUPABASE_PROJECT_URL", "NEXT_PUBLIC_SUPABASE_URL"
+        )
+    )
+    SUPABASE_API_KEY: str = Field(
+        validation_alias=AliasChoices(
+            "SUPABASE_API_KEY", "SUPABASE_ANON_KEY", "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+        )
+    )
+    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices(
+            "SUPABASE_SERVICE_ROLE_KEY",
+            "SUPABASE_SERVICE_ROLE",
+            "SERVICE_ROLE_KEY",
+            "SUPABASE_SERVICE_KEY",
+        ),
+    )
     SUPABASE_PASSWORD: Optional[str] = None
 
     # Dev-only: bypass email confirmation for selected users
