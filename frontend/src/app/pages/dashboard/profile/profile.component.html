@@ -1,0 +1,490 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <button class="back-button" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      <span>Volver al Dashboard</span>
+    </button>
+
+    <div class="profile-title">
+      <h1>Mi Perfil</h1>
+      <p>Gestiona tu información personal y configuración de cuenta</p>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <!-- Profile Summary Card -->
+    <div class="profile-summary">
+      <div class="avatar-section">
+        <div class="avatar-large">
+          @if (currentUser()?.avatar) {
+          <img
+            [src]="currentUser()?.avatar"
+            [alt]="userDisplayName()"
+            class="avatar-image"
+          />
+          } @else {
+          <span class="avatar-initials">{{ userInitials() }}</span>
+          }
+        </div>
+        <div class="user-info">
+          <h2>{{ userDisplayName() }}</h2>
+          <p class="user-email">{{ currentUser()?.email }}</p>
+          <span class="user-role-badge">{{ userRoleDisplayName() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'profile'"
+          (click)="setActiveTab('profile')"
+        >
+          <i class="fas fa-user"></i>
+          <span>Información Personal</span>
+        </button>
+
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'email'"
+          (click)="setActiveTab('email')"
+        >
+          <i class="fas fa-envelope"></i>
+          <span>Cambiar Email</span>
+        </button>
+
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'password'"
+          (click)="setActiveTab('password')"
+        >
+          <i class="fas fa-lock"></i>
+          <span>Cambiar Contraseña</span>
+        </button>
+
+        <button
+          class="tab-button"
+          [class.active]="activeTab() === 'role'"
+          (click)="setActiveTab('role')"
+        >
+          <i class="fas fa-user-cog"></i>
+          <span>Rol de Usuario</span>
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Profile Tab -->
+        @if (activeTab() === 'profile') {
+        <div class="tab-panel">
+          <div class="form-header">
+            <h3>Información Personal</h3>
+            <p>Actualiza tus datos personales</p>
+          </div>
+
+          @if (profileMessage()) {
+          <div
+            class="alert"
+            [class.alert-success]="profileMessage()?.type === 'success'"
+            [class.alert-error]="profileMessage()?.type === 'error'"
+          >
+            {{ profileMessage()?.text }}
+          </div>
+          }
+
+          <form
+            [formGroup]="profileForm"
+            (ngSubmit)="updateProfile()"
+            class="form"
+          >
+            <div class="form-group">
+              <label for="first_name">Nombre</label>
+              <input
+                type="text"
+                id="first_name"
+                formControlName="first_name"
+                placeholder="Ingresa tu nombre"
+                [class.error]="
+                  profileForm.get('first_name')?.invalid &&
+                  profileForm.get('first_name')?.touched
+                "
+              />
+              @if (profileForm.get('first_name')?.invalid &&
+              profileForm.get('first_name')?.touched) {
+              <span class="error-message"
+                >El nombre es requerido y debe tener al menos 2 caracteres</span
+              >
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="last_name">Apellido</label>
+              <input
+                type="text"
+                id="last_name"
+                formControlName="last_name"
+                placeholder="Ingresa tu apellido"
+                [class.error]="
+                  profileForm.get('last_name')?.invalid &&
+                  profileForm.get('last_name')?.touched
+                "
+              />
+              @if (profileForm.get('last_name')?.invalid &&
+              profileForm.get('last_name')?.touched) {
+              <span class="error-message"
+                >El apellido es requerido y debe tener al menos 2
+                caracteres</span
+              >
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Teléfono (Opcional)</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                placeholder="Ej: +57 300 123 4567"
+                [class.error]="
+                  profileForm.get('phone')?.invalid &&
+                  profileForm.get('phone')?.touched
+                "
+              />
+              @if (profileForm.get('phone')?.invalid &&
+              profileForm.get('phone')?.touched) {
+              <span class="error-message">Formato de teléfono inválido</span>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="profileForm.invalid || isLoading()"
+            >
+              @if (isLoading()) {
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Actualizando...</span>
+              } @else {
+              <i class="fas fa-save"></i>
+              <span>Guardar Cambios</span>
+              }
+            </button>
+          </form>
+        </div>
+        }
+
+        <!-- Email Tab -->
+        @if (activeTab() === 'email') {
+        <div class="tab-panel">
+          <div class="form-header">
+            <h3>Cambiar Email</h3>
+            <p>Actualiza tu dirección de correo electrónico</p>
+          </div>
+
+          @if (emailMessage()) {
+          <div
+            class="alert"
+            [class.alert-success]="emailMessage()?.type === 'success'"
+            [class.alert-error]="emailMessage()?.type === 'error'"
+          >
+            {{ emailMessage()?.text }}
+          </div>
+          }
+
+          <form [formGroup]="emailForm" (ngSubmit)="updateEmail()" class="form">
+            <div class="form-group">
+              <label for="current_email">Email Actual</label>
+              <input
+                type="email"
+                id="current_email"
+                [value]="currentUser()?.email"
+                disabled
+                class="disabled-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="new_email">Nuevo Email</label>
+              <input
+                type="email"
+                id="new_email"
+                formControlName="new_email"
+                placeholder="nuevo@email.com"
+                [class.error]="
+                  emailForm.get('new_email')?.invalid &&
+                  emailForm.get('new_email')?.touched
+                "
+              />
+              @if (emailForm.get('new_email')?.invalid &&
+              emailForm.get('new_email')?.touched) {
+              <span class="error-message">Ingresa un email válido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="current_password_email">Contraseña Actual</label>
+              <input
+                type="password"
+                id="current_password_email"
+                formControlName="current_password"
+                placeholder="Confirma tu contraseña actual"
+                [class.error]="
+                  emailForm.get('current_password')?.invalid &&
+                  emailForm.get('current_password')?.touched
+                "
+              />
+              @if (emailForm.get('current_password')?.invalid &&
+              emailForm.get('current_password')?.touched) {
+              <span class="error-message"
+                >La contraseña actual es requerida</span
+              >
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="emailForm.invalid || isLoading()"
+            >
+              @if (isLoading()) {
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Actualizando...</span>
+              } @else {
+              <i class="fas fa-envelope"></i>
+              <span>Actualizar Email</span>
+              }
+            </button>
+          </form>
+        </div>
+        }
+
+        <!-- Password Tab -->
+        @if (activeTab() === 'password') {
+        <div class="tab-panel">
+          <div class="form-header">
+            <h3>Cambiar Contraseña</h3>
+            <p>Actualiza tu contraseña por seguridad</p>
+          </div>
+
+          @if (passwordMessage()) {
+          <div
+            class="alert"
+            [class.alert-success]="passwordMessage()?.type === 'success'"
+            [class.alert-error]="passwordMessage()?.type === 'error'"
+          >
+            {{ passwordMessage()?.text }}
+          </div>
+          }
+
+          <form
+            [formGroup]="passwordForm"
+            (ngSubmit)="changePassword()"
+            class="form"
+          >
+            <div class="form-group">
+              <label for="current_password_pass">Contraseña Actual</label>
+              <input
+                type="password"
+                id="current_password_pass"
+                formControlName="current_password"
+                placeholder="Tu contraseña actual"
+                [class.error]="
+                  passwordForm.get('current_password')?.invalid &&
+                  passwordForm.get('current_password')?.touched
+                "
+              />
+              @if (passwordForm.get('current_password')?.invalid &&
+              passwordForm.get('current_password')?.touched) {
+              <span class="error-message"
+                >La contraseña actual es requerida</span
+              >
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="new_password">Nueva Contraseña</label>
+              <input
+                type="password"
+                id="new_password"
+                formControlName="new_password"
+                placeholder="Mínimo 6 caracteres"
+                [class.error]="
+                  passwordForm.get('new_password')?.invalid &&
+                  passwordForm.get('new_password')?.touched
+                "
+              />
+              @if (passwordForm.get('new_password')?.invalid &&
+              passwordForm.get('new_password')?.touched) {
+              <span class="error-message"
+                >La nueva contraseña debe tener al menos 6 caracteres</span
+              >
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="confirm_password">Confirmar Nueva Contraseña</label>
+              <input
+                type="password"
+                id="confirm_password"
+                formControlName="confirm_password"
+                placeholder="Repite la nueva contraseña"
+                [class.error]="
+                  (passwordForm.get('confirm_password')?.invalid ||
+                    passwordForm.hasError('passwordMismatch')) &&
+                  passwordForm.get('confirm_password')?.touched
+                "
+              />
+              @if (passwordForm.get('confirm_password')?.invalid &&
+              passwordForm.get('confirm_password')?.touched) {
+              <span class="error-message">Confirma tu nueva contraseña</span>
+              } @if (passwordForm.hasError('passwordMismatch') &&
+              passwordForm.get('confirm_password')?.touched) {
+              <span class="error-message">Las contraseñas no coinciden</span>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="passwordForm.invalid || isLoading()"
+            >
+              @if (isLoading()) {
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Actualizando...</span>
+              } @else {
+              <i class="fas fa-lock"></i>
+              <span>Cambiar Contraseña</span>
+              }
+            </button>
+          </form>
+        </div>
+        }
+
+        <!-- Role Tab -->
+        @if (activeTab() === 'role') {
+        <div class="tab-panel">
+          <div class="form-header">
+            <h3>Rol de Usuario</h3>
+            <p>Gestiona tu rol y permisos en la plataforma</p>
+          </div>
+
+          @if (roleMessage()) {
+          <div
+            class="alert"
+            [class.alert-success]="roleMessage()?.type === 'success'"
+            [class.alert-error]="roleMessage()?.type === 'error'"
+          >
+            {{ roleMessage()?.text }}
+          </div>
+          }
+
+          <div class="role-info">
+            <div class="current-role">
+              <h4>Rol Actual</h4>
+              <div class="role-badge role-badge-current">
+                {{ userRoleDisplayName() }}
+              </div>
+              <p class="role-description">
+                @switch (currentUser()?.role) { @case ('paciente') { Como
+                paciente puedes agendar citas y gestionar tu perfil. } @case
+                ('fisioterapeuta') { Como fisioterapeuta puedes gestionar
+                pacientes y citas. } @case ('admin') { Como administrador tienes
+                acceso completo al sistema. } @default { Rol de paciente
+                estándar. } }
+              </p>
+            </div>
+
+            <form [formGroup]="roleForm" (ngSubmit)="updateRole()" class="form">
+              <div class="form-group">
+                <label for="new_role">Solicitar Cambio de Rol</label>
+                <select
+                  id="new_role"
+                  formControlName="new_role"
+                  [class.error]="
+                    roleForm.get('new_role')?.invalid &&
+                    roleForm.get('new_role')?.touched
+                  "
+                >
+                  @for (role of availableRoles(); track role) {
+                  <option
+                    [value]="role"
+                    [disabled]="
+                      !canUpgradeToRole(role) && role !== currentUser()?.role
+                    "
+                  >
+                    {{ getRoleDisplayName(role) }}
+                    @if (!canUpgradeToRole(role) && role !==
+                    currentUser()?.role) { (No disponible) }
+                  </option>
+                  }
+                </select>
+                @if (roleForm.get('new_role')?.invalid &&
+                roleForm.get('new_role')?.touched) {
+                <span class="error-message">Selecciona un rol válido</span>
+                }
+              </div>
+
+              <div class="role-upgrade-info">
+                <h5>Información sobre Roles:</h5>
+                <ul>
+                  <li>
+                    <strong>Paciente:</strong> Puede agendar citas y gestionar
+                    su perfil
+                  </li>
+                  <li>
+                    <strong>Fisioterapeuta:</strong> Puede gestionar pacientes,
+                    citas y tratamientos
+                  </li>
+                  <li>
+                    <strong>Administrador:</strong> Acceso completo al sistema
+                  </li>
+                </ul>
+
+                @if (currentUser()?.role === 'paciente') {
+                <div class="upgrade-notice">
+                  <i class="fas fa-info-circle"></i>
+                  <span
+                    >Puedes solicitar el rol de Fisioterapeuta. Será revisado
+                    por un administrador.</span
+                  >
+                </div>
+                } @if (currentUser()?.role === 'fisioterapeuta') {
+                <div class="upgrade-notice">
+                  <i class="fas fa-info-circle"></i>
+                  <span
+                    >Puedes solicitar el rol de Administrador. Será revisado por
+                    otro administrador.</span
+                  >
+                </div>
+                }
+              </div>
+
+              @if (canUpgradeToRole(roleForm.value.new_role)) {
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="
+                  roleForm.invalid ||
+                  isLoading() ||
+                  roleForm.value.new_role === currentUser()?.role
+                "
+              >
+                @if (isLoading()) {
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Procesando...</span>
+                } @else {
+                <i class="fas fa-user-cog"></i>
+                <span>Solicitar Cambio de Rol</span>
+                }
+              </button>
+              }
+            </form>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
