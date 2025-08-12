@@ -1,16 +1,18 @@
 <div class="nav-container">
-  <div class="nav-header">
-    <div class="nav-header-icon">
-      <img class="nav-icon" src="assets/eye.png" alt="" />
+  <div class="nav-bar">
+    <div class="nav-header">
+      <div class="nav-header-icon">
+        <img class="nav-icon" src="assets/icons/eye.png" alt="" />
+      </div>
+      <div class="nav-header-text">
+        <span class="nav-title">FISIOMOVE</span>
+        <span class="nav-subtitle">¡A UN MOVIMIENTO DE TU BIENESTAR!</span>
+      </div>
     </div>
-    <div class="nav-header-text">
-      <span class="nav-title"><b>FISIOMOVE</b></span>
-      <span class="nav-subtitle">¡A un movimiento de tú bienestar!</span>
+    <div class="nav-options">
+      @for (option of navOptions; track option) {
+      <a class="nav-link" href="{{ option.route }}"> {{ option.name }} </a>
+      }
     </div>
-  </div>
-  <div class="nav-options">
-    @for (option of navOptions; track option) {
-    <a class="nav-link" href="{{ option.route }}"> {{ option.name }} </a>
-    }
   </div>
 </div>

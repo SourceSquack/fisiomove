@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #007aff;
+  --primary-color: #3b82f6;
   --secondary-color: #6c757d;
   --primary-dark-color: #003065;
 
@@ -12,13 +12,24 @@
   --footer-text-color: #ffffff;
 }
 
+@font-face {
+  font-family: "Monserrat";
+  src: url("/assets/fonts/Montserrat-Semibold.otf") format("opentype");
+  font-style:normal;
+  font-weight: normal;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Monserrat", sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
-  min-height: 100vh;
+}
+
+html,
+body {
+  min-width: 300px; /* ancho mínimo */
 }
 
 .text-primary {
