@@ -26,8 +26,20 @@ class Settings(BaseSettings):
     # Environment
     ENV: str = Field(default="development")  # development | staging | production
 
-    # CORS
-    CORS_ORIGINS: List[AnyHttpUrl] | List[str] = ["http://localhost:4200"]
+    # CORS - Configuración más amplia para desarrollo
+    CORS_ORIGINS: List[AnyHttpUrl] | List[str] = [
+        "http://localhost:4200",
+        "http://localhost:4201", 
+        "http://localhost:4202",
+        "http://localhost:4203",
+        "http://localhost:3000",
+        "http://127.0.0.1:4200",
+        "http://127.0.0.1:4201",
+        "http://127.0.0.1:4202",
+        "http://127.0.0.1:4203",
+        "http://127.0.0.1:3000",
+        "*"  # Permitir todos los orígenes en desarrollo
+    ]
 
     # Database (puede omitirse si no se usa)
     DATABASE_URL: Optional[PostgresDsn | str] = None

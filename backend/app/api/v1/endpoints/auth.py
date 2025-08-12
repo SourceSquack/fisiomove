@@ -27,6 +27,10 @@ class UpdateRolePayload(BaseModel):
     email: EmailStr
     role: Literal["admin", "fisioterapeuta", "paciente"]
 
+class LoginPayload(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=1)
+
 @router.get("/me", response_model=dict)
 def read_me(user: dict = Depends(get_current_user)):
     return {
@@ -77,9 +81,9 @@ def register(user_in: UserCreate):
         raise HTTPException(status_code=code, detail=detail)
 
 @router.post("/login", response_model=dict)
-def login(form: dict):
-    email = (form.get("email") or "").strip().lower()
-    password = form.get("password")
+def login(form: LoginPayload):
+    email = form.email.strip().lower()
+    password = form.password
     if not email or not password:
         raise HTTPException(status_code=400, detail={"message": "Credenciales inválidas"})
     try:
