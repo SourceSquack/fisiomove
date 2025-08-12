@@ -4,14 +4,15 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { authGuard, guestGuard } from './core/guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
   { path: 'contact', component: ContactComponent },
 
-  //TODO Implementar Guard
-  { path: 'dashboard', component: DashboardComponent }
+  // Rutas protegidas
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] }
 ];
