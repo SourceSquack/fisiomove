@@ -177,4 +177,11 @@ export class HomeComponent implements OnInit {
   trackByTeamMember(index: number, member: TeamMember): string {
     return member.id;
   }
+
+  scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }

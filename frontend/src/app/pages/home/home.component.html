@@ -13,10 +13,16 @@
             completa.
           </p>
           <div class="hero-buttons">
-            <button class="btn-primary">
+            <button
+              class="btn-primary"
+              (click)="scrollToSection('reservation-section')"
+            >
               <i class="fas fa-phone"></i> Contactar Ahora
             </button>
-            <button class="btn-secondary">
+            <button
+              class="btn-secondary"
+              (click)="scrollToSection('about-section')"
+            >
               <i class="fas fa-info-circle"></i> Conocer Más
             </button>
           </div>
@@ -86,7 +92,7 @@
   </div>
 
   <!-- Sección Sobre FisioMove -->
-  <div class="about-section">
+  <div id="about-section" class="about-section">
     <div class="about-container">
       <div class="about-content">
         <div class="about-text">
@@ -113,11 +119,6 @@
               <p>Años de Experiencia</p>
             </div>
           </div>
-
-          <button class="btn-primary">
-            <i class="fas fa-users"></i>
-            Conocer Nuestro Equipo
-          </button>
         </div>
 
         <div class="about-image">
@@ -244,7 +245,7 @@
   </div>
 
   <!-- Sección Reserva tu Cita -->
-  <section class="reservation-section">
+  <section id="reservation-section" class="reservation-section">
     <h2>Reserva tu Cita</h2>
     <p>
       Estamos aquí para ayudarte. Contáctanos y comienza tu camino hacia el
