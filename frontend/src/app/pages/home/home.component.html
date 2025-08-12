@@ -151,4 +151,95 @@
       </div>
     </div>
   </div>
+
+  <!-- Sección Nuestra Ubicación -->
+  <div class="location-section">
+    <div class="location-container">
+      <h2>Nuestra Ubicación</h2>
+      <p class="location-subtitle">
+        Nos encontramos en una ubicación céntrica y accesible para tu comodidad
+      </p>
+
+      <div class="location-content">
+        <div class="contact-info">
+          <h3>Información de Contacto</h3>
+
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="contact-details">
+              <h4>Dirección</h4>
+              <p>{{ contactInfo.address }}</p>
+              <p>{{ contactInfo.city }}, {{ contactInfo.state }}</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div class="contact-details">
+              <h4>Teléfono</h4>
+              <p>{{ contactInfo.phone }}</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="contact-details">
+              <h4>Email</h4>
+              <p>{{ contactInfo.email }}</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="contact-details">
+              <h4>Horarios de Atención</h4>
+              <p>{{ contactInfo.schedule.weekdays }}</p>
+              <p>{{ contactInfo.schedule.saturday }}</p>
+              <p>{{ contactInfo.schedule.sunday }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6!2d-75.6948!3d4.8172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e38876194138567%3A0x34ca6ad9b8d99c8c!2sCra.%2025%20%2382-96%2C%20Pereira%2C%20Risaralda!5e0!3m2!1ses!2sco!4v1692000000000!5m2!1ses!2sco"
+            width="100%"
+            height="350"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Ubicación FisioMove - Cra 25 # 82-96, Pereira, Risaralda"
+          >
+          </iframe>
+          <div class="location-buttons">
+            <a
+              href="https://maps.google.com/?q=Cra+26+83-58+Corales+Pereira+Risaralda"
+              target="_blank"
+              class="btn-location"
+            >
+              <i class="fas fa-map"></i>
+              Ver en Google Maps
+            </a>
+            <a
+              href="https://wa.me/573105055633"
+              target="_blank"
+              class="btn-whatsapp"
+            >
+              <i class="fab fa-whatsapp"></i>
+              Contactar por WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

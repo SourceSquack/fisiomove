@@ -25,6 +25,19 @@ export interface CompanyStats {
   experience: string;
 }
 
+export interface ContactInfo {
+  address: string;
+  city: string;
+  state: string;
+  phone: string;
+  email: string;
+  schedule: {
+    weekdays: string;
+    saturday: string;
+    sunday: string;
+  };
+}
+
 @Component({
   selector: 'app-home',
   imports: [CommonModule],
@@ -38,6 +51,20 @@ export class HomeComponent implements OnInit {
   companyStats: CompanyStats = {
     patients: '500+',
     experience: '10+',
+  };
+
+  // Información de contacto y ubicación
+  contactInfo: ContactInfo = {
+    address: 'Cra 26 # 83-58',
+    city: 'Corales, Pereira',
+    state: 'Risaralda',
+    phone: '+57 310 505 5633',
+    email: 'info@fisiomove.com',
+    schedule: {
+      weekdays: 'Lunes - Viernes: 8:00 AM - 7:00 PM',
+      saturday: 'Sábados: 9:00 AM - 2:00 PM',
+      sunday: 'Domingos: Cerrado',
+    },
   };
 
   // Equipo profesional
