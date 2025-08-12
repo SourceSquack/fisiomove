@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface SpecializedService {
@@ -6,6 +6,9 @@ export interface SpecializedService {
   title: string;
   description: string;
   icon: string;
+  detailedDescription: string;
+  benefits: string[];
+  imageUrl: string;
 }
 
 @Component({
@@ -14,37 +17,83 @@ export interface SpecializedService {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  selectedService: SpecializedService | null = null;
+
   specializedServices: SpecializedService[] = [
     {
       id: '1',
       title: 'Fisioterapia Deportiva',
       description:
-        'Tratamientos especializados para atletas y recuperación de lesiones deportivas.',
+        'Especializada en lesiones deportivas y recuperación atlética',
       icon: 'fa-running',
+      detailedDescription:
+        'Nuestro enfoque en fisioterapia deportiva combina técnicas avanzadas con un trato personalizado. Utilizamos equipos de última generación y métodos probados científicamente para garantizar los mejores resultados en tu proceso de recuperación.',
+      benefits: [
+        'Evaluación inicial completa',
+        'Plan de tratamiento personalizado',
+        'Seguimiento continuo del progreso',
+      ],
+      imageUrl: '/images/referencia2.jpg',
     },
     {
       id: '2',
-      title: 'Rehabilitación Postquirúrgica',
-      description:
-        'Programas personalizados para una recuperación segura y efectiva después de cirugías.',
-      icon: 'fa-hospital',
+      title: 'Rehabilitación Ortopédica',
+      description: 'Tratamiento integral para lesiones musculoesqueléticas',
+      icon: 'fa-bone',
+      detailedDescription:
+        'Nuestro enfoque en rehabilitación ortopédica combina técnicas avanzadas con un trato personalizado. Utilizamos equipos de última generación y métodos probados científicamente para garantizar los mejores resultados en tu proceso de recuperación.',
+      benefits: [
+        'Evaluación inicial completa',
+        'Plan de tratamiento personalizado',
+        'Seguimiento continuo del progreso',
+      ],
+      imageUrl: '/images/referencia2.jpg',
     },
     {
       id: '3',
       title: 'Terapia Manual',
-      description:
-        'Técnicas avanzadas para aliviar el dolor y mejorar la movilidad.',
+      description: 'Técnicas manuales avanzadas para el alivio del dolor',
       icon: 'fa-hand-paper',
+      detailedDescription:
+        'Nuestro enfoque en terapia manual combina técnicas avanzadas con un trato personalizado. Utilizamos equipos de última generación y métodos probados científicamente para garantizar los mejores resultados en tu proceso de recuperación.',
+      benefits: [
+        'Evaluación inicial completa',
+        'Plan de tratamiento personalizado',
+        'Seguimiento continuo del progreso',
+      ],
+      imageUrl: '/images/referencia2.jpg',
     },
     {
       id: '4',
-      title: 'Terapia Neurológica',
-      description:
-        'Atención especializada para pacientes con condiciones neurológicas.',
+      title: 'Fisioterapia Neurológica',
+      description: 'Especializada en trastornos del sistema nervioso',
       icon: 'fa-brain',
+      detailedDescription:
+        'Nuestro enfoque en fisioterapia neurológica combina técnicas avanzadas con un trato personalizado. Utilizamos equipos de última generación y métodos probados científicamente para garantizar los mejores resultados en tu proceso de recuperación.',
+      benefits: [
+        'Evaluación inicial completa',
+        'Plan de tratamiento personalizado',
+        'Seguimiento continuo del progreso',
+      ],
+      imageUrl: '/images/referencia2.jpg',
     },
   ];
+
+  ngOnInit(): void {
+    // Inicializar con el primer servicio seleccionado
+    if (this.specializedServices.length > 0) {
+      this.selectedService = this.specializedServices[0];
+    }
+  }
+
+  selectService(service: SpecializedService): void {
+    this.selectedService = service;
+  }
+
+  closeServiceDetail(): void {
+    this.selectedService = null;
+  }
 
   trackByService(index: number, service: SpecializedService): string {
     return service.id;

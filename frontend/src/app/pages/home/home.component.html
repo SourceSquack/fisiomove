@@ -42,10 +42,45 @@
       <div
         class="service-card"
         *ngFor="let service of specializedServices; trackBy: trackByService"
+        (click)="selectService(service)"
+        [class.selected]="selectedService?.id === service.id"
       >
         <i class="icon" [ngClass]="service.icon"></i>
         <h3>{{ service.title }}</h3>
         <p>{{ service.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Servicio Detallado -->
+  <div class="service-detail-section" *ngIf="selectedService">
+    <div class="service-detail-container">
+      <button class="close-button" (click)="closeServiceDetail()">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="service-detail-content">
+        <div class="service-detail-text">
+          <h2>{{ selectedService.title }}</h2>
+          <p class="service-detail-description">
+            {{ selectedService.detailedDescription }}
+          </p>
+
+          <ul class="service-benefits">
+            <li *ngFor="let benefit of selectedService.benefits">
+              <i class="fas fa-check-circle"></i>
+              {{ benefit }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="service-detail-image">
+          <img
+            [src]="selectedService.imageUrl"
+            [alt]="selectedService.title"
+            class="detail-image"
+          />
+        </div>
       </div>
     </div>
   </div>
