@@ -1,0 +1,165 @@
+.reminders-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  height: fit-content;
+}
+
+.reminders-card h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  color: #1e2a4a;
+}
+
+.reminders-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  position: relative;
+  padding-left: 1.5rem;
+  padding-right: 0.5rem;
+}
+
+.reminder-item:last-child {
+  margin-bottom: 0;
+}
+
+.reminder-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.priority-high::before {
+  background-color: #e53e3e;
+}
+
+.priority-medium::before {
+  background-color: #ffc107;
+}
+
+.priority-low::before {
+  background-color: #28a745;
+}
+
+.reminder-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.reminder-text {
+  font-weight: 600;
+  color: #1e2a4a;
+  margin-bottom: 0.25rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.reminder-patient {
+  font-size: 0.9rem;
+  color: #5a647e;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-footer {
+  margin-top: 2rem;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #9aa5c0;
+}
+
+.card-footer img {
+  height: 20px;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reminders-card {
+    padding: 1.25rem;
+  }
+
+  .reminders-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .reminder-item {
+    margin-bottom: 1.25rem;
+    padding-left: 1.25rem;
+  }
+
+  .reminder-item::before {
+    width: 8px;
+    height: 8px;
+    top: 6px;
+  }
+
+  .reminder-text {
+    font-size: 0.95rem;
+  }
+
+  .reminder-patient {
+    font-size: 0.85rem;
+  }
+
+  .card-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .reminders-card {
+    padding: 1rem;
+  }
+
+  .reminders-card h2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .reminder-item {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+  }
+
+  .reminder-item::before {
+    width: 6px;
+    height: 6px;
+    top: 7px;
+  }
+
+  .reminder-text {
+    font-size: 0.9rem;
+  }
+
+  .reminder-patient {
+    font-size: 0.8rem;
+  }
+
+  .card-footer {
+    font-size: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .card-footer img {
+    height: 16px;
+  }
+}

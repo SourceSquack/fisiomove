@@ -1,0 +1,15 @@
+<div class="reminders-card">
+  <h2>Recordatorios</h2>
+  <ul class="reminders-list">
+    <li
+      *ngFor="let reminder of reminders"
+      class="reminder-item"
+      [ngClass]="'priority-' + reminder.priority"
+    >
+      <div class="reminder-content">
+        <span class="reminder-text">{{ reminder.text }}</span>
+        <span class="reminder-patient">{{ reminder.patient }}</span>
+      </div>
+    </li>
+  </ul>
+</div>
