@@ -1,1 +1,52 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <app-sidebar [isOpen]="sidebarOpen"></app-sidebar>
+  <div
+    class="overlay"
+    [class.show]="sidebarOpen"
+    (click)="closeSidebar()"
+  ></div>
+  <main class="main-content">
+    <app-navbar (sidebarToggle)="toggleSidebar()"></app-navbar>
+    <div class="page-content">
+      <div class="header">
+        <h1>Dashboard</h1>
+        <p>Bienvenido de vuelta, Dr. Rodriguez</p>
+      </div>
+      <div class="stats-grid">
+        <app-stat-card
+          title="Citas Hoy"
+          value="12"
+          icon="fas fa-calendar-day"
+          color="#e0f7ff"
+        ></app-stat-card>
+        <app-stat-card
+          title="Pacientes Atendidos"
+          value="8"
+          icon="fas fa-user-check"
+          color="#e6f7f0"
+        ></app-stat-card>
+        <app-stat-card
+          title="Citas Pendientes"
+          value="4"
+          icon="fas fa-clock"
+          color="#fff8e1"
+        ></app-stat-card>
+        <app-stat-card
+          title="Total Pacientes"
+          value="156"
+          icon="fas fa-users"
+          color="#f3e8ff"
+        ></app-stat-card>
+      </div>
+      <div class="main-grid">
+        <div class="left-column">
+          <app-appointments-list></app-appointments-list>
+        </div>
+        <div class="right-column">
+          <app-calendar></app-calendar>
+          <app-reminders></app-reminders>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
