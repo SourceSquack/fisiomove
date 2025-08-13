@@ -63,6 +63,7 @@ export class AuthService {
   updateProfile(userData: {
     first_name: string;
     last_name: string;
+    phone?: string;
   }): Observable<any> {
     return this.httpClient.put<any>('auth/profile', userData);
   }

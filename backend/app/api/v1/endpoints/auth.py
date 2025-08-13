@@ -32,6 +32,7 @@ class UpdatePasswordPayload(BaseModel):
 class UpdateProfilePayload(BaseModel):
     first_name: str = Field(min_length=1)
     last_name: str = Field(min_length=1)
+    phone: str = Field(default="")
 
 
 class UpdateRolePayload(BaseModel):
@@ -301,9 +302,12 @@ def update_profile(
     payload: UpdateProfilePayload, token: str = Depends(reuseable_oauth)
 ):
     try:
-        # Actualizar first_name y last_name por separado
+        # Actualizar first_name, last_name y phone por separado
         result = update_user_self(
-            token, first_name=payload.first_name, last_name=payload.last_name
+            token,
+            first_name=payload.first_name,
+            last_name=payload.last_name,
+            phone=payload.phone,
         )
         return {"ok": True, "user": result}
     except ValueError as e:

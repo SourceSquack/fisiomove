@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment.development';
+import { StorageService } from './storage.service';
 
 export interface ApiResponse<T> {
   data?: T;
@@ -16,16 +17,25 @@ export interface ApiResponse<T> {
 })
 export class HttpClientService {
   private readonly http = inject(HttpClient);
+  private readonly storageService = inject(StorageService);
   private readonly baseUrl = environment.API_URL;
+
+  private readonly TOKEN_KEY = 'fisiomove_token';
 
   /**
    * GET request
    */
   get<T>(endpoint: string, params?: HttpParams): Observable<T> {
+    const headers = this.getHeaders();
+    console.log('🔍 HTTP GET Request:', {
+      url: `${this.baseUrl}${endpoint}`,
+      headers: this.logHeaders(headers),
+    });
+
     return this.http
       .get<T>(`${this.baseUrl}${endpoint}`, {
         params,
-        headers: this.getHeaders(),
+        headers,
       })
       .pipe(catchError(this.handleError));
   }
@@ -45,9 +55,16 @@ export class HttpClientService {
    * PUT request
    */
   put<T>(endpoint: string, body: any): Observable<T> {
+    const headers = this.getHeaders();
+    console.log('🔍 HTTP PUT Request:', {
+      url: `${this.baseUrl}${endpoint}`,
+      headers: this.logHeaders(headers),
+      body,
+    });
+
     return this.http
       .put<T>(`${this.baseUrl}${endpoint}`, body, {
-        headers: this.getHeaders(),
+        headers,
       })
       .pipe(catchError(this.handleError));
   }
@@ -78,10 +95,39 @@ export class HttpClientService {
    * Get headers
    */
   private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
+    const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+    };
+
+    // Add Authorization header if token exists
+    const token = this.storageService.getItem(this.TOKEN_KEY);
+    console.log('🔑 Token status:', {
+      tokenExists: !!token,
+      tokenLength: token?.length || 0,
+      tokenPreview: token?.substring(0, 20) + '...' || 'NO TOKEN',
     });
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return new HttpHeaders(headers);
+  }
+
+  /**
+   * Log headers for debugging (without exposing sensitive data)
+   */
+  private logHeaders(headers: HttpHeaders): any {
+    const result: any = {};
+    headers.keys().forEach((key) => {
+      if (key.toLowerCase() === 'authorization') {
+        result[key] = headers.get(key)?.substring(0, 20) + '...';
+      } else {
+        result[key] = headers.get(key);
+      }
+    });
+    return result;
   }
 
   /**

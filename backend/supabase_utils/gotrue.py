@@ -192,6 +192,7 @@ def update_user_self(
     full_name: Optional[str] = None,
     first_name: Optional[str] = None,
     last_name: Optional[str] = None,
+    phone: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Actualiza el usuario autenticado (email/password/metadata)."""
     url = f"{BASE_URL}/auth/v1/user"
@@ -212,12 +213,23 @@ def update_user_self(
         metadata["first_name"] = first_name
     if last_name is not None:
         metadata["last_name"] = last_name
+    if phone is not None:
+        metadata["phone"] = phone
     if metadata:
         payload["data"] = metadata
     if not payload:
         return get_user_from_token(access_token)
 
-    resp = requests.patch(url, json=payload, headers=headers, timeout=15)
+    print(f"🌐 Making PUT request to: {url}")
+    print(f"📦 Payload: {payload}")
+    print(f"🔑 Headers: {headers}")
+
+    resp = requests.put(url, json=payload, headers=headers, timeout=15)
+
+    print(f"📊 Response status: {resp.status_code}")
+    print(f"📝 Response headers: {dict(resp.headers)}")
+    print(f"📄 Response text: {resp.text}")
+
     if resp.status_code >= 400:
         try:
             detail = resp.json()
