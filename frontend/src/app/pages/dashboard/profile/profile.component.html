@@ -64,6 +64,7 @@
           <span>Cambiar Contraseña</span>
         </button>
 
+        @if (isAdmin()) {
         <button
           class="tab-button"
           [class.active]="activeTab() === 'role'"
@@ -72,6 +73,7 @@
           <i class="fas fa-user-cog"></i>
           <span>Rol de Usuario</span>
         </button>
+        }
       </div>
 
       <!-- Tab Content -->
@@ -363,7 +365,7 @@
         }
 
         <!-- Role Tab -->
-        @if (activeTab() === 'role') {
+        @if (activeTab() === 'role' && isAdmin()) {
         <div class="tab-panel">
           <div class="form-header">
             <h3>Rol de Usuario</h3>

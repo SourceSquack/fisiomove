@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -24,12 +24,13 @@ export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
-  // Usar el estado global para el usuario actual
   currentUser = this.authStore.user;
   userDisplayName = this.authStore.userDisplayName;
   userInitials = this.authStore.userInitials;
   userRole = this.authStore.userRole;
   userRoleDisplayName = this.authStore.roleDisplayName;
+
+  isAdmin = computed(() => this.userRole() === 'admin');
 
   isLoading = signal(false);
   activeTab = signal<'profile' | 'email' | 'password' | 'role'>('profile');
