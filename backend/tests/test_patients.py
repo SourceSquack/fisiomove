@@ -2,8 +2,7 @@ import logging
 
 
 def test_patients_crud_flow(client):
-    logging.info("[Pacientes] Crear un paciente con datos básicos")
-    # Create
+    logging.info("[Patients] Create a patient with basic data")
     payload = {
         "full_name": "John Doe",
         "email": "john@example.com",
@@ -17,30 +16,25 @@ def test_patients_crud_flow(client):
     created = r.json()
     pid = created["id"]
 
-    logging.info("[Pacientes] Obtener el paciente creado por ID y validar campos")
-    # Get
+    logging.info("[Patients] Retrieve the created patient by ID and validate fields")
     r = client.get(f"/api/v1/pacientes/{pid}")
     assert r.status_code == 200
     assert r.json()["full_name"] == "John Doe"
 
-    logging.info("[Pacientes] Listar pacientes y verificar que el creado aparece")
-    # List
+    logging.info("[Patients] List patients and verify the created one appears")
     r = client.get("/api/v1/pacientes")
     assert r.status_code == 200
     assert any(p["id"] == pid for p in r.json())
 
-    logging.info("[Pacientes] Actualizar nombre y teléfono del paciente")
-    # Update
+    logging.info("[Patients] Update the patient's name and phone")
     upd = {"full_name": "John X. Doe", "phone": "987654321"}
     r = client.put(f"/api/v1/pacientes/{pid}", json=upd)
     assert r.status_code == 200
     assert r.json()["full_name"] == "John X. Doe"
 
-    logging.info("[Pacientes] Eliminar el paciente y comprobar 404 al consultarlo")
-    # Delete
+    logging.info("[Patients] Delete the patient and verify 404 when retrieving")
     r = client.delete(f"/api/v1/pacientes/{pid}")
     assert r.status_code == 204
 
-    # Get after delete
     r = client.get(f"/api/v1/pacientes/{pid}")
     assert r.status_code == 404

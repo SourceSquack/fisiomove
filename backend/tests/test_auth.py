@@ -10,9 +10,6 @@ def test_auth_me_returns_user(client):
     assert set(["id", "email", "full_name", "role"]).issubset(body.keys())
 
 
-# ---- Tests de autorización por roles (pendientes de implementación) ----
-
-
 @pytest.fixture()
 def set_role_admin(monkeypatch):
     from app.services import auth as auth_service
