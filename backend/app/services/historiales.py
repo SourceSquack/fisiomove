@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.historial import Historial, Terapia
+from app.models.historial import Historial, TerapiaHistorial
 from app.schemas.historiales import HistorialCreate, TerapiaCreate
 
 
@@ -12,7 +12,7 @@ def create_historial(db: Session, historial_in: HistorialCreate):
 
 
 def create_terapia(db: Session, terapia_in: TerapiaCreate):
-    terapia = Terapia(**terapia_in.dict())
+    terapia = TerapiaHistorial(**terapia_in.model_dump())
     db.add(terapia)
     db.commit()
     db.refresh(terapia)

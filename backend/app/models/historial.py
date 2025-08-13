@@ -13,11 +13,11 @@ class Historial(Base):
     paciente_id = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
 
     paciente = relationship("Paciente", back_populates="historiales")
-    terapias = relationship("Terapia", back_populates="historial")
+    terapias = relationship("TerapiaHistorial", back_populates="historial")
 
 
-class Terapia(Base):
-    __tablename__ = "terapias"
+class TerapiaHistorial(Base):
+    __tablename__ = "terapias_historial"
 
     id = Column(Integer, primary_key=True, index=True)
     tipo = Column(String, nullable=False)
