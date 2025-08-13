@@ -42,10 +42,6 @@ def sign_up_user(
     Crea un usuario en Supabase Auth.
     Devuelve el JSON de GoTrue (user, session, etc) o lanza una excepción en error.
     """
-    print(f"📝 sign_up_user called for: {email}")
-    print(
-        f"📋 Parameters: full_name='{full_name}', first_name='{first_name}', last_name='{last_name}', role='{role}', redirect_to='{redirect_to}'"
-    )
 
     url = f"{BASE_URL}/auth/v1/signup"
     payload: Dict[str, Any] = {"email": email, "password": password}
@@ -66,14 +62,7 @@ def sign_up_user(
     if redirect_to:
         payload["redirect_to"] = redirect_to
 
-    print(f"🌐 Making request to: {url}")
-    print(f"📦 Payload: {payload}")
-    print(f"🔑 Headers: {PUBLIC_HEADERS}")
-
     resp = requests.post(url, json=payload, headers=PUBLIC_HEADERS, timeout=15)
-
-    print(f"📊 Response status: {resp.status_code}")
-    print(f"📝 Response headers: {dict(resp.headers)}")
 
     if resp.status_code >= 400:
         try:
@@ -83,12 +72,7 @@ def sign_up_user(
             detail = {"message": resp.text}
             print(f"❌ Error response text: {resp.text}")
         raise ValueError({"status": resp.status_code, "detail": detail})
-
     result = resp.json()
-    print(f"✅ Signup successful")
-    print(f"📝 Response keys: {list(result.keys())}")
-    if "user" in result and result["user"] and "user_metadata" in result["user"]:
-        print(f"👤 User metadata: {result['user'].get('user_metadata', {})}")
 
     return result
 
@@ -101,31 +85,21 @@ def sign_in_user(email: str, password: str) -> Dict[str, Any]:
     url = f"{BASE_URL}/auth/v1/token?grant_type=password"
     payload = {"email": email, "password": password}
 
-    print(f"🌐 Making request to: {url}")
-    print(f"📦 Payload: {{'email': '{email}', 'password': '[HIDDEN]'}}")
-    print(f"🔑 Headers: {PUBLIC_HEADERS}")
-
     resp = requests.post(url, json=payload, headers=PUBLIC_HEADERS, timeout=15)
-
-    print(f"📊 Response status: {resp.status_code}")
-    print(f"📝 Response headers: {dict(resp.headers)}")
 
     if resp.status_code >= 400:
         try:
             detail = resp.json()
-            print(f"❌ Error response body: {detail}")
         except Exception:
             detail = {"message": resp.text}
-            print(f"❌ Error response text: {resp.text}")
+            
         raise ValueError({"status": resp.status_code, "detail": detail})
-
     result = resp.json()
-    print(f"✅ Login success response keys: {list(result.keys())}")
+    
     return result
 
 
 def refresh_session(refresh_token: str) -> Dict[str, Any]:
-    """Intercambia refresh_token por nuevos tokens."""
     url = f"{BASE_URL}/auth/v1/token?grant_type=refresh_token"
     payload = {"refresh_token": refresh_token}
     resp = requests.post(url, json=payload, headers=PUBLIC_HEADERS, timeout=15)
@@ -220,15 +194,7 @@ def update_user_self(
     if not payload:
         return get_user_from_token(access_token)
 
-    print(f"🌐 Making PUT request to: {url}")
-    print(f"📦 Payload: {payload}")
-    print(f"🔑 Headers: {headers}")
-
     resp = requests.put(url, json=payload, headers=headers, timeout=15)
-
-    print(f"📊 Response status: {resp.status_code}")
-    print(f"📝 Response headers: {dict(resp.headers)}")
-    print(f"📄 Response text: {resp.text}")
 
     if resp.status_code >= 400:
         try:
@@ -250,66 +216,44 @@ def admin_confirm_user(user_id: str) -> bool:
 
 
 def admin_get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
-    """Obtiene usuario por email usando admin (requiere service_role)."""
-    print(f"🔍 admin_get_user_by_email called for: {email}")
 
     if not ADMIN_HEADERS:
-        print("❌ No ADMIN_HEADERS available")
         return None
 
     url = f"{BASE_URL}/auth/v1/admin/users"
     params = {"email": email}
 
-    print(f"🌐 Making request to: {url}")
-    print(f"📦 Params: {params}")
-    print(f"🔑 Headers: {ADMIN_HEADERS}")
 
     resp = requests.get(url, headers=ADMIN_HEADERS, params=params, timeout=15)
 
-    print(f"📊 Response status: {resp.status_code}")
-    print(f"📝 Response headers: {dict(resp.headers)}")
-
     if resp.status_code >= 400:
         try:
-            error_detail = resp.json()
-            print(f"❌ Error response body: {error_detail}")
+            resp.json()
         except:
             print(f"❌ Error response text: {resp.text}")
         return None
 
     data = resp.json()
-    print(f"📋 Raw response data: {data}")
 
     # API devuelve {users:[...]} o un user directo según versión; manejamos ambos
     if isinstance(data, dict) and "users" in data:
         users_list = data.get("users", [])
-        print(f"👥 Found {len(users_list)} users in response")
 
         # Buscar el usuario específico por email
         for user in users_list:
             user_email = user.get("email", "").lower()
-            print(f"🔍 Checking user: {user_email} vs {email.lower()}")
             if user_email == email.lower():
-                print(f"✅ Found matching user: {user_email}")
                 return user
 
-        print(f"❌ No user found with email: {email}")
         return None
 
     # Si es un user directo, verificar que el email coincida
     if isinstance(data, dict) and data.get("email"):
         user_email = data.get("email", "").lower()
-        print(f"🔍 Direct user response: {user_email} vs {email.lower()}")
         if user_email == email.lower():
-            print(f"✅ Found matching direct user: {user_email}")
             return data
         else:
-            print(
-                f"❌ Direct user email doesn't match: {user_email} != {email.lower()}"
-            )
             return None
-
-    print(f"❌ Unexpected response format: {data}")
     return None
 
 
@@ -351,16 +295,10 @@ def admin_create_user(
     role: Optional[str] = None,
     email_confirm: bool = True,
 ) -> Optional[Dict[str, Any]]:
-    print(f"🏗️ admin_create_user called for: {email}")
-    print(
-        f"📋 Parameters: full_name='{full_name}', first_name='{first_name}', last_name='{last_name}', role='{role}', email_confirm={email_confirm}"
-    )
 
     if not ADMIN_HEADERS:
-        print("❌ No ADMIN_HEADERS available")
         return None
 
-    print(f"🔑 Using ADMIN_HEADERS: {ADMIN_HEADERS}")
 
     url = f"{BASE_URL}/auth/v1/admin/users"
     payload: Dict[str, Any] = {
@@ -380,25 +318,17 @@ def admin_create_user(
     if data:
         payload["user_metadata"] = data
 
-    print(f"🌐 Making request to: {url}")
-    print(f"📦 Payload: {payload}")
 
     resp = requests.post(url, json=payload, headers=ADMIN_HEADERS, timeout=15)
-
-    print(f"📊 Response status: {resp.status_code}")
-    print(f"📝 Response headers: {dict(resp.headers)}")
 
     if resp.status_code >= 400:
         try:
             error_detail = resp.json()
-            print(f"❌ Error response body: {error_detail}")
         except:
             print(f"❌ Error response text: {resp.text}")
         return None
 
     result = resp.json()
-    print(f"✅ User created successfully")
-    print(f"📝 Response keys: {list(result.keys())}")
     if "user_metadata" in result:
         print(f"👤 User metadata: {result.get('user_metadata', {})}")
 

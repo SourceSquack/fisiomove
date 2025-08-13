@@ -14,6 +14,7 @@ export interface AuthState {
   token: string | null;
   isLoading: boolean;
   error: string | null;
+  rol: string;
 }
 
 const initialState: AuthState = {
@@ -22,6 +23,7 @@ const initialState: AuthState = {
   token: null,
   isLoading: false,
   error: null,
+  rol: '',
 };
 
 export const AuthStore = signalStore(
@@ -31,8 +33,6 @@ export const AuthStore = signalStore(
     userDisplayName: computed(() => {
       const user = store.user();
       if (!user) return 'Usuario';
-
-      // Prioridad: first_name + last_name, luego full_name, luego email
       if (user.first_name && user.last_name) {
         return `${user.first_name} ${user.last_name}`.trim();
       } else if (user.first_name) {
@@ -50,7 +50,6 @@ export const AuthStore = signalStore(
       const user = store.user();
       if (!user) return 'U';
 
-      // Prioridad: first_name + last_name, luego full_name
       if (user.first_name && user.last_name) {
         return (
           user.first_name[0].toUpperCase() + user.last_name[0].toUpperCase()
