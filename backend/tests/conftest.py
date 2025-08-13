@@ -41,7 +41,12 @@ def override_get_db() -> Generator:
 CURRENT_TEST_USER = {
     "id": "test-user-1",
     "email": "tester@example.com",
-    "user_metadata": {"full_name": "Tester", "role": "admin"},
+    "user_metadata": {
+        "first_name": "Test",
+        "last_name": "User",
+        "full_name": "Test User",
+        "role": "admin",
+    },
 }
 
 

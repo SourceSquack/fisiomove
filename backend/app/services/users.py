@@ -5,13 +5,17 @@ from app.models.user import User, UserRole
 from app.schemas.auth import UserCreate
 from app.services.security import get_password_hash
 
+
 def get_by_email(db: Session, email: str) -> Optional[User]:
     return db.query(User).filter(User.email == email).first()
+
 
 def create_user(db: Session, data: UserCreate) -> User:
     user = User(
         email=data.email,
         full_name=data.full_name,
+        first_name=data.first_name,
+        last_name=data.last_name,
         role=UserRole(data.role),
         hashed_password=get_password_hash(data.password),
     )

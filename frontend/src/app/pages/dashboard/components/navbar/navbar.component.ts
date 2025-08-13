@@ -82,22 +82,38 @@ export class NavbarComponent implements OnInit {
   getUserDisplayName(): string {
     if (!this.currentUser) return 'Usuario';
 
-    // Si tiene full_name, usarlo
-    if (this.currentUser.full_name) {
+    if (this.currentUser.first_name && this.currentUser.last_name) {
+      return `${this.currentUser.first_name} ${this.currentUser.last_name}`.trim();
+    } else if (this.currentUser.first_name) {
+      return this.currentUser.first_name;
+    } else if (this.currentUser.full_name) {
       return this.currentUser.full_name;
+    } else if (this.currentUser.email) {
+      return this.currentUser.email.split('@')[0];
     }
 
-    // Si no, usar email sin el dominio
-    return this.currentUser.email.split('@')[0];
+    return 'Usuario';
   }
 
   getUserInitials(): string {
-    if (!this.currentUser || !this.currentUser.full_name) return 'U';
+    if (!this.currentUser) return 'U';
 
-    const names = this.currentUser.full_name.split(' ');
-    if (names.length >= 2) {
-      return names[0][0] + names[1][0];
+    // Prioridad: first_name + last_name, luego full_name
+    if (this.currentUser.first_name && this.currentUser.last_name) {
+      return (
+        this.currentUser.first_name[0].toUpperCase() +
+        this.currentUser.last_name[0].toUpperCase()
+      );
+    } else if (this.currentUser.first_name) {
+      return this.currentUser.first_name[0].toUpperCase();
+    } else if (this.currentUser.full_name) {
+      const names = this.currentUser.full_name.split(' ');
+      if (names.length >= 2) {
+        return names[0][0] + names[1][0];
+      }
+      return names[0][0];
     }
-    return names[0][0];
+
+    return 'U';
   }
 }

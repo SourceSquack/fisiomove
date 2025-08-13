@@ -60,7 +60,10 @@ export class AuthService {
   /**
    * Actualizar perfil
    */
-  updateProfile(userData: { full_name: string }): Observable<any> {
+  updateProfile(userData: {
+    first_name: string;
+    last_name: string;
+  }): Observable<any> {
     return this.httpClient.put<any>('auth/profile', userData);
   }
 

@@ -33,6 +33,8 @@ def sign_up_user(
     password: str,
     *,
     full_name: Optional[str] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
     role: Optional[str] = None,
     redirect_to: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -42,7 +44,7 @@ def sign_up_user(
     """
     print(f"📝 sign_up_user called for: {email}")
     print(
-        f"📋 Parameters: full_name='{full_name}', role='{role}', redirect_to='{redirect_to}'"
+        f"📋 Parameters: full_name='{full_name}', first_name='{first_name}', last_name='{last_name}', role='{role}', redirect_to='{redirect_to}'"
     )
 
     url = f"{BASE_URL}/auth/v1/signup"
@@ -52,6 +54,10 @@ def sign_up_user(
     user_metadata: Dict[str, Any] = {}
     if full_name:
         user_metadata["full_name"] = full_name
+    if first_name:
+        user_metadata["first_name"] = first_name
+    if last_name:
+        user_metadata["last_name"] = last_name
     if role:
         user_metadata["role"] = role
     if user_metadata:
@@ -184,6 +190,8 @@ def update_user_self(
     new_email: Optional[str] = None,
     new_password: Optional[str] = None,
     full_name: Optional[str] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Actualiza el usuario autenticado (email/password/metadata)."""
     url = f"{BASE_URL}/auth/v1/user"
@@ -200,6 +208,10 @@ def update_user_self(
     metadata: Dict[str, Any] = {}
     if full_name is not None:
         metadata["full_name"] = full_name
+    if first_name is not None:
+        metadata["first_name"] = first_name
+    if last_name is not None:
+        metadata["last_name"] = last_name
     if metadata:
         payload["data"] = metadata
     if not payload:
@@ -322,12 +334,14 @@ def admin_create_user(
     password: str,
     *,
     full_name: Optional[str] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
     role: Optional[str] = None,
     email_confirm: bool = True,
 ) -> Optional[Dict[str, Any]]:
     print(f"🏗️ admin_create_user called for: {email}")
     print(
-        f"📋 Parameters: full_name='{full_name}', role='{role}', email_confirm={email_confirm}"
+        f"📋 Parameters: full_name='{full_name}', first_name='{first_name}', last_name='{last_name}', role='{role}', email_confirm={email_confirm}"
     )
 
     if not ADMIN_HEADERS:
@@ -345,6 +359,10 @@ def admin_create_user(
     data: Dict[str, Any] = {}
     if full_name:
         data["full_name"] = full_name
+    if first_name:
+        data["first_name"] = first_name
+    if last_name:
+        data["last_name"] = last_name
     if role:
         data["role"] = role
     if data:
@@ -382,6 +400,8 @@ def admin_update_user(
     email_confirm: Optional[bool] = None,
     password: Optional[str] = None,
     full_name: Optional[str] = None,
+    first_name: Optional[str] = None,
+    last_name: Optional[str] = None,
     role: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """Actualiza atributos del usuario por Admin API."""
@@ -398,6 +418,10 @@ def admin_update_user(
     meta: Dict[str, Any] = {}
     if full_name is not None:
         meta["full_name"] = full_name
+    if first_name is not None:
+        meta["first_name"] = first_name
+    if last_name is not None:
+        meta["last_name"] = last_name
     if role is not None:
         meta["role"] = role
     if meta:

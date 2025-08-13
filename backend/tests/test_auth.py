@@ -7,7 +7,9 @@ def test_auth_me_returns_user(client):
     r = client.get("/api/v1/auth/me")
     assert r.status_code == 200
     body = r.json()
-    assert set(["id", "email", "full_name", "role"]).issubset(body.keys())
+    assert set(
+        ["id", "email", "first_name", "last_name", "full_name", "role"]
+    ).issubset(body.keys())
 
 
 @pytest.fixture()
@@ -18,7 +20,12 @@ def set_role_admin(monkeypatch):
         return {
             "id": "admin-1",
             "email": "admin@example.com",
-            "user_metadata": {"full_name": "Admin", "role": "admin"},
+            "user_metadata": {
+                "first_name": "Admin",
+                "last_name": "User",
+                "full_name": "Admin User",
+                "role": "admin",
+            },
         }
 
     monkeypatch.setattr(auth_service, "get_current_user", lambda: fake_admin_user())

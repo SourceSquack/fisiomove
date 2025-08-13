@@ -25,7 +25,9 @@ export interface PaginatedResponse<T> {
 // Usuario
 export interface User extends BaseModel {
   email: string;
-  full_name: string;
+  full_name?: string;
+  first_name?: string;
+  last_name?: string;
   role: 'admin' | 'fisioterapeuta' | 'paciente';
   is_active: boolean;
   phone?: string;
@@ -76,7 +78,9 @@ export interface LoginResponse {
 export interface RegisterRequest {
   email: string;
   password: string;
-  full_name: string;
+  full_name?: string; // Para compatibilidad
+  first_name?: string;
+  last_name?: string;
   role?: 'paciente';
   phone?: string;
 }

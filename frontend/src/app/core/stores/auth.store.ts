@@ -32,9 +32,13 @@ export const AuthStore = signalStore(
       const user = store.user();
       if (!user) return 'Usuario';
 
-      const fullName = user.full_name?.trim();
-      if (fullName) {
-        return fullName;
+      // Prioridad: first_name + last_name, luego full_name, luego email
+      if (user.first_name && user.last_name) {
+        return `${user.first_name} ${user.last_name}`.trim();
+      } else if (user.first_name) {
+        return user.first_name;
+      } else if (user.full_name?.trim()) {
+        return user.full_name.trim();
       } else if (user.email) {
         return user.email.split('@')[0];
       }
@@ -46,8 +50,15 @@ export const AuthStore = signalStore(
       const user = store.user();
       if (!user) return 'U';
 
-      const fullName = user.full_name?.trim();
-      if (fullName) {
+      // Prioridad: first_name + last_name, luego full_name
+      if (user.first_name && user.last_name) {
+        return (
+          user.first_name[0].toUpperCase() + user.last_name[0].toUpperCase()
+        );
+      } else if (user.first_name) {
+        return user.first_name[0].toUpperCase();
+      } else if (user.full_name?.trim()) {
+        const fullName = user.full_name.trim();
         const names = fullName.split(' ');
         if (names.length >= 2) {
           return (

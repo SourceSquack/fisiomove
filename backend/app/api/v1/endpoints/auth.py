@@ -30,7 +30,8 @@ class UpdatePasswordPayload(BaseModel):
 
 
 class UpdateProfilePayload(BaseModel):
-    full_name: str = Field(min_length=1)
+    first_name: str = Field(min_length=1)
+    last_name: str = Field(min_length=1)
 
 
 class UpdateRolePayload(BaseModel):
@@ -51,22 +52,35 @@ def read_me(user: dict = Depends(get_current_user)):
     user_metadata = user.get("user_metadata") or {}
     print("📊 User metadata:", user_metadata)
 
-    # Try to get data from different possible locations
-    full_name = (
-        user_metadata.get("full_name")
-        or user.get("full_name")
-        or user_metadata.get("name")
-        or ""
-    )
+    # Try to get name data from different possible locations
+    first_name = user_metadata.get("first_name") or user.get("first_name") or ""
+
+    last_name = user_metadata.get("last_name") or user.get("last_name") or ""
+
+    # Fallback to full_name if separate fields are not available
+    if not first_name and not last_name:
+        full_name = (
+            user_metadata.get("full_name")
+            or user.get("full_name")
+            or user_metadata.get("name")
+            or ""
+        )
+        # Try to split full_name into first and last
+        if full_name:
+            name_parts = full_name.split(" ", 1)
+            first_name = name_parts[0] if len(name_parts) > 0 else ""
+            last_name = name_parts[1] if len(name_parts) > 1 else ""
 
     role = user_metadata.get("role") or user.get("role") or "paciente"  # default role
 
     result = {
         "id": user.get("id"),
         "email": user.get("email"),
-        "full_name": full_name,
+        "first_name": first_name,
+        "last_name": last_name,
+        "full_name": f"{first_name} {last_name}".strip(),
         "role": role,
-        "is_active": True,  # Supabase users are active by default
+        "is_active": True,
         "phone": user_metadata.get("phone") or user.get("phone"),
     }
 
@@ -107,13 +121,25 @@ def register(user_in: UserCreate):
                 return {"message": "Usuario existente confirmado", "user": existing}
 
             print(f"🚀 Creating new user via Admin API: {normalized_email}")
-            created = admin_create_user(
-                normalized_email,
-                user_in.password,
-                full_name=(user_in.full_name or "").strip(),
-                role=user_in.role,
-                email_confirm=True,
-            )
+
+            # Usar first_name y last_name si están disponibles, sino usar full_name
+            if user_in.first_name and user_in.last_name:
+                created = admin_create_user(
+                    normalized_email,
+                    user_in.password,
+                    first_name=user_in.first_name.strip(),
+                    last_name=user_in.last_name.strip(),
+                    role=user_in.role,
+                    email_confirm=True,
+                )
+            else:
+                created = admin_create_user(
+                    normalized_email,
+                    user_in.password,
+                    full_name=(user_in.full_name or "").strip(),
+                    role=user_in.role,
+                    email_confirm=True,
+                )
             print(f"📝 Admin API result: {created}")
 
             if not created:
@@ -127,12 +153,23 @@ def register(user_in: UserCreate):
 
         # Flujo normal (producción): signup público que requiere confirmación de email
         print("🔐 Using normal signup flow")
-        result = sign_up_user(
-            email=normalized_email,
-            password=user_in.password,
-            full_name=(user_in.full_name or "").strip(),
-            role=user_in.role,
-        )
+
+        # Usar first_name y last_name si están disponibles, sino usar full_name
+        if user_in.first_name and user_in.last_name:
+            result = sign_up_user(
+                email=normalized_email,
+                password=user_in.password,
+                first_name=user_in.first_name.strip(),
+                last_name=user_in.last_name.strip(),
+                role=user_in.role,
+            )
+        else:
+            result = sign_up_user(
+                email=normalized_email,
+                password=user_in.password,
+                full_name=(user_in.full_name or "").strip(),
+                role=user_in.role,
+            )
         print(f"📝 Signup result: {result}")
         return result
     except ValueError as e:
@@ -264,7 +301,10 @@ def update_profile(
     payload: UpdateProfilePayload, token: str = Depends(reuseable_oauth)
 ):
     try:
-        result = update_user_self(token, full_name=payload.full_name)
+        # Actualizar first_name y last_name por separado
+        result = update_user_self(
+            token, first_name=payload.first_name, last_name=payload.last_name
+        )
         return {"ok": True, "user": result}
     except ValueError as e:
         detail = e.args[0] if e.args else {"message": "No se pudo actualizar perfil"}
@@ -303,19 +343,22 @@ def seed_dev_users():
         {
             "email": "admin@fisiomove.com",
             "password": "Admin123",
-            "full_name": "Admin",
+            "first_name": "Admin",
+            "last_name": "User",
             "role": "admin",
         },
         {
             "email": "fisio@fisiomove.com",
             "password": "Fisio123",
-            "full_name": "Fisio",
+            "first_name": "Fisio",
+            "last_name": "Terapeuta",
             "role": "fisioterapeuta",
         },
         {
             "email": "user@fisiomove.com",
             "password": "User1234",
-            "full_name": "User",
+            "first_name": "Paciente",
+            "last_name": "Usuario",
             "role": "paciente",
         },
     ]
@@ -333,7 +376,8 @@ def seed_dev_users():
             created = admin_create_user(
                 email,
                 u["password"],
-                full_name=u["full_name"],
+                first_name=u["first_name"],
+                last_name=u["last_name"],
                 role=u["role"],
                 email_confirm=True,
             )

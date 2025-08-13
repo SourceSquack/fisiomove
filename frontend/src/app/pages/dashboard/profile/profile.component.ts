@@ -60,7 +60,8 @@ export class ProfileComponent implements OnInit {
 
   private initializeForms() {
     this.profileForm = this.fb.group({
-      full_name: ['', [Validators.required, Validators.minLength(2)]],
+      first_name: ['', [Validators.required, Validators.minLength(2)]],
+      last_name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.pattern(/^\+?[\d\s\-\(\)]+$/)]],
     });
 
@@ -112,7 +113,8 @@ export class ProfileComponent implements OnInit {
           });
 
           this.profileForm.patchValue({
-            full_name: user.full_name || '',
+            first_name: user.first_name || '',
+            last_name: user.last_name || '',
             phone: user.phone || '',
           });
 
