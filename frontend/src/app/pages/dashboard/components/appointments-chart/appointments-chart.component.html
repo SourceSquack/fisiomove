@@ -1,0 +1,27 @@
+<div class="chart-container">
+  <div class="chart-header">
+    <h3>Estado de las Citas</h3>
+    <p class="chart-subtitle">Distribución actual de citas por estado</p>
+  </div>
+
+  <div class="chart-wrapper">
+    <canvas
+      baseChart
+      [data]="appointmentsChartData"
+      [options]="appointmentsChartOptions"
+      type="doughnut"
+    >
+    </canvas>
+  </div>
+
+  <div class="chart-stats">
+    <div class="stat-item">
+      <span class="stat-label">Total de Citas</span>
+      <span class="stat-value">{{ totalAppointments }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Tasa de Completadas</span>
+      <span class="stat-value">{{ completionRate }}</span>
+    </div>
+  </div>
+</div>
