@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import date
 
 from sqlalchemy import Boolean, Column, Date, DateTime, Float, Integer, String, Text
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.base import Base
@@ -33,3 +34,5 @@ class Patient(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    historiales = relationship("Historial", back_populates="paciente")

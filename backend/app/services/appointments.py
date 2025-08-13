@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
 from app.models.appointment import Appointment, AppointmentStatus
+from app.services.notifications import create_notification
+from app.schemas.notifications import NotificationCreate
 
 
 def _naive_utc(dt: datetime) -> datetime:
@@ -22,7 +24,7 @@ def has_conflict(
     end: datetime,
     exclude_id: Optional[int] = None,
 ) -> bool:
-    # Normalize to naive UTC for consistent comparisons across backends (e.g., SQLite)
+    # Ensure consistent timezone handling by normalizing to naive UTC
     start_n = _naive_utc(start)
     end_n = _naive_utc(end)
 
@@ -67,6 +69,8 @@ def create_appointment(
     db.add(ap)
     db.commit()
     db.refresh(ap)
+    notify_on_appointment_change(db, patient_id, "Se ha creado una nueva cita")
+    notify_on_appointment_change(db, fisio_id, "Se ha creado una nueva cita")
     return ap
 
 
@@ -117,6 +121,8 @@ def update_appointment(
     db.add(ap)
     db.commit()
     db.refresh(ap)
+    notify_on_appointment_change(db, ap.patient_id, "Se ha modificado una cita")
+    notify_on_appointment_change(db, ap.fisio_id, "Se ha modificado una cita")
     return ap
 
 
@@ -129,4 +135,11 @@ def cancel_appointment(db: Session, ap: Appointment) -> Appointment:
     db.add(ap)
     db.commit()
     db.refresh(ap)
+    notify_on_appointment_change(db, ap.patient_id, "Se ha cancelado una cita")
+    notify_on_appointment_change(db, ap.fisio_id, "Se ha cancelado una cita")
     return ap
+
+
+def notify_on_appointment_change(db: Session, user_id: int, message: str):
+    notification = NotificationCreate(tipo="cita", mensaje=message, usuario_id=user_id)
+    create_notification(db, notification)

@@ -11,20 +11,28 @@ reuseable_oauth = OAuth2PasswordBearer(
     scheme_name="JWT",
 )
 
-def get_current_user(token: str = Depends(reuseable_oauth), db: Session = Depends(get_db)):
+
+def get_current_user(
+    token: str = Depends(reuseable_oauth), db: Session = Depends(get_db)
+):
     try:
         data = get_user_from_token(token)
         return data
     except Exception:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido o expirado")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido o expirado"
+        )
+
 
 def require_roles(*roles: str):
-    def _checker(user = Depends(get_current_user)):
-        # si guardas role en user_metadata.role lo validamos aquí
+    def _checker(user=Depends(get_current_user)):
+        # Validate user role against allowed roles
         meta = (user or {}).get("user_metadata", {})
         role = meta.get("role")
         if roles and role not in roles:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Permisos insuficientes")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions"
+            )
         return user
 
     return _checker
