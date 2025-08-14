@@ -11,6 +11,7 @@ import {
   PatientsService,
   CreatePatientRequest,
 } from '../../../../core/services/patients.service';
+import { PatientsStore } from '../../../../core/stores/patients.store';
 
 @Component({
   selector: 'app-patient-new',
@@ -21,6 +22,7 @@ import {
 })
 export class PatientNewComponent implements OnInit {
   private readonly patientsService = inject(PatientsService);
+  private readonly patientsStore = inject(PatientsStore);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
 
@@ -75,6 +77,15 @@ export class PatientNewComponent implements OnInit {
       this.patientsService.createPatient(patientData).subscribe({
         next: (response) => {
           console.log('Paciente creado exitosamente:', response);
+          
+          // Agregar el paciente al store para actualizar la lista
+          if (response && response.data) {
+            this.patientsStore.addPatient(response.data);
+          }
+          
+          // Limpiar filtros para asegurar que se muestren todos los pacientes
+          this.patientsStore.clearFilters();
+          
           alert('Paciente creado exitosamente');
           this.router.navigate(['/dashboard/patients']);
         },
