@@ -45,11 +45,11 @@ export const routes: Routes = [
     component: ProfileComponent,
     canActivate: [authGuard],
   },
-  // {
-  //   path: 'dashboard/patients',
-  //   component: PatientsComponent,
-  //   canActivate: [authGuard],
-  // },
+  {
+    path: 'dashboard/patients',
+    component: PatientsComponent,
+    canActivate: [authGuard],
+  },
   {
     path: 'dashboard/patients/new',
     component: PatientNewComponent,
