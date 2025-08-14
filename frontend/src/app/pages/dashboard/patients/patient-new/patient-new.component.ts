@@ -77,21 +77,24 @@ export class PatientNewComponent implements OnInit {
       this.patientsService.createPatient(patientData).subscribe({
         next: (response) => {
           console.log('Paciente creado exitosamente:', response);
-          
+
           // Agregar el paciente al store para actualizar la lista
           if (response && response.data) {
             this.patientsStore.addPatient(response.data);
           }
-          
+
           // Limpiar filtros para asegurar que se muestren todos los pacientes
           this.patientsStore.clearFilters();
-          
+
           alert('Paciente creado exitosamente');
           this.router.navigate(['/dashboard/patients']);
         },
         error: (error) => {
           console.error('Error al crear paciente:', error);
-          alert('Error al crear el paciente: ' + (error.message || 'Ha ocurrido un error inesperado.'));
+          alert(
+            'Error al crear el paciente: ' +
+              (error.message || 'Ha ocurrido un error inesperado.')
+          );
           this.isSubmitting = false;
         },
       });

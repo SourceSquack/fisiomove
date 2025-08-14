@@ -1,0 +1,226 @@
+<div class="appointment-edit-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="title-section">
+    <button class="btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      <span>Volver</span>
+    </button>
+    <h1>Editar Cita</h1>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <span>Cargando información de la cita...</span>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Edit Form -->
+  <div *ngIf="!isLoading && appointment" class="form-container">
+    <form
+      [formGroup]="appointmentForm"
+      (ngSubmit)="onSubmit()"
+      class="appointment-form"
+    >
+      <div class="form-grid">
+        <!-- Paciente -->
+        <div class="form-group">
+          <label for="patient_id" class="form-label">
+            Paciente <span class="required">*</span>
+          </label>
+          <select
+            id="patient_id"
+            formControlName="patient_id"
+            class="form-select"
+            [class.error]="patient_id?.invalid && patient_id?.touched"
+          >
+            <option value="">Seleccionar paciente</option>
+            <option *ngFor="let patient of patients" [value]="patient.id">
+              {{ getPatientFullName(patient) }}
+            </option>
+          </select>
+          <div
+            *ngIf="patient_id?.invalid && patient_id?.touched"
+            class="field-error"
+          >
+            Debe seleccionar un paciente
+          </div>
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-group">
+          <label for="appointment_date" class="form-label">
+            Fecha <span class="required">*</span>
+          </label>
+          <input
+            type="date"
+            id="appointment_date"
+            formControlName="appointment_date"
+            class="form-input"
+            [class.error]="
+              appointment_date?.invalid && appointment_date?.touched
+            "
+          />
+          <div
+            *ngIf="appointment_date?.invalid && appointment_date?.touched"
+            class="field-error"
+          >
+            Debe seleccionar una fecha
+          </div>
+        </div>
+
+        <!-- Hora -->
+        <div class="form-group">
+          <label for="appointment_time" class="form-label">
+            Hora <span class="required">*</span>
+          </label>
+          <input
+            type="time"
+            id="appointment_time"
+            formControlName="appointment_time"
+            class="form-input"
+            [class.error]="
+              appointment_time?.invalid && appointment_time?.touched
+            "
+          />
+          <div
+            *ngIf="appointment_time?.invalid && appointment_time?.touched"
+            class="field-error"
+          >
+            Debe seleccionar una hora
+          </div>
+        </div>
+
+        <!-- Tipo de Cita -->
+        <div class="form-group">
+          <label for="appointment_type" class="form-label">
+            Tipo de Cita <span class="required">*</span>
+          </label>
+          <select
+            id="appointment_type"
+            formControlName="appointment_type"
+            class="form-select"
+            [class.error]="
+              appointment_type?.invalid && appointment_type?.touched
+            "
+          >
+            <option value="">Seleccionar tipo</option>
+            <option *ngFor="let type of appointmentTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+          <div
+            *ngIf="appointment_type?.invalid && appointment_type?.touched"
+            class="field-error"
+          >
+            Debe seleccionar un tipo de cita
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+          <label for="status" class="form-label">
+            Estado <span class="required">*</span>
+          </label>
+          <select
+            id="status"
+            formControlName="status"
+            class="form-select"
+            [class.error]="status?.invalid && status?.touched"
+          >
+            <option value="">Seleccionar estado</option>
+            <option
+              *ngFor="let status of appointmentStatuses"
+              [value]="status.value"
+            >
+              {{ status.label }}
+            </option>
+          </select>
+          <div *ngIf="status?.invalid && status?.touched" class="field-error">
+            Debe seleccionar un estado
+          </div>
+        </div>
+
+        <!-- Duración -->
+        <div class="form-group">
+          <label for="duration_minutes" class="form-label">
+            Duración (minutos) <span class="required">*</span>
+          </label>
+          <input
+            type="number"
+            id="duration_minutes"
+            formControlName="duration_minutes"
+            class="form-input"
+            [class.error]="
+              duration_minutes?.invalid && duration_minutes?.touched
+            "
+            min="15"
+            max="240"
+            step="15"
+          />
+          <div
+            *ngIf="duration_minutes?.invalid && duration_minutes?.touched"
+            class="field-error"
+          >
+            <span *ngIf="duration_minutes?.errors?.['required']"
+              >La duración es requerida</span
+            >
+            <span *ngIf="duration_minutes?.errors?.['min']"
+              >La duración mínima es 15 minutos</span
+            >
+            <span *ngIf="duration_minutes?.errors?.['max']"
+              >La duración máxima es 240 minutos</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Notas -->
+      <div class="form-group full-width">
+        <label for="notes" class="form-label"> Notas y Observaciones </label>
+        <textarea
+          id="notes"
+          formControlName="notes"
+          class="form-textarea"
+          rows="4"
+          placeholder="Ingrese notas adicionales para la cita..."
+        ></textarea>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="goBack()"
+          [disabled]="isSubmitting"
+        >
+          <i class="fas fa-times"></i>
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="appointmentForm.invalid || isSubmitting"
+        >
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i>
+            Guardando...
+          </span>
+          <span *ngIf="!isSubmitting">
+            <i class="fas fa-save"></i>
+            Guardar Cambios
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

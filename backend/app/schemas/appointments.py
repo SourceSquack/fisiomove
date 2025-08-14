@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime
-from typing import Optional, Literal
-from pydantic import BaseModel, Field
+from typing import Optional, Literal, Any
+from pydantic import BaseModel, Field, ConfigDict, field_serializer
 
 
 # Definir los tipos de cita disponibles
@@ -14,7 +14,9 @@ AppointmentTypeEnum = Literal[
     "otro",
 ]
 
-AppointmentStatusEnum = Literal["programada", "cancelada", "completada"]
+AppointmentStatusEnum = Literal[
+    "programada", "confirmada", "completada", "cancelada", "no_show"
+]
 
 
 class PatientInfo(BaseModel):
@@ -62,8 +64,8 @@ class AppointmentRead(BaseModel):
     duration_minutes: int
     patient_id: str
     fisio_id: Optional[str] = None
-    appointment_type: AppointmentTypeEnum
-    status: AppointmentStatusEnum
+    appointment_type: str
+    status: str
     created_at: datetime
     updated_at: datetime
 
@@ -71,5 +73,4 @@ class AppointmentRead(BaseModel):
     patient: Optional[PatientInfo] = None
     fisio: Optional[FisioInfo] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

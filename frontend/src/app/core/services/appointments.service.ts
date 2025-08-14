@@ -27,6 +27,17 @@ export interface CreateAppointmentRequest {
   duration_minutes?: number;
 }
 
+export interface UpdateAppointmentRequest {
+  patient_id?: string;
+  appointment_date?: string;
+  appointment_time?: string;
+  type?: string;
+  appointment_type?: string;
+  duration_minutes?: number;
+  status?: 'programada' | 'confirmada' | 'completada' | 'cancelada' | 'no_show';
+  notes?: string;
+}
+
 export interface BackendAppointmentCreate {
   patient_id: string;
   start_time: string; // ISO datetime string
@@ -101,11 +112,35 @@ export class AppointmentsService {
    */
   updateAppointment(
     id: string,
-    appointmentData: Partial<CreateAppointmentRequest>
+    appointmentData: UpdateAppointmentRequest
   ): Observable<ApiResponse<Appointment>> {
+    // Transformar los datos al formato que espera el backend
+    const backendData: any = {};
+
+    // Construir start_time si se proporcionan fecha y hora
+    if (appointmentData.appointment_date && appointmentData.appointment_time) {
+      backendData.start_time = `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00`;
+    }
+
+    // Mapear campos
+    if (appointmentData.patient_id) {
+      backendData.patient_id = appointmentData.patient_id;
+    }
+    if (appointmentData.type) {
+      backendData.appointment_type = appointmentData.type;
+    }
+    if (appointmentData.duration_minutes) {
+      backendData.duration_minutes = appointmentData.duration_minutes;
+    }
+    if (appointmentData.status) {
+      backendData.status = appointmentData.status;
+    }
+
+    console.log('Datos transformados para backend:', backendData);
+
     return this.httpClient.put<ApiResponse<Appointment>>(
       `appointments/${id}`,
-      appointmentData
+      backendData
     );
   }
 

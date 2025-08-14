@@ -70,6 +70,18 @@ def list_citas(
     return items
 
 
+@router.get("/{cita_id}", response_model=AppointmentRead)
+def get_cita(
+    cita_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user),
+):
+    ap = get_appointment(db, cita_id)
+    if not ap:
+        raise HTTPException(status_code=404, detail={"message": "Cita no encontrada"})
+    return ap
+
+
 @router.put("/{cita_id}", response_model=AppointmentRead)
 def update_cita(
     cita_id: int,
@@ -88,6 +100,7 @@ def update_cita(
             duration_minutes=payload.duration_minutes,
             patient_id=payload.patient_id,
             fisio_id=payload.fisio_id,
+            appointment_type=payload.appointment_type,
             status=payload.status,
         )
         return ap
