@@ -7,6 +7,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/dashboard/profile/profile.component';
 import { PatientsComponent } from './pages/dashboard/patients/patients.component';
 import { PatientDetailComponent } from './pages/dashboard/patients/patient-detail/patient-detail.component';
+import { PatientNewComponent } from './pages/dashboard/patients/patient-new/patient-new.component';
 import { authGuard, guestGuard } from './core/guards';
 
 export const routes: Routes = [
@@ -30,6 +31,11 @@ export const routes: Routes = [
   {
     path: 'dashboard/patients',
     component: PatientsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/patients/new',
+    component: PatientNewComponent,
     canActivate: [authGuard],
   },
   {

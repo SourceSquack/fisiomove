@@ -12,14 +12,18 @@ export interface PatientFilters {
 }
 
 export interface CreatePatientRequest {
-  user_id: string;
-  dni?: string;
+  full_name: string;
+  dni: string;
+  email?: string;
+  phone?: string;
+  auth_user_id?: string;
   birth_date?: string;
-  gender?: 'M' | 'F' | 'Other';
-  address?: string;
-  emergency_contact?: string;
+  gender?: string;
   medical_history?: string;
-  notes?: string;
+  allergies?: string;
+  height_cm?: number;
+  weight_kg?: number;
+  blood_type?: string;
 }
 
 @Injectable({

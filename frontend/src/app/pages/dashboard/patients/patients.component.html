@@ -2,29 +2,26 @@
   <!-- Header -->
   <div class="patients-header">
     <div class="header-left">
-      <button class="btn-back" (click)="goToDashboard()">
+      <button class="back-button" (click)="goToDashboard()">
         <i class="fas fa-arrow-left"></i>
-        Volver al Dashboard
+        <span>Volver al Dashboard</span>
       </button>
       <div class="header-title">
-        <h1>👥 Gestión de Pacientes</h1>
+        <h1>Gestión de Pacientes</h1>
         <p>Administra la información de todos los pacientes</p>
       </div>
     </div>
-    <button class="btn-primary" (click)="createNewPatient()">
-      <i class="fas fa-plus"></i>
-      Nuevo Paciente
-    </button>
   </div>
 
-  <!-- Filtros -->
-  <div class="filters-section">
-    <div class="filter-group">
+  <!-- Barra de filtros y acciones -->
+  <div class="filters-actions-bar">
+    <!-- Filtros compactos -->
+    <div class="compact-filters">
       <label>Género:</label>
       <select
         [(ngModel)]="selectedGender"
         (change)="onFilterChange()"
-        class="filter-select"
+        class="filter-select-compact"
       >
         <option value="">Todos</option>
         <option value="M">Masculino</option>
@@ -32,30 +29,40 @@
         <option value="Other">Otro</option>
       </select>
     </div>
+
+    <button class="btn-primary" (click)="createNewPatient()">
+      <i class="fas fa-plus"></i>
+      Nuevo Paciente
+    </button>
   </div>
 
   <!-- Contenido principal -->
   <div class="patients-content">
-    <!-- Loading State -->
-    @if (loading) {
-    <div class="loading-state">
-      <i class="fas fa-spinner fa-spin"></i>
-      <span>Cargando pacientes...</span>
-    </div>
-    }
+    <!-- Sección de lista de pacientes -->
+    <div class="patients-list-section">
+      <h3>Lista de Pacientes</h3>
 
-    <!-- Error State -->
-    @if (error && !loading) {
-    <div class="error-state">
-      <i class="fas fa-exclamation-triangle"></i>
-      <span>{{ error }}</span>
-      <button class="btn-secondary" (click)="loadPatients()">Reintentar</button>
-    </div>
-    }
+      <!-- Loading State -->
+      @if (loading) {
+      <div class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Cargando pacientes...</span>
+      </div>
+      }
 
-    <!-- Patients List -->
-    @if (!loading && !error) {
-    <div class="patients-list">
+      <!-- Error State -->
+      @if (error && !loading) {
+      <div class="error-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>{{ error }}</span>
+        <button class="btn-secondary" (click)="loadPatients()">
+          Reintentar
+        </button>
+      </div>
+      }
+
+      <!-- Patients List -->
+      @if (!loading && !error) {
       <!-- Empty State -->
       @if (patients.length === 0) {
       <div class="empty-state">
@@ -75,7 +82,7 @@
         @for (patient of patients; track patient.id) {
         <div class="patient-card" (click)="viewPatient(patient.id!)">
           <div class="patient-avatar">
-            <i class="fas fa-user"></i>
+            {{ (patient.full_name || "U").charAt(0).toUpperCase() }}
           </div>
 
           <div class="patient-info">
@@ -95,25 +102,6 @@
             }
           </div>
 
-          <div class="patient-details">
-            @if (patient.birth_date) {
-            <div class="detail-item">
-              <i class="fas fa-birthday-cake"></i>
-              <span>{{ formatDate(patient.birth_date) }}</span>
-            </div>
-            } @if (patient.gender) {
-            <div class="detail-item">
-              <i class="fas fa-venus-mars"></i>
-              <span>{{ getGenderLabel(patient.gender) }}</span>
-            </div>
-            } @if (patient.user?.phone) {
-            <div class="detail-item">
-              <i class="fas fa-phone"></i>
-              <span>{{ patient.user?.phone }}</span>
-            </div>
-            }
-          </div>
-
           <div class="patient-actions">
             <button
               class="btn-action btn-view"
@@ -121,24 +109,13 @@
               title="Ver detalles"
             >
               <i class="fas fa-eye"></i>
+              Ver
             </button>
-            <button
-              class="btn-action btn-edit"
-              (click)="editPatient(patient.id!); $event.stopPropagation()"
-              title="Editar"
-            >
-              <i class="fas fa-edit"></i>
-            </button>
-          </div>
-
-          <div class="patient-status" [class.active]="patient.user?.is_active">
-            <span>{{ patient.user?.is_active ? "Activo" : "Inactivo" }}</span>
           </div>
         </div>
         }
       </div>
-      }
+      } }
     </div>
-    }
   </div>
 </div>

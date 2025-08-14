@@ -74,10 +74,6 @@ export class PatientsComponent implements OnInit {
     this.router.navigate(['/dashboard/patients', patientId]);
   }
 
-  editPatient(patientId: string): void {
-    this.router.navigate(['/dashboard/patients', patientId, 'edit']);
-  }
-
   createNewPatient(): void {
     this.router.navigate(['/dashboard/patients', 'new']);
   }
