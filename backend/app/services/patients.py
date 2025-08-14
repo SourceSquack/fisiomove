@@ -31,6 +31,25 @@ def update_patient(db: Session, patient: Patient, data: dict) -> Patient:
     return patient
 
 
+def search_patients(db: Session, search_term: str) -> List[Patient]:
+    """Buscar pacientes por nombre, email o DNI"""
+    if not search_term or len(search_term.strip()) < 2:
+        return []
+
+    search_term = f"%{search_term.strip()}%"
+    return (
+        db.query(Patient)
+        .filter(
+            Patient.full_name.ilike(search_term)
+            | Patient.email.ilike(search_term)
+            | Patient.dni.ilike(search_term)
+        )
+        .order_by(Patient.full_name)
+        .limit(10)
+        .all()
+    )
+
+
 def delete_patient(db: Session, patient: Patient) -> None:
     db.delete(patient)
     db.commit()

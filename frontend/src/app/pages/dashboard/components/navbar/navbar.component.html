@@ -5,7 +5,23 @@
 
   <div class="search-bar">
     <i class="fas fa-search"></i>
-    <input type="text" placeholder="Buscar pacientes, citas..." />
+    <input
+      type="text"
+      placeholder="Buscar pacientes..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchInput()"
+      autocomplete="off"
+    />
+
+    <!-- Modal de resultados -->
+    <app-patient-search-modal
+      *ngIf="showSearchDropdown && searchQuery"
+      [loading]="searchLoading"
+      [error]="searchError"
+      [results]="searchResults"
+      (close)="showSearchDropdown = false"
+      (selectPatient)="openPatientModal($event)"
+    ></app-patient-search-modal>
   </div>
 
   <div class="user-menu">

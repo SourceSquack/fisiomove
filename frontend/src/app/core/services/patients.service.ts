@@ -13,6 +13,7 @@ export interface PatientFilters {
 
 export interface CreatePatientRequest {
   user_id: string;
+  dni?: string;
   birth_date?: string;
   gender?: 'M' | 'F' | 'Other';
   address?: string;
@@ -87,11 +88,8 @@ export class PatientsService {
   /**
    * Buscar pacientes por nombre o email
    */
-  searchPatients(query: string): Observable<ApiResponse<Patient[]>> {
+  searchPatients(query: string): Observable<Patient[]> {
     const params = new HttpParams().set('search', query);
-    return this.httpClient.get<ApiResponse<Patient[]>>(
-      'patients/search',
-      params
-    );
+    return this.httpClient.get<Patient[]>('patients/search', params);
   }
 }

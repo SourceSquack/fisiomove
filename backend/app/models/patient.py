@@ -17,6 +17,9 @@ class Patient(Base):
     email = Column(String(255), index=True, nullable=True)
     full_name = Column(String(255), nullable=True)
     phone = Column(String(50), nullable=True)
+    dni = Column(
+        String(30), unique=True, index=True, nullable=True
+    )  # Cédula de Ciudadanía (DNI)
     birth_date = Column(Date, nullable=True)
     gender = Column(String(20), nullable=True)
     medical_history = Column(Text, nullable=True)

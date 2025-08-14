@@ -9,6 +9,9 @@ class PatientBase(BaseModel):
     email: Optional[EmailStr] = None
     full_name: Optional[str] = Field(default=None, max_length=255)
     phone: Optional[str] = Field(default=None, max_length=50)
+    dni: Optional[str] = Field(
+        default=None, max_length=30, description="Cédula de Ciudadanía (DNI)"
+    )
     birth_date: Optional[date] = None
     gender: Optional[str] = Field(default=None, max_length=20)
     medical_history: Optional[str] = None
@@ -20,14 +23,22 @@ class PatientBase(BaseModel):
 
 class PatientCreate(PatientBase):
     full_name: str = Field(min_length=1)
+    dni: str = Field(
+        min_length=5, max_length=30, description="Cédula de Ciudadanía (DNI)"
+    )
 
 
 class PatientUpdate(PatientBase):
-    pass
+    dni: Optional[str] = Field(
+        default=None, max_length=30, description="Cédula de Ciudadanía (DNI)"
+    )
 
 
 class PatientRead(PatientBase):
     id: int
+    dni: Optional[str] = Field(
+        default=None, max_length=30, description="Cédula de Ciudadanía (DNI)"
+    )
     is_active: bool
     created_at: datetime
     updated_at: datetime

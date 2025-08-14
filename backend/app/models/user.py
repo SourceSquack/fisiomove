@@ -4,6 +4,7 @@ from datetime import datetime
 from enum import Enum
 
 from sqlalchemy import Boolean, Column, DateTime, Enum as SAEnum, Integer, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.base import Base
@@ -39,3 +40,5 @@ class User(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    notificaciones = relationship("Notification", back_populates="usuario")

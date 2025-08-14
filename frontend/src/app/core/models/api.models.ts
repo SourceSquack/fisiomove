@@ -37,6 +37,9 @@ export interface User extends BaseModel {
 // Paciente
 export interface Patient extends BaseModel {
   user_id: string;
+  full_name: string;
+  dni?: string;
+  email: string;
   user?: User;
   birth_date?: string;
   gender?: 'M' | 'F' | 'Other';

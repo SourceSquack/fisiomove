@@ -7,6 +7,7 @@ from pathlib import Path
 # Load .env so DATABASE_URL is available for Alembic
 try:
     from dotenv import load_dotenv
+
     env_path = Path(__file__).resolve().parents[1] / ".env"
     if env_path.exists():
         load_dotenv(env_path)

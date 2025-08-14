@@ -10,9 +10,9 @@ class Historial(Base):
     diagnostico = Column(String, nullable=False)
     notas = Column(String, nullable=True)
     fecha = Column(Date, nullable=False)
-    paciente_id = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
+    paciente_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
 
-    paciente = relationship("Paciente", back_populates="historiales")
+    paciente = relationship("Patient", back_populates="historiales")
     terapias = relationship("TerapiaHistorial", back_populates="historial")
 
 

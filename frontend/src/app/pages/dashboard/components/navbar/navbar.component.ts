@@ -1,28 +1,93 @@
 import { Component, Output, EventEmitter, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PatientSearchModalComponent } from '../../../../components/patient-search-modal/patient-search-modal.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { User } from '../../../../core/models/api.models';
+import { PatientsService } from '../../../../core/services/patients.service';
+import { Patient } from '../../../../core/models/api.models';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, PatientSearchModalComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
+  openPatientModal(patient: Patient): void {
+    this.showSearchDropdown = false;
+    if (patient.id) {
+      this.router.navigate(['/dashboard/patients', patient.id]);
+    }
+  }
   @Output() sidebarToggle = new EventEmitter<void>();
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  searchQuery: string = '';
+  searchResults: Patient[] = [];
+  searchLoading = false;
+  searchError: string | null = null;
+  showSearchDropdown = false;
+  private searchInput$ = new Subject<string>();
+  private readonly patientsService = inject(PatientsService);
   currentUser: User | null = null;
   isDropdownOpen = false;
   isLoading = true;
 
   ngOnInit(): void {
     this.loadUserProfile();
+
+    // Suscribirse a cambios en el input de búsqueda con debounce
+    this.searchInput$
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((query) => {
+        this.performPatientSearch(query);
+      });
+  }
+  onSearchInput(): void {
+    this.searchError = null;
+    this.searchLoading = true;
+    this.searchInput$.next(this.searchQuery.trim());
+    this.showSearchDropdown = true;
+  }
+
+  onSearchBlur(): void {
+    // Ocultar dropdown tras pequeño delay para permitir click
+    setTimeout(() => {
+      this.showSearchDropdown = false;
+    }, 200);
+  }
+
+  performPatientSearch(query: string): void {
+    if (!query) {
+      this.searchResults = [];
+      this.searchLoading = false;
+      return;
+    }
+    this.searchLoading = true;
+    this.patientsService.searchPatients(query).subscribe({
+      next: (patients) => {
+        this.searchResults = patients || [];
+        this.searchLoading = false;
+      },
+      error: (err) => {
+        this.searchError = err.message || 'Error buscando pacientes';
+        this.searchResults = [];
+        this.searchLoading = false;
+      },
+    });
+  }
+
+  goToPatientProfile(patient: Patient): void {
+    this.showSearchDropdown = false;
+    if (patient.id) {
+      this.router.navigate(['/dashboard/patients', patient.id]);
+    }
   }
 
   toggleSidebar(): void {
