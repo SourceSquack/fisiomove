@@ -5,14 +5,13 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-// Imports temporalmente comentados por servicios faltantes
-// import { PatientsComponent } from './pages/patient/patients.component';
-// import { PatientNewComponent } from './pages/patient/patient-new/patient-new.component';
-// import { PatientDetailComponent } from './pages/patient/patient-detail/patient-detail.component';
-// import { AppointmentsComponent } from './pages/appointment/appointments.component';
-// import { AppointmentNewComponent } from './pages/appointment/appointment-new/appointment-new.component';
-// import { AppointmentDetailComponent } from './pages/appointment/appointment-detail/appointment-detail.component';
-// import { AppointmentEditComponent } from './pages/appointment/appointment-edit/appointment-edit.component';
+import { PatientsComponent } from './pages/patient/patients.component';
+import { PatientNewComponent } from './pages/patient/patient-new/patient-new.component';
+import { PatientDetailComponent } from './pages/patient/patient-detail/patient-detail.component';
+import { AppointmentsComponent } from './pages/appointment/appointments.component';
+import { AppointmentNewComponent } from './pages/appointment/appointment-new/appointment-new.component';
+import { AppointmentDetailComponent } from './pages/appointment/appointment-detail/appointment-detail.component';
+import { AppointmentEditComponent } from './pages/appointment/appointment-edit/appointment-edit.component';
 import { DebugAuthComponent } from './debug-auth/debug-auth.component';
 import { authGuard, guestGuard } from './core/guards';
 import { CalendarComponent } from './pages/calendar/calendar.component';
@@ -35,51 +34,50 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
-      { path: "calendar", component: CalendarComponent },
-      // { path: "patients", component: PatientsComponent }, // Comentado temporalmente
-      { path: "historic", component: HistoricComponent },
-      { path: "settings", component: SettingsComponent },
-    ]
+      { path: 'calendar', component: CalendarComponent },
+      { path: 'patients', component: PatientsComponent },
+      { path: 'historic', component: HistoricComponent },
+      { path: 'settings', component: SettingsComponent },
+    ],
   },
   {
     path: 'dashboard/profile',
     component: ProfileComponent,
     canActivate: [authGuard],
   },
-  // Rutas temporalmente comentadas por servicios faltantes
   // {
   //   path: 'dashboard/patients',
   //   component: PatientsComponent,
   //   canActivate: [authGuard],
   // },
-  // {
-  //   path: 'dashboard/patients/new',
-  //   component: PatientNewComponent,
-  //   canActivate: [authGuard],
-  // },
-  // {
-  //   path: 'dashboard/patients/:id',
-  //   component: PatientDetailComponent,
-  //   canActivate: [authGuard],
-  // },
-  // {
-  //   path: 'dashboard/appointments',
-  //   component: AppointmentsComponent,
-  //   canActivate: [authGuard],
-  // },
-  // {
-  //   path: 'dashboard/appointments/new',
-  //   component: AppointmentNewComponent,
-  //   canActivate: [authGuard],
-  // },
-  // {
-  //   path: 'dashboard/appointments/edit/:id',
-  //   component: AppointmentEditComponent,
-  //   canActivate: [authGuard],
-  // },
-  // {
-  //   path: 'dashboard/appointments/:id',
-  //   component: AppointmentDetailComponent,
-  //   canActivate: [authGuard],
-  // },
+  {
+    path: 'dashboard/patients/new',
+    component: PatientNewComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/patients/:id',
+    component: PatientDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/appointments',
+    component: AppointmentsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/appointments/new',
+    component: AppointmentNewComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/appointments/edit/:id',
+    component: AppointmentEditComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/appointments/:id',
+    component: AppointmentDetailComponent,
+    canActivate: [authGuard],
+  },
 ];

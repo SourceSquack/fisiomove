@@ -24,7 +24,8 @@ import { RouterOutlet } from '@angular/router';
     CalendarComponent,
     RemindersComponent,
     AppointmentsChartComponent,
-    RouterOutlet
+
+    RouterOutlet,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -35,7 +36,7 @@ export class DashboardComponent implements OnInit {
   loading = false;
   selectedDate: Date = new Date();
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit() {
     this.loadDashboardData();
