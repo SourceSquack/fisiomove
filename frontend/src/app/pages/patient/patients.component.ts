@@ -2,9 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PatientsService } from '../../../core/services/patients.service';
-import { PatientsStore } from '../../../core/stores/patients.store';
-import { Patient } from '../../../core/models/api.models';
+import { PatientsService } from '../../core/services/patients.service';
+import { PatientsStore } from '../../core/stores/patients.store';
+import { Patient } from '../../core/models/api.models';
 
 @Component({
   selector: 'app-patients',

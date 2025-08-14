@@ -9,8 +9,8 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
-import { PatientsService } from '../../../../core/services/patients.service';
-import { Patient } from '../../../../core/models/api.models';
+import { PatientsService } from '../../../core/services/patients.service';
+import { Patient } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-patient-detail',

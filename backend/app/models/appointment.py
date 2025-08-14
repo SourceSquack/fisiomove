@@ -11,8 +11,10 @@ from app.db.base import Base
 
 class AppointmentStatus(str, Enum):
     programada = "programada"
-    cancelada = "cancelada"
+    confirmada = "confirmada"
     completada = "completada"
+    cancelada = "cancelada"
+    no_show = "no_show"
 
 
 class AppointmentType(str, Enum):

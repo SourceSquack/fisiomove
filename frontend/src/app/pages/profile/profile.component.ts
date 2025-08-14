@@ -7,9 +7,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { AuthStore } from '../../../core/stores/auth.store';
-import { User } from '../../../core/models/api.models';
+import { AuthService } from '../../core/services/auth.service';
+import { AuthStore } from '../../core/stores/auth.store';
+import { User } from '../../core/models/api.models';
 
 @Component({
   selector: 'app-profile',

@@ -1,0 +1,31 @@
+<div class="header">
+  <h1>Dashboard</h1>
+  <p>Bienvenido de vuelta, Dr. Rodriguez</p>
+</div>
+
+<div class="stats-grid">
+  <app-stat-card
+    title="Citas Hoy"
+    [value]="(dashboardData?.citas_hoy || 0).toString()"
+    icon="fas fa-calendar-day"
+    color="#e0f7ff"
+  ></app-stat-card>
+  <app-stat-card
+    title="Terapias Activas"
+    [value]="(dashboardData?.terapias_activas || 0).toString()"
+    icon="fas fa-user-check"
+    color="#e6f7f0"
+  ></app-stat-card>
+  <app-stat-card
+    title="Citas Pendientes"
+    [value]="(dashboardData?.citas_por_estado?.pendiente || 0).toString()"
+    icon="fas fa-clock"
+    color="#fff8e1"
+  ></app-stat-card>
+  <app-stat-card
+    title="Total Pacientes"
+    [value]="(dashboardData?.total_pacientes || 0).toString()"
+    icon="fas fa-users"
+    color="#f3e8ff"
+  ></app-stat-card>
+</div>

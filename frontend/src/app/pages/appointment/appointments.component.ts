@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import {
   AppointmentsService,
   AppointmentFilters,
-} from '../../../core/services/appointments.service';
-import { Appointment } from '../../../core/models/api.models';
+} from '../../core/services/appointments.service';
+import { Appointment } from '../../core/models/api.models';
 
 @Component({
   selector: 'app-appointments',

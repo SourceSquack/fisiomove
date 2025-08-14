@@ -58,26 +58,53 @@
   padding: 0.5rem;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
   position: relative;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 32px;
+  font-weight: 500;
 }
 
 .day:hover {
   background-color: #f0f2f5;
+  transform: scale(1.05);
+}
+
+.day.current-month:hover {
+  background-color: #e3f2fd;
 }
 
 .other-month {
   color: #ccc;
+  cursor: default;
+}
+
+.other-month:hover {
+  background-color: #f8f9fa;
+  transform: none;
 }
 
 .today {
   background-color: var(--primary-color);
   color: #fff;
+  font-weight: 600;
+}
+
+.today:hover {
+  background-color: #1976d2;
+}
+
+.selected {
+  background-color: #4caf50;
+  color: #fff;
+  font-weight: 600;
+}
+
+.selected:hover {
+  background-color: #45a049;
 }
 
 .with-appointments {
@@ -90,10 +117,37 @@
   bottom: 5px;
   left: 50%;
   transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: #28a745;
+}
+
+.selected.with-appointments::after,
+.today.with-appointments::after {
+  background-color: #fff;
+}
+
+.appointments-count {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.selected .appointments-count,
+.today .appointments-count {
+  background-color: #fff;
+  color: #333;
 }
 
 .calendar-legend {
@@ -101,6 +155,7 @@
   justify-content: center;
   margin-top: 1.5rem;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .legend-item {
@@ -121,8 +176,41 @@
   background-color: var(--primary-color);
 }
 
+.selected-dot {
+  background-color: #4caf50;
+}
+
 .appointments-dot {
-  background-color: #e0f7ff;
+  background-color: #28a745;
+}
+
+.calendar-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Responsive Design */

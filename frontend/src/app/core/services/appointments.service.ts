@@ -27,6 +27,17 @@ export interface CreateAppointmentRequest {
   duration_minutes?: number;
 }
 
+export interface UpdateAppointmentRequest {
+  patient_id?: string;
+  appointment_date?: string;
+  appointment_time?: string;
+  type?: string;
+  appointment_type?: string;
+  duration_minutes?: number;
+  status?: 'programada' | 'confirmada' | 'completada' | 'cancelada' | 'no_show';
+  notes?: string;
+}
+
 export interface BackendAppointmentCreate {
   patient_id: string;
   start_time: string; // ISO datetime string
@@ -101,11 +112,35 @@ export class AppointmentsService {
    */
   updateAppointment(
     id: string,
-    appointmentData: Partial<CreateAppointmentRequest>
+    appointmentData: UpdateAppointmentRequest
   ): Observable<ApiResponse<Appointment>> {
+    // Transformar los datos al formato que espera el backend
+    const backendData: any = {};
+
+    // Construir start_time si se proporcionan fecha y hora
+    if (appointmentData.appointment_date && appointmentData.appointment_time) {
+      backendData.start_time = `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00`;
+    }
+
+    // Mapear campos
+    if (appointmentData.patient_id) {
+      backendData.patient_id = appointmentData.patient_id;
+    }
+    if (appointmentData.type) {
+      backendData.appointment_type = appointmentData.type;
+    }
+    if (appointmentData.duration_minutes) {
+      backendData.duration_minutes = appointmentData.duration_minutes;
+    }
+    if (appointmentData.status) {
+      backendData.status = appointmentData.status;
+    }
+
+    console.log('Datos transformados para backend:', backendData);
+
     return this.httpClient.put<ApiResponse<Appointment>>(
       `appointments/${id}`,
-      appointmentData
+      backendData
     );
   }
 
@@ -181,5 +216,32 @@ export class AppointmentsService {
       'appointments/upcoming',
       params
     );
+  }
+
+  /**
+   * Obtener citas por fecha específica
+   */
+  getAppointmentsByDate(date: string): Observable<Appointment[]> {
+    const params = new HttpParams().set('date', date);
+    return this.httpClient.get<Appointment[]>('appointments/', params);
+  }
+
+  /**
+   * Obtener todas las citas del mes para marcar días en calendario
+   */
+  getAppointmentsByMonth(year: number, month: number): Observable<Appointment[]> {
+    // Formato: YYYY-MM (mes es 1-indexado)
+    const monthStr = month.toString().padStart(2, '0');
+    const startDate = `${year}-${monthStr}-01`;
+    
+    // Último día del mes
+    const lastDay = new Date(year, month, 0).getDate();
+    const endDate = `${year}-${monthStr}-${lastDay.toString().padStart(2, '0')}`;
+    
+    const params = new HttpParams()
+      .set('date_from', startDate)
+      .set('date_to', endDate);
+    
+    return this.httpClient.get<Appointment[]>('appointments/', params);
   }
 }

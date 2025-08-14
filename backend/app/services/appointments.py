@@ -222,6 +222,7 @@ def update_appointment(
     duration_minutes: Optional[int] = None,
     patient_id: Optional[str] = None,
     fisio_id: Optional[str] = None,
+    appointment_type: Optional[str] = None,
     status: Optional[str] = None,
 ) -> Appointment:
     if start_time is not None:
@@ -232,6 +233,8 @@ def update_appointment(
         ap.patient_id = patient_id
     if fisio_id is not None:
         ap.fisio_id = fisio_id
+    if appointment_type is not None:
+        ap.appointment_type = AppointmentType(appointment_type)
     if status is not None:
         ap.status = AppointmentStatus(status)
 

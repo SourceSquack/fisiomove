@@ -46,11 +46,16 @@ export const AppointmentsStore = signalStore(
         }
         if (
           filters.dateFrom &&
+          appointment.appointment_date &&
           appointment.appointment_date < filters.dateFrom
         ) {
           return false;
         }
-        if (filters.dateTo && appointment.appointment_date > filters.dateTo) {
+        if (
+          filters.dateTo &&
+          appointment.appointment_date &&
+          appointment.appointment_date > filters.dateTo
+        ) {
           return false;
         }
         return true;
@@ -62,7 +67,8 @@ export const AppointmentsStore = signalStore(
       const today = new Date().toISOString().split('T')[0];
 
       return appointments.filter(
-        (appointment) => appointment.appointment_date === today
+        (appointment) =>
+          appointment.appointment_date && appointment.appointment_date === today
       );
     }),
 
@@ -72,8 +78,9 @@ export const AppointmentsStore = signalStore(
 
       return appointments.filter(
         (appointment) =>
+          appointment.appointment_date &&
           appointment.appointment_date >= today &&
-          appointment.status === 'scheduled'
+          appointment.status === 'programada'
       );
     }),
 
