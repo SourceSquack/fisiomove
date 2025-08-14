@@ -29,6 +29,13 @@ export class PatientsService {
   private readonly httpClient = inject(HttpClientService);
 
   /**
+   * Obtener lista de pacientes sin filtros (todos)
+   */
+  getAllPatients(): Observable<Patient[]> {
+    return this.httpClient.get<Patient[]>('patients');
+  }
+
+  /**
    * Obtener lista de pacientes con filtros
    */
   getPatients(

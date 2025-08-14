@@ -1,0 +1,144 @@
+<div class="patients-container">
+  <!-- Header -->
+  <div class="patients-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goToDashboard()">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Dashboard
+      </button>
+      <div class="header-title">
+        <h1>👥 Gestión de Pacientes</h1>
+        <p>Administra la información de todos los pacientes</p>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="createNewPatient()">
+      <i class="fas fa-plus"></i>
+      Nuevo Paciente
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Género:</label>
+      <select
+        [(ngModel)]="selectedGender"
+        (change)="onFilterChange()"
+        class="filter-select"
+      >
+        <option value="">Todos</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+        <option value="Other">Otro</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="patients-content">
+    <!-- Loading State -->
+    @if (loading) {
+    <div class="loading-state">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Cargando pacientes...</span>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !loading) {
+    <div class="error-state">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>{{ error }}</span>
+      <button class="btn-secondary" (click)="loadPatients()">Reintentar</button>
+    </div>
+    }
+
+    <!-- Patients List -->
+    @if (!loading && !error) {
+    <div class="patients-list">
+      <!-- Empty State -->
+      @if (patients.length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-users"></i>
+        <h3>No se encontraron pacientes</h3>
+        <p>Intenta ajustar los filtros o agregar un nuevo paciente</p>
+        <button class="btn-primary" (click)="createNewPatient()">
+          <i class="fas fa-plus"></i>
+          Agregar Primer Paciente
+        </button>
+      </div>
+      }
+
+      <!-- Patients Cards -->
+      @if (patients.length > 0) {
+      <div class="patients-grid">
+        @for (patient of patients; track patient.id) {
+        <div class="patient-card" (click)="viewPatient(patient.id!)">
+          <div class="patient-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+
+          <div class="patient-info">
+            <h3 class="patient-name">
+              {{ patient.full_name || "Sin nombre" }}
+            </h3>
+            @if (patient.email) {
+            <p class="patient-email">
+              <i class="fas fa-envelope"></i>
+              {{ patient.email }}
+            </p>
+            } @if (patient.dni) {
+            <p class="patient-dni">
+              <i class="fas fa-id-card"></i>
+              {{ patient.dni }}
+            </p>
+            }
+          </div>
+
+          <div class="patient-details">
+            @if (patient.birth_date) {
+            <div class="detail-item">
+              <i class="fas fa-birthday-cake"></i>
+              <span>{{ formatDate(patient.birth_date) }}</span>
+            </div>
+            } @if (patient.gender) {
+            <div class="detail-item">
+              <i class="fas fa-venus-mars"></i>
+              <span>{{ getGenderLabel(patient.gender) }}</span>
+            </div>
+            } @if (patient.user?.phone) {
+            <div class="detail-item">
+              <i class="fas fa-phone"></i>
+              <span>{{ patient.user?.phone }}</span>
+            </div>
+            }
+          </div>
+
+          <div class="patient-actions">
+            <button
+              class="btn-action btn-view"
+              (click)="viewPatient(patient.id!); $event.stopPropagation()"
+              title="Ver detalles"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+            <button
+              class="btn-action btn-edit"
+              (click)="editPatient(patient.id!); $event.stopPropagation()"
+              title="Editar"
+            >
+              <i class="fas fa-edit"></i>
+            </button>
+          </div>
+
+          <div class="patient-status" [class.active]="patient.user?.is_active">
+            <span>{{ patient.user?.is_active ? "Activo" : "Inactivo" }}</span>
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>
