@@ -6,23 +6,12 @@ export interface DashboardSummary {
   total_pacientes: number;
   citas_hoy: number;
   terapias_activas: number;
-  citas_por_estado?: {
+  citas_por_estado: {
     confirmado: number;
     pendiente: number;
     cancelado: number;
     completado: number;
   };
-}
-
-export interface AppointmentsByStatusResponse {
-  filter_applied: {
-    status?: string;
-    fecha_desde?: string;
-    fecha_hasta?: string;
-  };
-  total_appointments: number;
-  appointments_by_status: { [key: string]: any[] };
-  status_counts: { [key: string]: number };
 }
 
 export interface AppointmentsByStatus {
@@ -46,8 +35,8 @@ export class DashboardService {
   }
 
   // Obtener citas por estado
-  getAppointmentsByStatus(): Observable<AppointmentsByStatusResponse> {
-    return this.http.get<AppointmentsByStatusResponse>(`${this.apiUrl}/citas-por-estado`);
+  getAppointmentsByStatus(): Observable<AppointmentsByStatus> {
+    return this.http.get<AppointmentsByStatus>(`${this.apiUrl}/citas-por-estado`);
   }
 
   // Obtener citas de hoy

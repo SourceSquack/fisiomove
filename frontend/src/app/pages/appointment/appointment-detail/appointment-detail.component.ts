@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppointmentsService } from '../../../../core/services/appointments.service';
-import { Appointment } from '../../../../core/models/api.models';
+import { AppointmentsService } from '../../../core/services/appointments.service';
+import { Appointment } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-appointment-detail',

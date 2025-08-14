@@ -10,9 +10,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   AppointmentsService,
   UpdateAppointmentRequest,
-} from '../../../../core/services/appointments.service';
-import { PatientsService } from '../../../../core/services/patients.service';
-import { Appointment, Patient } from '../../../../core/models/api.models';
+} from '../../../core/services/appointments.service';
+import { PatientsService } from '../../../core/services/patients.service';
+import { Appointment, Patient } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-appointment-edit',

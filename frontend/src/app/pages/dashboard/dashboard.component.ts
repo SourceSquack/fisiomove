@@ -11,7 +11,7 @@ import {
   DashboardService,
   DashboardSummary,
 } from '../../core/services/dashboard.service';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,9 +24,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     CalendarComponent,
     RemindersComponent,
     AppointmentsChartComponent,
-
-    RouterOutlet,
-    RouterLink
+    RouterOutlet
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',

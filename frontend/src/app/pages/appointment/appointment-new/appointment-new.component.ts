@@ -10,10 +10,10 @@ import { Router } from '@angular/router';
 import {
   AppointmentsService,
   CreateAppointmentRequest,
-} from '../../../../core/services/appointments.service';
-import { PatientsService } from '../../../../core/services/patients.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { Patient } from '../../../../core/models/api.models';
+} from '../../../core/services/appointments.service';
+import { PatientsService } from '../../../core/services/patients.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { Patient } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-appointment-new',
