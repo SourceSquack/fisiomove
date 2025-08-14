@@ -1,0 +1,255 @@
+<div class="appointment-new-container">
+  <div class="header">
+    <div class="title-section">
+      <button class="btn-back" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        Volver
+      </button>
+      <h1>Nueva Cita</h1>
+      <p>Programar una nueva cita de fisioterapia</p>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="success-message">
+    <i class="fas fa-check-circle"></i>
+    {{ successMessage }}
+    <button class="btn-close" (click)="clearSuccess()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+    <button class="btn-close" (click)="clearError()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="form-container">
+    <form
+      [formGroup]="appointmentForm"
+      (ngSubmit)="onSubmit()"
+      class="appointment-form"
+    >
+      <!-- Selección de Paciente -->
+      <div class="form-section">
+        <h3>Información del Paciente</h3>
+
+        <div class="form-group">
+          <label for="patient_id">
+            Paciente <span class="required">*</span>
+          </label>
+          <select
+            id="patient_id"
+            formControlName="patient_id"
+            class="form-select"
+            [class.error]="patient_id?.invalid && patient_id?.touched"
+          >
+            <option value="">Seleccionar paciente...</option>
+            <option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.full_name }} - {{ patient.dni }}
+            </option>
+          </select>
+          <div
+            *ngIf="patient_id?.invalid && patient_id?.touched"
+            class="error-message"
+          >
+            <span *ngIf="patient_id?.errors?.['required']">
+              Debe seleccionar un paciente
+            </span>
+          </div>
+          <div *ngIf="isLoadingPatients" class="loading-message">
+            Cargando pacientes...
+          </div>
+        </div>
+      </div>
+
+      <!-- Información de la Cita -->
+      <div class="form-section">
+        <h3>Detalles de la Cita</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="appointment_date">
+              Fecha <span class="required">*</span>
+            </label>
+            <input
+              type="date"
+              id="appointment_date"
+              formControlName="appointment_date"
+              class="form-input"
+              [class.error]="
+                appointment_date?.invalid && appointment_date?.touched
+              "
+              [min]="getMinDate()"
+            />
+            <div
+              *ngIf="appointment_date?.invalid && appointment_date?.touched"
+              class="error-message"
+            >
+              <span *ngIf="appointment_date?.errors?.['required']">
+                La fecha es requerida
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="appointment_time">
+              Hora <span class="required">*</span>
+            </label>
+            <select
+              id="appointment_time"
+              formControlName="appointment_time"
+              class="form-select"
+              [class.error]="
+                appointment_time?.invalid && appointment_time?.touched
+              "
+            >
+              <option value="">Seleccionar hora...</option>
+              <option
+                *ngFor="let time of getAvailableTimesForDate()"
+                [value]="time"
+              >
+                {{ time }}
+              </option>
+            </select>
+            <div
+              *ngIf="appointment_time?.invalid && appointment_time?.touched"
+              class="error-message"
+            >
+              <span *ngIf="appointment_time?.errors?.['required']">
+                Debe seleccionar una hora
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="type">
+              Tipo de Cita <span class="required">*</span>
+            </label>
+            <select
+              id="type"
+              formControlName="type"
+              class="form-select"
+              [class.error]="type?.invalid && type?.touched"
+            >
+              <option value="">Seleccionar tipo...</option>
+              <option
+                *ngFor="let appointmentType of appointmentTypes"
+                [value]="appointmentType"
+              >
+                {{ appointmentType }}
+              </option>
+            </select>
+            <div *ngIf="type?.invalid && type?.touched" class="error-message">
+              <span *ngIf="type?.errors?.['required']">
+                Debe seleccionar el tipo de cita
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="duration_minutes">
+              Duración (minutos) <span class="required">*</span>
+            </label>
+            <input
+              type="number"
+              id="duration_minutes"
+              formControlName="duration_minutes"
+              class="form-input"
+              [class.error]="
+                duration_minutes?.invalid && duration_minutes?.touched
+              "
+              min="15"
+              max="180"
+              step="15"
+            />
+            <div
+              *ngIf="duration_minutes?.invalid && duration_minutes?.touched"
+              class="error-message"
+            >
+              <span *ngIf="duration_minutes?.errors?.['required']">
+                La duración es requerida
+              </span>
+              <span *ngIf="duration_minutes?.errors?.['min']">
+                La duración mínima es 15 minutos
+              </span>
+              <span *ngIf="duration_minutes?.errors?.['max']">
+                La duración máxima es 180 minutos
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="notes"> Notas (opcional) </label>
+          <textarea
+            id="notes"
+            formControlName="notes"
+            class="form-textarea"
+            rows="4"
+            placeholder="Observaciones, síntomas, solicitudes especiales..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Resumen de la Cita -->
+      <div *ngIf="appointmentForm.valid" class="appointment-summary">
+        <h3>Resumen de la Cita</h3>
+        <div class="summary-details">
+          <div class="summary-item">
+            <strong>Paciente:</strong>
+            {{ getPatientName(appointmentForm.value.patient_id) }}
+          </div>
+          <div class="summary-item">
+            <strong>Fecha:</strong>
+            {{ appointmentForm.value.appointment_date | date : "dd/MM/yyyy" }}
+          </div>
+          <div class="summary-item">
+            <strong>Hora:</strong>
+            {{ appointmentForm.value.appointment_time }}
+          </div>
+          <div class="summary-item">
+            <strong>Tipo:</strong>
+            {{ appointmentForm.value.type }}
+          </div>
+          <div class="summary-item">
+            <strong>Duración:</strong>
+            {{ appointmentForm.value.duration_minutes }} minutos
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="goBack()"
+          [disabled]="isSubmitting"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="appointmentForm.invalid || isSubmitting"
+        >
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i>
+            Creando...
+          </span>
+          <span *ngIf="!isSubmitting">
+            <i class="fas fa-calendar-plus"></i>
+            Crear Cita
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

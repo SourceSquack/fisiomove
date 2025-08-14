@@ -40,6 +40,9 @@ export class PatientsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Limpiar filtros al inicializar el componente para evitar filtros activos
+    this.patientsStore.clearFilters();
+    this.selectedGender = ''; // Resetear el select del template
     this.loadPatients();
   }
 

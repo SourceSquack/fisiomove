@@ -4,15 +4,47 @@ from typing import Optional, Literal
 from pydantic import BaseModel, Field
 
 
+# Definir los tipos de cita disponibles
+AppointmentTypeEnum = Literal[
+    "evaluacion_inicial",
+    "fisioterapia",
+    "rehabilitacion",
+    "seguimiento",
+    "consulta",
+    "otro",
+]
+
+AppointmentStatusEnum = Literal["programada", "cancelada", "completada"]
+
+
+class PatientInfo(BaseModel):
+    """Información básica del paciente para mostrar en las citas"""
+
+    id: str
+    first_name: str
+    last_name: str
+    email: Optional[str] = None
+
+
+class FisioInfo(BaseModel):
+    """Información básica del fisioterapeuta para mostrar en las citas"""
+
+    id: str
+    first_name: str
+    last_name: str
+    email: Optional[str] = None
+
+
 class AppointmentBase(BaseModel):
     start_time: datetime
     duration_minutes: int = Field(ge=1, le=24 * 60)
     patient_id: str = Field(min_length=1)
-    fisio_id: str = Field(min_length=1)
+    fisio_id: Optional[str] = Field(default=None, min_length=1)
+    appointment_type: AppointmentTypeEnum = Field(default="consulta")
 
 
 class AppointmentCreate(AppointmentBase):
-    pass
+    fisio_id: Optional[str] = Field(default=None)
 
 
 class AppointmentUpdate(BaseModel):
@@ -20,14 +52,24 @@ class AppointmentUpdate(BaseModel):
     duration_minutes: Optional[int] = Field(default=None, ge=1, le=24 * 60)
     patient_id: Optional[str] = None
     fisio_id: Optional[str] = None
-    status: Optional[Literal["programada", "cancelada", "completada"]] = None
+    appointment_type: Optional[AppointmentTypeEnum] = None
+    status: Optional[AppointmentStatusEnum] = None
 
 
-class AppointmentRead(AppointmentBase):
+class AppointmentRead(BaseModel):
     id: int
-    status: str
+    start_time: datetime
+    duration_minutes: int
+    patient_id: str
+    fisio_id: Optional[str] = None
+    appointment_type: AppointmentTypeEnum
+    status: AppointmentStatusEnum
     created_at: datetime
     updated_at: datetime
+
+    # Información adicional del paciente y fisioterapeuta
+    patient: Optional[PatientInfo] = None
+    fisio: Optional[FisioInfo] = None
 
     class Config:
         from_attributes = True

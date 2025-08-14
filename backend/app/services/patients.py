@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from sqlalchemy.orm import Session
 
@@ -20,6 +20,12 @@ def list_patients(db: Session) -> List[Patient]:
 
 def get_patient(db: Session, patient_id: int) -> Optional[Patient]:
     return db.query(Patient).filter(Patient.id == patient_id).first()
+
+
+def get_patients_by_ids(db: Session, patient_ids: List[int]) -> Dict[int, Patient]:
+    """Obtener múltiples pacientes por sus IDs y devolver un diccionario para acceso rápido"""
+    patients = db.query(Patient).filter(Patient.id.in_(patient_ids)).all()
+    return {patient.id: patient for patient in patients}
 
 
 def update_patient(db: Session, patient: Patient, data: dict) -> Patient:
