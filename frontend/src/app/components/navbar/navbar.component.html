@@ -5,23 +5,20 @@
         <img class="nav-icon" src="assets/isotipo.png" alt="" />
       </div>
       <div class="nav-header-text">
-        <span class="nav-title">FISIOMOVE</span>
+        <span class="nav-title" routerLink="/home">FISIOMOVE</span>
       </div>
     </div>
     <div class="nav-options">
-      @if (!isAuthenticated()) {
-      <a class="nav-link" routerLink="/home">Home</a>
-      <a class="nav-link" routerLink="/login">Login</a>
-      <a class="nav-link" routerLink="/register">Register</a>
-      } @if (isAuthenticated()) {
+      @if(isAuthenticated()){
       <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-
       @if (currentUser$ | async; as user) {
       <div class="user-dropdown">
         <span class="user-name">{{ user.full_name }}</span>
-        <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+        <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
       </div>
-      } }
+      }} @else {
+      <a class="nav-link" routerLink="/login">Ingresar</a>
+      }
     </div>
   </div>
 </div>

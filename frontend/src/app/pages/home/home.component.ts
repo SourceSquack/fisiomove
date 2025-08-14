@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit {
   specializedServices: SpecializedService[] = [
     {
       id: '1',
-      title: 'Fisioterapia Deportiva',
+      title: 'Fisioterapia deportiva',
       description:
         'Especializada en lesiones deportivas y recuperación atlética',
       icon: 'fa-running',

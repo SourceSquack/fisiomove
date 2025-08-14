@@ -18,7 +18,8 @@ export class NavbarComponent {
   navOptions = [
     { name: 'Home', route: '/' },
     { name: 'Login', route: '/login' },
-    // { name: 'Contact', route: '/contact' },
+    { name: 'Dashboard', route: '/dashboard' },
+    { name: 'Contact', route: '/contact' },
   ];
 
   logout(): void {
