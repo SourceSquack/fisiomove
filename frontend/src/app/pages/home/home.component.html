@@ -4,7 +4,7 @@
       <div class="hero-content">
         <div class="hero-text">
           <h1>
-            A un Movimiento de <br /><span class="highlight">Tu Bienestar</span>
+            A un movimiento de <br /><span class="highlight">tu bienestar</span>
           </h1>
           <p>
             En FisioMove ofrecemos tratamientos especializados de fisioterapia
@@ -17,13 +17,13 @@
               class="btn-primary"
               (click)="scrollToSection('reservation-section')"
             >
-              <i class="fas fa-phone"></i> Contactar Ahora
+              <i class="fas fa-phone"></i> Contactar ahora
             </button>
             <button
               class="btn-secondary"
               (click)="scrollToSection('about-section')"
             >
-              <i class="fas fa-info-circle"></i> Conocer Más
+              <i class="fas fa-info-circle"></i> Conocer más
             </button>
           </div>
         </div>
@@ -39,7 +39,7 @@
   </div>
 
   <div class="specialized-services">
-    <h2>Nuestros Servicios Especializados</h2>
+    <h2>Nuestros servicios especializados</h2>
     <p>
       Ofrecemos una amplia gama de tratamientos de fisioterapia adaptados a tus
       necesidades específicas
@@ -62,10 +62,6 @@
   @if (selectedService) {
   <div class="service-detail-section">
     <div class="service-detail-container">
-      <button class="close-button" (click)="closeServiceDetail()">
-        <i class="fas fa-times"></i>
-      </button>
-
       <div class="service-detail-content">
         <div class="service-detail-text">
           <h2>{{ selectedService.title }}</h2>
@@ -138,7 +134,7 @@
   <!-- Sección Nuestro Equipo -->
   <div class="team-section">
     <div class="team-container">
-      <h2>Nuestro Equipo Profesional</h2>
+      <h2>Nuestro equipo profesional</h2>
 
       <div class="team-grid">
         @for (member of teamMembers; track member.name) {
@@ -255,7 +251,7 @@
     </p>
     <form class="reservation-form">
       <div class="form-group">
-        <label for="name">Nombre Completo</label>
+        <label for="name">Nombre completo</label>
         <input
           type="text"
           id="name"
@@ -277,13 +273,13 @@
         <input type="email" id="email" placeholder="tu@email.com" required />
       </div>
       <div class="form-group">
-        <label for="service">Servicio de Interés</label>
+        <label for="service">Servicio de interés</label>
         <select id="service" required>
           <option value="" disabled selected>Selecciona un servicio</option>
-          <option value="deportiva">Fisioterapia Deportiva</option>
-          <option value="ortopedica">Rehabilitación Ortopédica</option>
-          <option value="manual">Terapia Manual</option>
-          <option value="neurologica">Fisioterapia Neurológica</option>
+          <option value="deportiva">Fisioterapia deportiva</option>
+          <option value="ortopedica">Rehabilitación ortopédica</option>
+          <option value="manual">Terapia manual</option>
+          <option value="neurologica">Fisioterapia neurológica</option>
         </select>
       </div>
       <div class="form-group">
@@ -295,7 +291,7 @@
         ></textarea>
       </div>
       <button type="submit" class="btn-primary">
-        <i class="fas fa-paper-plane"></i> Enviar Consulta
+        <i class="fas fa-paper-plane"></i> Enviar consulta
       </button>
     </form>
   </section>

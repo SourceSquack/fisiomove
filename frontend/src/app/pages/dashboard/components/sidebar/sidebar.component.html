@@ -1,36 +1,16 @@
 <div class="sidebar">
   <div class="logo-container">
     <img src="assets/isotipo.png" alt="FisioMove Logo" class="logo" />
-    <span class="logo-text">FisioMove</span>
+    <span class="logo-text" routerLink="/home">FISIOMOVE</span>
   </div>
   <ul class="nav-menu">
-    <li class="nav-item active">
-      <a routerLink="/dashboard"
-        ><i class="fas fa-tachometer-alt"></i> Dashboard</a
-      >
-    </li>
+    @for (option of sidebarOptions; track option.name) {
     <li class="nav-item">
-      <a routerLink="/dashboard/appointments" routerLinkActive="active"
-        ><i class="fas fa-calendar-alt"></i> Citas</a
-      >
+      <a routerLink="{{ option.route }}" routerLinkActive="active">
+        <i class="{{ option.icon }}"></i> {{ option.name }}
+      </a>
     </li>
-    <li class="nav-item">
-      <a routerLink="/dashboard/patients" routerLinkActive="active"
-        ><i class="fas fa-users"></i> Pacientes</a
-      >
-    </li>
-    <li class="nav-item">
-      <a href="#"><i class="fas fa-file-medical"></i> Historial Médico</a>
-    </li>
-    <li class="nav-item">
-      <a href="#"><i class="fas fa-procedures"></i> Terapias</a>
-    </li>
-    <li class="nav-item">
-      <a href="#"><i class="fas fa-box"></i> Operativos</a>
-    </li>
-    <li class="nav-item">
-      <a href="#"><i class="fas fa-cog"></i> Configuración</a>
-    </li>
+    }
   </ul>
   <div class="quick-access">
     <h3>Acceso Rápido</h3>

@@ -15,4 +15,13 @@ export class SidebarComponent {
   get open() {
     return this.isOpen;
   }
+
+  sidebarOptions = [
+    { name: 'Dashboard', icon: "fas fa-tachometer-alt", route: '/dashboard' },
+    { name: 'Calendario', icon: "fas fa-calendar-alt", route: '/dashboard/calendar' },
+    { name: 'Pacientes', icon: "fas fa-users", route: '/dashboard/patients' },
+    { name: 'Historial', icon: "fas fa-file-medical", route: '/dashboard/historic' },
+    { name: 'Operativos', icon: "fas fa-box", route: '/dashboard/operatives' },
+    { name: 'Configuración', icon: "fas fa-cog", route: '/dashboard/settings' },
+  ]
 }
