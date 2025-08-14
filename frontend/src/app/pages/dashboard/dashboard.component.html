@@ -12,7 +12,10 @@
         <h1>Dashboard</h1>
         <p>Bienvenido de vuelta, Dr. Rodriguez</p>
       </div>
-      <div class="stats-grid">
+
+      <router-outlet></router-outlet>
+
+      <!-- <div class="stats-grid">
         <app-stat-card
           title="Citas Hoy"
           [value]="(dashboardData?.citas_hoy || 0).toString()"
@@ -37,8 +40,9 @@
           icon="fas fa-users"
           color="#f3e8ff"
         ></app-stat-card>
-      </div>
-      <div class="main-grid">
+      </div> -->
+
+      <!-- <div class="main-grid">
         <div class="left-column">
           <app-appointments-list [selectedDate]="selectedDate"></app-appointments-list>
           <app-appointments-chart></app-appointments-chart>
@@ -47,7 +51,7 @@
           <app-calendar (dateSelected)="onDateSelected($event)"></app-calendar>
           <app-reminders></app-reminders>
         </div>
-      </div>
+      </div> -->
     </div>
   </main>
 </div>
