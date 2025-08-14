@@ -15,6 +15,15 @@ class AppointmentStatus(str, Enum):
     completada = "completada"
 
 
+class AppointmentType(str, Enum):
+    evaluacion_inicial = "evaluacion_inicial"
+    fisioterapia = "fisioterapia"
+    rehabilitacion = "rehabilitacion"
+    seguimiento = "seguimiento"
+    consulta = "consulta"
+    otro = "otro"
+
+
 class Appointment(Base):
     __tablename__ = "appointments"
 
@@ -23,7 +32,15 @@ class Appointment(Base):
     duration_minutes = Column(Integer, nullable=False)
 
     patient_id = Column(String(64), nullable=False, index=True)
-    fisio_id = Column(String(64), nullable=False, index=True)
+    fisio_id = Column(
+        String(64), nullable=True, index=True
+    )  # Permitir null para citas pendientes de asignación
+
+    appointment_type = Column(
+        SAEnum(AppointmentType, name="appointment_type"),
+        nullable=False,
+        default=AppointmentType.consulta,
+    )
 
     status = Column(
         SAEnum(AppointmentStatus, name="appointment_status"),

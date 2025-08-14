@@ -20,12 +20,18 @@ export interface AppointmentFilters {
 
 export interface CreateAppointmentRequest {
   patient_id: string;
-  physiotherapist_id: string;
   appointment_date: string;
   appointment_time: string;
   type: string;
   notes?: string;
   duration_minutes?: number;
+}
+
+export interface BackendAppointmentCreate {
+  patient_id: string;
+  start_time: string; // ISO datetime string
+  duration_minutes: number;
+  // fisio_id se omite - la cita quedará pendiente de asignación
 }
 
 @Injectable({
@@ -37,9 +43,7 @@ export class AppointmentsService {
   /**
    * Obtener lista de citas con filtros
    */
-  getAppointments(
-    filters?: AppointmentFilters
-  ): Observable<ApiResponse<PaginatedResponse<Appointment>>> {
+  getAppointments(filters?: AppointmentFilters): Observable<Appointment[]> {
     let params = new HttpParams();
 
     if (filters) {
@@ -55,10 +59,12 @@ export class AppointmentsService {
       if (filters.size) params = params.set('size', filters.size.toString());
     }
 
-    return this.httpClient.get<ApiResponse<PaginatedResponse<Appointment>>>(
-      'appointments',
-      params
+    console.log(
+      '🌐 Haciendo petición GET a appointments/ con params:',
+      params.toString()
     );
+
+    return this.httpClient.get<Appointment[]>('appointments/', params);
   }
 
   /**
@@ -74,9 +80,19 @@ export class AppointmentsService {
   createAppointment(
     appointmentData: CreateAppointmentRequest
   ): Observable<ApiResponse<Appointment>> {
+    // Transformar los datos al formato que espera el backend
+    const backendData: BackendAppointmentCreate = {
+      patient_id: appointmentData.patient_id,
+      // No enviar fisio_id para que se autoasigne en el backend
+      start_time: `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00`,
+      duration_minutes: appointmentData.duration_minutes || 60,
+    };
+
+    console.log('Datos enviados al backend:', backendData);
+
     return this.httpClient.post<ApiResponse<Appointment>>(
       'appointments',
-      appointmentData
+      backendData
     );
   }
 
@@ -103,6 +119,15 @@ export class AppointmentsService {
     return this.httpClient.patch<ApiResponse<Appointment>>(
       `appointments/${id}/cancel`,
       { reason }
+    );
+  }
+
+  /**
+   * Eliminar cita
+   */
+  deleteAppointment(id: string): Observable<ApiResponse<Appointment>> {
+    return this.httpClient.delete<ApiResponse<Appointment>>(
+      `appointments/${id}`
     );
   }
 

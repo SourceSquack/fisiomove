@@ -10,7 +10,9 @@
       >
     </li>
     <li class="nav-item">
-      <a href="#"><i class="fas fa-calendar-alt"></i> Calendario</a>
+      <a routerLink="/dashboard/appointments" routerLinkActive="active"
+        ><i class="fas fa-calendar-alt"></i> Citas</a
+      >
     </li>
     <li class="nav-item">
       <a routerLink="/dashboard/patients" routerLinkActive="active"
@@ -32,10 +34,10 @@
   </ul>
   <div class="quick-access">
     <h3>Acceso Rápido</h3>
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" routerLink="/dashboard/appointments/new">
       <i class="fas fa-plus"></i> Nueva Cita
     </button>
-    <button class="btn btn-secondary">
+    <button class="btn btn-secondary" routerLink="/dashboard/patients/new">
       <i class="fas fa-user-plus"></i> Nuevo Paciente
     </button>
   </div>

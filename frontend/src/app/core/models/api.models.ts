@@ -37,7 +37,9 @@ export interface User extends BaseModel {
 // Paciente
 export interface Patient extends BaseModel {
   user_id: string;
-  full_name: string;
+  full_name?: string;
+  first_name?: string; // Agregado para compatibilidad con backend
+  last_name?: string; // Agregado para compatibilidad con backend
   dni?: string;
   email: string;
   user?: User;
@@ -53,14 +55,22 @@ export interface Patient extends BaseModel {
 export interface Appointment extends BaseModel {
   patient_id: string;
   patient?: Patient;
-  physiotherapist_id: string;
+  fisio_id: string | null;
   physiotherapist?: User;
-  appointment_date: string;
-  appointment_time: string;
-  status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
-  type: string;
+  start_time: string;
+  status: 'programada' | 'confirmada' | 'completada' | 'cancelada' | 'no_show';
+  duration_minutes: number;
+  appointment_type:
+    | 'evaluacion_inicial'
+    | 'fisioterapia'
+    | 'rehabilitacion'
+    | 'seguimiento'
+    | 'consulta'
+    | 'otro';
   notes?: string;
-  duration_minutes?: number;
+  physiotherapist_id?: string;
+  appointment_date?: string;
+  appointment_time?: string;
 }
 
 // Autenticación

@@ -100,17 +100,10 @@ export class HttpClientService {
       Accept: 'application/json',
     };
 
-    // Add Authorization header if token exists
-    const token = this.storageService.getItem(this.TOKEN_KEY);
-    console.log('🔑 Token status:', {
-      tokenExists: !!token,
-      tokenLength: token?.length || 0,
-      tokenPreview: token?.substring(0, 20) + '...' || 'NO TOKEN',
-    });
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    // Note: Authorization header is handled by AuthInterceptor
+    console.log(
+      '� HttpClientService - Base headers created (Auth handled by interceptor)'
+    );
 
     return new HttpHeaders(headers);
   }
@@ -134,7 +127,14 @@ export class HttpClientService {
    * Handle HTTP errors
    */
   private handleError(error: any): Observable<never> {
-    console.error('HTTP Error:', error);
+    console.error('🚨 HTTP Error Details:', {
+      status: error.status,
+      statusText: error.statusText,
+      url: error.url,
+      error: error.error,
+      message: error.message,
+      fullError: error,
+    });
 
     let errorMessage = 'Ha ocurrido un error';
 

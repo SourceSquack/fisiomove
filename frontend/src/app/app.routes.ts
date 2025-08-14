@@ -8,6 +8,9 @@ import { ProfileComponent } from './pages/dashboard/profile/profile.component';
 import { PatientsComponent } from './pages/dashboard/patients/patients.component';
 import { PatientDetailComponent } from './pages/dashboard/patients/patient-detail/patient-detail.component';
 import { PatientNewComponent } from './pages/dashboard/patients/patient-new/patient-new.component';
+import { AppointmentsComponent } from './pages/dashboard/appointments/appointments.component';
+import { AppointmentNewComponent } from './pages/dashboard/appointments/appointment-new/appointment-new.component';
+import { DebugAuthComponent } from './debug-auth/debug-auth.component';
 import { authGuard, guestGuard } from './core/guards';
 
 export const routes: Routes = [
@@ -16,6 +19,9 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
   { path: 'contact', component: ContactComponent },
+
+  // Debug route (temporary)
+  { path: 'debug-auth', component: DebugAuthComponent },
 
   // Rutas protegidas
   {
@@ -41,6 +47,16 @@ export const routes: Routes = [
   {
     path: 'dashboard/patients/:id',
     component: PatientDetailComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/appointments',
+    component: AppointmentsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'dashboard/appointments/new',
+    component: AppointmentNewComponent,
     canActivate: [authGuard],
   },
 ];
