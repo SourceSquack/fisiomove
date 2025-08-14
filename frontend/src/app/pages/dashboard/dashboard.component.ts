@@ -11,6 +11,7 @@ import {
   DashboardService,
   DashboardSummary,
 } from '../../core/services/dashboard.service';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +24,9 @@ import {
     CalendarComponent,
     RemindersComponent,
     AppointmentsChartComponent,
+
+    RouterOutlet,
+    RouterLink
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -32,7 +36,7 @@ export class DashboardComponent implements OnInit {
   dashboardData: DashboardSummary | null = null;
   loading = false;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit() {
     this.loadDashboardData();
