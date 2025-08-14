@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
   sidebarOpen = false;
   dashboardData: DashboardSummary | null = null;
   loading = false;
+  selectedDate: Date = new Date();
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -48,20 +49,13 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error loading dashboard data:', error);
         this.loading = false;
-        // Usar datos mock en caso de error
-        this.dashboardData = {
-          total_pacientes: 156,
-          citas_hoy: 12,
-          terapias_activas: 8,
-          citas_por_estado: {
-            confirmado: 8,
-            pendiente: 4,
-            cancelado: 2,
-            completado: 12,
-          },
-        };
       },
     });
+  }
+
+  onDateSelected(date: Date): void {
+    console.log('📅 Fecha seleccionada en el calendario:', date);
+    this.selectedDate = date;
   }
 
   toggleSidebar() {

@@ -217,4 +217,31 @@ export class AppointmentsService {
       params
     );
   }
+
+  /**
+   * Obtener citas por fecha específica
+   */
+  getAppointmentsByDate(date: string): Observable<Appointment[]> {
+    const params = new HttpParams().set('date', date);
+    return this.httpClient.get<Appointment[]>('appointments/', params);
+  }
+
+  /**
+   * Obtener todas las citas del mes para marcar días en calendario
+   */
+  getAppointmentsByMonth(year: number, month: number): Observable<Appointment[]> {
+    // Formato: YYYY-MM (mes es 1-indexado)
+    const monthStr = month.toString().padStart(2, '0');
+    const startDate = `${year}-${monthStr}-01`;
+    
+    // Último día del mes
+    const lastDay = new Date(year, month, 0).getDate();
+    const endDate = `${year}-${monthStr}-${lastDay.toString().padStart(2, '0')}`;
+    
+    const params = new HttpParams()
+      .set('date_from', startDate)
+      .set('date_to', endDate);
+    
+    return this.httpClient.get<Appointment[]>('appointments/', params);
+  }
 }

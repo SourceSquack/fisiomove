@@ -18,8 +18,9 @@ export class SidebarComponent {
 
   sidebarOptions = [
     { name: 'Dashboard', icon: "fas fa-tachometer-alt", route: '/dashboard' },
-    { name: 'Calendario', icon: "fas fa-calendar-alt", route: '/dashboard/calendar' },
     { name: 'Pacientes', icon: "fas fa-users", route: '/dashboard/patients' },
+    { name: 'Citas', icon: "fas fa-calendar-check", route: '/dashboard/appointments' },
+    { name: 'Calendario', icon: "fas fa-calendar-alt", route: '/dashboard/calendar' },
     { name: 'Historial', icon: "fas fa-file-medical", route: '/dashboard/historic' },
     { name: 'Operativos', icon: "fas fa-box", route: '/dashboard/operatives' },
     { name: 'Configuración', icon: "fas fa-cog", route: '/dashboard/settings' },

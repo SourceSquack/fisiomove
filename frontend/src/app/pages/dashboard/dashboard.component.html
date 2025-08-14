@@ -40,14 +40,11 @@
       </div>
       <div class="main-grid">
         <div class="left-column">
-          <app-appointments-list></app-appointments-list>
-          <app-appointments-chart
-            [appointmentData]="dashboardData?.citas_por_estado || null"
-          >
-          </app-appointments-chart>
+          <app-appointments-list [selectedDate]="selectedDate"></app-appointments-list>
+          <app-appointments-chart></app-appointments-chart>
         </div>
         <div class="right-column">
-          <app-calendar></app-calendar>
+          <app-calendar (dateSelected)="onDateSelected($event)"></app-calendar>
           <app-reminders></app-reminders>
         </div>
       </div>

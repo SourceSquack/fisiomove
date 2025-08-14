@@ -7,20 +7,20 @@
 }
 
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
 }
 
-.card-header h2 {
+.header-content h2 {
   margin: 0;
   font-size: 1.25rem;
   color: #1e2a4a;
-  flex: 1;
-  min-width: 150px;
+}
+
+.selected-date {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
 }
 
 .btn-add {
@@ -201,4 +201,138 @@
     font-size: 0.75rem;
     padding: 0.2rem 0.4rem;
   }
+}
+
+/* Nuevos estilos para el calendario interactivo */
+.loading-state, .error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: #666;
+}
+
+.error-state {
+  color: #e74c3c;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #ddd;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.empty-state p {
+  margin: 0.5rem 0 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary:hover {
+  background-color: #1976d2;
+}
+
+.appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-action:hover {
+  background-color: #f0f0f0;
+  color: var(--primary-color);
+}
+
+.day-summary {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8eaed;
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.summary-item {
+  text-align: center;
+  flex: 1;
+}
+
+.summary-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.summary-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.summary-value.confirmed {
+  color: #4caf50;
+}
+
+.summary-value.pending {
+  color: #ff9800;
+}
+
+.appointments-content {
+  min-height: 200px;
 }
