@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, EmailStr, Field
-from typing import Literal
+from typing import Literal, Optional
 
 from app.schemas.auth import UserCreate
 from app.services.auth import get_current_user, require_roles, reuseable_oauth
@@ -45,13 +45,9 @@ class LoginPayload(BaseModel):
     password: str = Field(min_length=1)
 
 
-@router.get("/me", response_model=dict)
-def read_me(user: dict = Depends(get_current_user)):
-
-    user_metadata = user.get("user_metadata") or {}
-
+def _extract_names_from_user(user: dict, user_metadata: dict) -> tuple[str, str]:
+    """Extract first_name and last_name from user data."""
     first_name = user_metadata.get("first_name") or user.get("first_name") or ""
-
     last_name = user_metadata.get("last_name") or user.get("last_name") or ""
 
     if not first_name and not last_name:
@@ -66,9 +62,16 @@ def read_me(user: dict = Depends(get_current_user)):
             first_name = name_parts[0] if len(name_parts) > 0 else ""
             last_name = name_parts[1] if len(name_parts) > 1 else ""
 
+    return first_name, last_name
+
+
+def _build_user_response(
+    user: dict, user_metadata: dict, first_name: str, last_name: str
+) -> dict:
+    """Build the user response dictionary."""
     role = user_metadata.get("role") or "paciente"
 
-    result = {
+    return {
         "id": user.get("id"),
         "email": user.get("email"),
         "first_name": first_name,
@@ -78,110 +81,141 @@ def read_me(user: dict = Depends(get_current_user)):
         "is_active": True,
         "phone": user_metadata.get("phone") or user.get("phone"),
     }
-    
-    return result
+
+
+@router.get("/me", response_model=dict)
+def read_me(user: dict = Depends(get_current_user)):
+    user_metadata = user.get("user_metadata") or {}
+    first_name, last_name = _extract_names_from_user(user, user_metadata)
+    return _build_user_response(user, user_metadata, first_name, last_name)
+
+
+def _handle_dev_bypass_registration(user_in: UserCreate, normalized_email: str) -> dict:
+    """Handle registration with development bypass enabled."""
+    if not settings.SUPABASE_SERVICE_ROLE_KEY:
+        raise HTTPException(
+            status_code=400,
+            detail={"message": "Falta SUPABASE_SERVICE_ROLE_KEY para bypass"},
+        )
+
+    existing = admin_get_user_by_email(normalized_email)
+    if existing:
+        admin_confirm_user_by_email(normalized_email)
+        return {"message": "Usuario existente confirmado", "user": existing}
+
+    created = _create_admin_user(user_in, normalized_email)
+    if not created:
+        raise HTTPException(
+            status_code=400,
+            detail={"message": "No se pudo crear usuario vía Admin API"},
+        )
+    return created
+
+
+def _create_admin_user(user_in: UserCreate, normalized_email: str) -> dict:
+    """Create user via admin API with proper name handling."""
+    if user_in.first_name and user_in.last_name:
+        return admin_create_user(
+            normalized_email,
+            user_in.password,
+            first_name=user_in.first_name.strip(),
+            last_name=user_in.last_name.strip(),
+            role=user_in.role,
+            email_confirm=True,
+        )
+    else:
+        return admin_create_user(
+            normalized_email,
+            user_in.password,
+            full_name=(user_in.full_name or "").strip(),
+            role=user_in.role,
+            email_confirm=True,
+        )
+
+
+def _create_regular_user(user_in: UserCreate, normalized_email: str) -> dict:
+    """Create user via regular signup with proper name handling."""
+    if user_in.first_name and user_in.last_name:
+        return sign_up_user(
+            email=normalized_email,
+            password=user_in.password,
+            first_name=user_in.first_name.strip(),
+            last_name=user_in.last_name.strip(),
+            role=user_in.role,
+        )
+    else:
+        return sign_up_user(
+            email=normalized_email,
+            password=user_in.password,
+            full_name=(user_in.full_name or "").strip(),
+            role=user_in.role,
+        )
 
 
 @router.post("/register", response_model=dict, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate):
-
     try:
         normalized_email = user_in.email.strip().lower()
 
         if settings.ENV != "production" and settings.DEV_BYPASS_EMAIL_CONFIRM:
+            return _handle_dev_bypass_registration(user_in, normalized_email)
 
-            if not settings.SUPABASE_SERVICE_ROLE_KEY:
-                raise HTTPException(
-                    status_code=400,
-                    detail={"message": "Falta SUPABASE_SERVICE_ROLE_KEY para bypass"},
-                )
+        return _create_regular_user(user_in, normalized_email)
 
-            existing = admin_get_user_by_email(normalized_email)
-            if existing:
-                # Confirmar si existe y devolverlo
-                admin_confirm_user_by_email(normalized_email)
-                return {"message": "Usuario existente confirmado", "user": existing}
-
-            if user_in.first_name and user_in.last_name:
-                created = admin_create_user(
-                    normalized_email,
-                    user_in.password,
-                    first_name=user_in.first_name.strip(),
-                    last_name=user_in.last_name.strip(),
-                    role=user_in.role,
-                    email_confirm=True,
-                )
-            else:
-                created = admin_create_user(
-                    normalized_email,
-                    user_in.password,
-                    full_name=(user_in.full_name or "").strip(),
-                    role=user_in.role,
-                    email_confirm=True,
-                )
-
-            if not created:
-                raise HTTPException(
-                    status_code=400,
-                    detail={"message": "No se pudo crear usuario vía Admin API"},
-                )
-            return created
-
-        if user_in.first_name and user_in.last_name:
-            result = sign_up_user(
-                email=normalized_email,
-                password=user_in.password,
-                first_name=user_in.first_name.strip(),
-                last_name=user_in.last_name.strip(),
-                role=user_in.role,
-            )
-        else:
-            result = sign_up_user(
-                email=normalized_email,
-                password=user_in.password,
-                full_name=(user_in.full_name or "").strip(),
-                role=user_in.role,
-            )
-        return result
     except ValueError as e:
         detail = e.args[0] if e.args else {"message": "Error en registro"}
         code = detail.get("status", 400) if isinstance(detail, dict) else 400
         raise HTTPException(status_code=code, detail=detail)
 
 
+def _handle_email_confirmation_bypass(
+    email: str, password: str, detail: dict
+) -> Optional[dict]:
+    """Handle email confirmation bypass for development environment."""
+    if not (
+        isinstance(detail, dict)
+        and (detail.get("detail") or {}).get("error_code") == "email_not_confirmed"
+        and settings.ENV != "production"
+        and settings.DEV_BYPASS_EMAIL_CONFIRM
+    ):
+        return None
+
+    bypass_list = [
+        x.strip().lower()
+        for x in (settings.DEV_BYPASS_EMAILS or "").split(",")
+        if x.strip()
+    ]
+
+    if email in set(bypass_list):
+        try:
+            admin_confirm_user_by_email(email)
+            return sign_in_user(email, password)
+        except Exception:
+            pass
+
+    return None
+
+
 @router.post("/login", response_model=dict)
 def login(form: LoginPayload):
-
     email = form.email.strip().lower()
     password = form.password
+
     if not email or not password:
         raise HTTPException(
             status_code=400, detail={"message": "Credenciales inválidas"}
         )
+
     try:
-        result = sign_in_user(email, password)
-        return result
+        return sign_in_user(email, password)
     except ValueError as e:
         detail = e.args[0] if e.args else {"message": "Error de autenticación"}
 
-        if (
-            isinstance(detail, dict)
-            and (detail.get("detail") or {}).get("error_code") == "email_not_confirmed"
-            and settings.ENV != "production"
-            and settings.DEV_BYPASS_EMAIL_CONFIRM
-        ):
-            bypass_list = [
-                x.strip().lower()
-                for x in (settings.DEV_BYPASS_EMAILS or "").split(",")
-                if x.strip()
-            ]
-            if email in set(bypass_list):
-                try:
-                    admin_confirm_user_by_email(email)
-                    # Reintentar login una vez
-                    return sign_in_user(email, password)
-                except Exception as retry_e:
-                    pass
+        # Try bypass if applicable
+        bypass_result = _handle_email_confirmation_bypass(email, password, detail)
+        if bypass_result:
+            return bypass_result
+
         code = detail.get("status", 401) if isinstance(detail, dict) else 401
         raise HTTPException(status_code=code, detail=detail)
 
@@ -284,63 +318,3 @@ def admin_update_role(payload: UpdateRolePayload):
             detail={"message": "No se pudo actualizar rol (¿service_role válido?)"},
         )
     return {"ok": True, "user": updated}
-
-
-@router.post("/seed-dev-users", tags=["auth"])  # temporal para develop
-def seed_dev_users():
-    if settings.ENV == "production":
-        raise HTTPException(
-            status_code=403, detail={"message": "No permitido en producción"}
-        )
-    if not settings.SUPABASE_SERVICE_ROLE_KEY:
-        raise HTTPException(
-            status_code=400, detail={"message": "Falta SUPABASE_SERVICE_ROLE_KEY"}
-        )
-
-    users = [
-        {
-            "email": "admin@fisiomove.com",
-            "password": "Admin123",
-            "first_name": "Admin",
-            "last_name": "User",
-            "role": "admin",
-        },
-        {
-            "email": "fisio@fisiomove.com",
-            "password": "Fisio123",
-            "first_name": "Fisio",
-            "last_name": "Terapeuta",
-            "role": "fisioterapeuta",
-        },
-        {
-            "email": "user@fisiomove.com",
-            "password": "User1234",
-            "first_name": "Paciente",
-            "last_name": "Usuario",
-            "role": "paciente",
-        },
-    ]
-
-    results = []
-    for u in users:
-        email = u["email"].strip().lower()
-        existing = admin_get_user_by_email(email)
-        if existing:
-            confirmed = admin_confirm_user_by_email(email)
-            results.append(
-                {"email": email, "created": False, "confirmed": bool(confirmed)}
-            )
-        else:
-            created = admin_create_user(
-                email,
-                u["password"],
-                first_name=u["first_name"],
-                last_name=u["last_name"],
-                role=u["role"],
-                email_confirm=True,
-            )
-            results.append(
-                {"email": email, "created": bool(created), "confirmed": bool(created)}
-            )
-
-    return {"ok": True, "results": results}
