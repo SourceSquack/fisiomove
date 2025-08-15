@@ -23,6 +23,8 @@ from app.services.auth import get_current_user
 
 router = APIRouter()
 
+quote_not_found_message = "Cita no encontrada"
+
 
 @router.post("/", response_model=AppointmentRead, status_code=status.HTTP_201_CREATED)
 def create_cita(
@@ -78,7 +80,7 @@ def get_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": "Cita no encontrada"})
+        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
     return ap
 
 
@@ -91,7 +93,7 @@ def update_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": "Cita no encontrada"})
+        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
     try:
         ap = update_appointment(
             db,
@@ -114,7 +116,7 @@ def cancel_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": "Cita no encontrada"})
+        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
     ap = cancel_appointment(db, ap)
     return ap
 
@@ -125,6 +127,6 @@ def delete_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": "Cita no encontrada"})
+        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
     ap = delete_appointment(db, ap)
     return ap

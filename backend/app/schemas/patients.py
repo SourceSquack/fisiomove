@@ -4,13 +4,15 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
+dni_message = "Cédula de Ciudadanía (DNI) debe tener entre 9 y 11 Caracteres"
+
 class PatientBase(BaseModel):
     auth_user_id: Optional[str] = None
     email: Optional[EmailStr] = None
     full_name: Optional[str] = Field(default=None, max_length=255)
     phone: Optional[str] = Field(default=None, max_length=50)
     dni: Optional[str] = Field(
-        default=None, max_length=30, description="Cédula de Ciudadanía (DNI)"
+        default=None, max_length=30, description=dni_message
     )
     birth_date: Optional[date] = None
     gender: Optional[str] = Field(default=None, max_length=20)
@@ -24,20 +26,20 @@ class PatientBase(BaseModel):
 class PatientCreate(PatientBase):
     full_name: str = Field(min_length=1)
     dni: str = Field(
-        min_length=5, max_length=30, description="Cédula de Ciudadanía (DNI)"
+        min_length=5, max_length=30, description=dni_message
     )
 
 
 class PatientUpdate(PatientBase):
     dni: Optional[str] = Field(
-        default=None, max_length=30, description="Cédula de Ciudadanía (DNI)"
+        default=None, max_length=30, description=dni_message
     )
 
 
 class PatientRead(PatientBase):
     id: int
     dni: Optional[str] = Field(
-        default=None, max_length=30, description="Cédula de Ciudadanía (DNI)"
+        default=None, max_length=30, description=dni_message
     )
     is_active: bool
     created_at: datetime

@@ -129,9 +129,10 @@ def create_appointment(
     return ap
 
 
-def list_appointments(
-    db: Session, *, date: Optional[datetime] = None, user_id: Optional[str] = None
-) -> List[AppointmentRead]:
+def _build_appointments_query(
+    db: Session, date: Optional[datetime] = None, user_id: Optional[str] = None
+) -> List[Appointment]:
+    """Build and execute the appointments query with optional filters."""
     q = db.query(Appointment)
     if date:
         day_start = date.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -143,21 +144,83 @@ def list_appointments(
         q = q.filter(
             or_(Appointment.patient_id == user_id, Appointment.fisio_id == user_id)
         )
-    appointments = q.order_by(Appointment.start_time.asc()).all()
+    return q.order_by(Appointment.start_time.asc()).all()
 
-    # Separar IDs de pacientes (int) y fisioterapeutas (str)
+
+def _extract_ids_from_appointments(
+    appointments: List[Appointment],
+) -> tuple[List[int], List[str]]:
+    """Extract patient IDs and fisio IDs from appointments list."""
     patient_ids = []
     fisio_ids = []
     for ap in appointments:
-        # patient_id debe ser convertido a int para consultar la tabla Patient
         if ap.patient_id:
             try:
                 patient_ids.append(int(ap.patient_id))
             except (ValueError, TypeError):
                 print(f"Warning: patient_id {ap.patient_id} no es un entero válido")
-        # fisio_id es un string UUID que referencia la tabla User
         if ap.fisio_id:
             fisio_ids.append(ap.fisio_id)
+    return patient_ids, fisio_ids
+
+
+def _create_patient_info(ap: Appointment, patients_info: dict) -> Optional[PatientInfo]:
+    """Create PatientInfo object from appointment and patients data."""
+    try:
+        patient_id_int = int(ap.patient_id)
+        if patient_id_int in patients_info:
+            patient = patients_info[patient_id_int]
+            first_name, last_name = _split_full_name(patient.full_name or "")
+            return PatientInfo(
+                id=str(patient.id),
+                first_name=first_name,
+                last_name=last_name,
+                email=patient.email or "",
+            )
+    except (ValueError, TypeError):
+        print(f"Warning: No se pudo procesar patient_id {ap.patient_id}")
+    return None
+
+
+def _create_fisio_info(ap: Appointment, fisios_info: dict) -> Optional[FisioInfo]:
+    """Create FisioInfo object from appointment and fisios data."""
+    if ap.fisio_id and ap.fisio_id in fisios_info:
+        fisio = fisios_info[ap.fisio_id]
+        return FisioInfo(
+            id=fisio.id,
+            first_name=fisio.first_name or "",
+            last_name=fisio.last_name or "",
+            email=fisio.email,
+        )
+    return None
+
+
+def _create_appointment_read(
+    ap: Appointment,
+    patient_info: Optional[PatientInfo],
+    fisio_info: Optional[FisioInfo],
+) -> AppointmentRead:
+    """Create AppointmentRead object from appointment and related info."""
+    return AppointmentRead(
+        id=ap.id,
+        start_time=ap.start_time,
+        duration_minutes=ap.duration_minutes,
+        patient_id=ap.patient_id,
+        fisio_id=ap.fisio_id,
+        appointment_type=ap.appointment_type.value,
+        status=ap.status.value,
+        created_at=ap.created_at,
+        updated_at=ap.updated_at,
+        patient=patient_info,
+        fisio=fisio_info,
+    )
+
+
+def list_appointments(
+    db: Session, *, date: Optional[datetime] = None, user_id: Optional[str] = None
+) -> List[AppointmentRead]:
+    appointments = _build_appointments_query(db, date, user_id)
+    patient_ids, fisio_ids = _extract_ids_from_appointments(appointments)
 
     # Obtener información de pacientes y fisioterapeutas por separado
     patients_info = get_patients_by_ids(db, patient_ids) if patient_ids else {}
@@ -165,50 +228,9 @@ def list_appointments(
 
     result = []
     for ap in appointments:
-        # Información del paciente (de la tabla Patient)
-        patient_info = None
-        try:
-            patient_id_int = int(ap.patient_id)
-            if patient_id_int in patients_info:
-                patient = patients_info[patient_id_int]
-                # Dividir full_name en first_name y last_name
-                first_name, last_name = _split_full_name(patient.full_name or "")
-                patient_info = PatientInfo(
-                    id=str(
-                        patient.id
-                    ),  # Convertir a string para consistencia en el frontend
-                    first_name=first_name,
-                    last_name=last_name,
-                    email=patient.email or "",
-                )
-        except (ValueError, TypeError):
-            print(f"Warning: No se pudo procesar patient_id {ap.patient_id}")
-
-        # Información del fisioterapeuta (de la tabla User)
-        fisio_info = None
-        if ap.fisio_id and ap.fisio_id in fisios_info:
-            fisio = fisios_info[ap.fisio_id]
-            fisio_info = FisioInfo(
-                id=fisio.id,
-                first_name=fisio.first_name or "",
-                last_name=fisio.last_name or "",
-                email=fisio.email,
-            )
-
-        # Crear el objeto AppointmentRead con toda la información
-        appointment_read = AppointmentRead(
-            id=ap.id,
-            start_time=ap.start_time,
-            duration_minutes=ap.duration_minutes,
-            patient_id=ap.patient_id,
-            fisio_id=ap.fisio_id,
-            appointment_type=ap.appointment_type.value,  # Convertir enum a string
-            status=ap.status.value,  # Convertir enum a string
-            created_at=ap.created_at,
-            updated_at=ap.updated_at,
-            patient=patient_info,
-            fisio=fisio_info,
-        )
+        patient_info = _create_patient_info(ap, patients_info)
+        fisio_info = _create_fisio_info(ap, fisios_info)
+        appointment_read = _create_appointment_read(ap, patient_info, fisio_info)
         result.append(appointment_read)
 
     return result

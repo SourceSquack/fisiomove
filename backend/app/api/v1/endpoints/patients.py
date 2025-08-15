@@ -16,6 +16,10 @@ from app.services.auth import get_current_user
 
 router = APIRouter()
 
+patient_not__found_message = "Paciente no encontrado"
+
+
+
 
 @router.post("/", response_model=PatientRead, status_code=status.HTTP_201_CREATED)
 def create_paciente(
@@ -55,7 +59,7 @@ def get_paciente(
     obj = get_patient(db, patient_id)
     if not obj:
         raise HTTPException(
-            status_code=404, detail={"message": "Paciente no encontrado"}
+            status_code=404, detail={"message":patient_not__found_message}
         )
     return obj
 
@@ -70,7 +74,7 @@ def update_paciente(
     obj = get_patient(db, patient_id)
     if not obj:
         raise HTTPException(
-            status_code=404, detail={"message": "Paciente no encontrado"}
+            status_code=404, detail={"message":patient_not__found_message}
         )
     obj = update_patient(db, obj, data=payload.model_dump(exclude_unset=True))
     return obj
@@ -85,7 +89,7 @@ def delete_paciente(
     obj = get_patient(db, patient_id)
     if not obj:
         raise HTTPException(
-            status_code=404, detail={"message": "Paciente no encontrado"}
+            status_code=404, detail={"message":patient_not__found_message}
         )
     delete_patient(db, obj)
     return None
