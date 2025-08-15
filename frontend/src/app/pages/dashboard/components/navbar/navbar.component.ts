@@ -4,9 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { PatientSearchModalComponent } from '../../../../components/patient-search-modal/patient-search-modal.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
-import { User } from '../../../../core/models/api.models';
+import { Patient, User } from '../../../../core/models/api.models';
 import { PatientsService } from '../../../../core/services/patients.service';
-import { Patient } from '../../../../core/models/api.models';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
@@ -17,12 +16,6 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  openPatientModal(patient: Patient): void {
-    this.showSearchDropdown = false;
-    if (patient.id) {
-      this.router.navigate(['/dashboard/patients', patient.id]);
-    }
-  }
   @Output() sidebarToggle = new EventEmitter<void>();
 
   private readonly authService = inject(AuthService);
@@ -50,6 +43,7 @@ export class NavbarComponent implements OnInit {
         this.performPatientSearch(query);
       });
   }
+
   onSearchInput(): void {
     this.searchError = null;
     this.searchLoading = true;
@@ -90,6 +84,7 @@ export class NavbarComponent implements OnInit {
       this.router.navigate(['/dashboard/patients', patient.id]);
     }
   }
+
 
   toggleSidebar(): void {
     this.sidebarToggle.emit();
@@ -164,7 +159,6 @@ export class NavbarComponent implements OnInit {
   getUserInitials(): string {
     if (!this.currentUser) return 'U';
 
-    // Prioridad: first_name + last_name, luego full_name
     if (this.currentUser.first_name && this.currentUser.last_name) {
       return (
         this.currentUser.first_name[0].toUpperCase() +

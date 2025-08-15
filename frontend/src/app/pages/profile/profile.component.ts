@@ -19,10 +19,10 @@ import { User } from '../../core/models/api.models';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  private authService = inject(AuthService);
-  private authStore = inject(AuthStore);
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly authStore = inject(AuthStore);
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   currentUser = this.authStore.user;
   userDisplayName = this.authStore.userDisplayName;
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       first_name: ['', [Validators.required, Validators.minLength(2)]],
       last_name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.pattern(/^\+?[\d\s\-\(\)]+$/)]],
+      phone: ['', [Validators.pattern(/^\+?[\d\s\-()]+$/)]],
     });
 
     this.emailForm = this.fb.group({
@@ -71,14 +71,13 @@ export class ProfileComponent implements OnInit {
       current_password: ['', [Validators.required]],
     });
 
-    this.passwordForm = this.fb.group(
-      {
-        current_password: ['', [Validators.required]],
-        new_password: ['', [Validators.required, Validators.minLength(6)]],
-        confirm_password: ['', [Validators.required]],
-      },
-      { validators: this.passwordMatchValidator }
-    );
+    this.passwordForm = this.fb.group({
+      current_password: ['', [Validators.required]],
+      new_password: ['', [Validators.required, Validators.minLength(6)]],
+      confirm_password: ['', [Validators.required]],
+    }, {
+      validators: this.passwordMatchValidator
+    });
 
     this.roleForm = this.fb.group({
       new_role: ['', [Validators.required]],
