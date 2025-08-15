@@ -117,7 +117,7 @@ export class AppointmentNewComponent implements OnInit {
       const formValue = this.appointmentForm.value;
       const currentUser = this.authService.getCurrentUser();
 
-      if (!currentUser || !currentUser.id) {
+      if (!currentUser?.id) {
         this.errorMessage = 'Error: Usuario no autenticado o ID no disponible';
         this.isSubmitting = false;
         return;

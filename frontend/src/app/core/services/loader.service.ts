@@ -12,7 +12,7 @@ export interface LoaderState {
   providedIn: 'root',
 })
 export class LoaderService {
-  private loaderState = new BehaviorSubject<LoaderState>({
+  private readonly loaderState = new BehaviorSubject<LoaderState>({
     isVisible: false,
     message: 'Cargando...',
     type: 'default',

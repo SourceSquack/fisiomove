@@ -58,6 +58,8 @@
   border-radius: 8px;
   margin-bottom: 1rem;
   font-weight: 500;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
 }
 
 .error-message i {
@@ -172,12 +174,6 @@
 .form-textarea {
   resize: vertical;
   min-height: 100px;
-}
-
-.error-message {
-  color: #ef4444;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
 }
 
 .loading-message {
