@@ -129,7 +129,6 @@ def get_metricas_tiempo_real(
     """Obtener métricas en tiempo real para el dashboard"""
     try:
         now = datetime.now()
-        today = now.date()
 
         summary = get_dashboard_summary(db)
         today_appointments = get_today_appointments(db)

@@ -27,6 +27,23 @@ def get_dashboard_summary(db: Session) -> Dict[str, Any]:
     }
 
 
+def _build_next_appointment_info(next_appointment, now):
+    """Build next appointment information, extracting nested conditional logic."""
+    if not next_appointment:
+        return None
+
+    patient_name = None
+    if next_appointment.patient:
+        patient_name = next_appointment.patient.name
+
+    return {
+        "id": str(next_appointment.id),
+        "patient_name": patient_name,
+        "start_time": next_appointment.start_time.isoformat(),
+        "time_until": str(next_appointment.start_time - now),
+    }
+
+
 def get_today_appointments(db: Session) -> Dict[str, Any]:
     """Obtener citas del día actual"""
     today = date.today()
@@ -66,26 +83,7 @@ def get_today_appointments(db: Session) -> Dict[str, Any]:
             }
             for apt in appointments
         ],
-        "next_appointment": (
-            {
-                "id": str(next_appointment.id),
-                "patient_name": (
-                    next_appointment.patient.name
-                    if next_appointment and next_appointment.patient
-                    else None
-                ),
-                "start_time": (
-                    next_appointment.start_time.isoformat()
-                    if next_appointment
-                    else None
-                ),
-                "time_until": (
-                    str(next_appointment.start_time - now) if next_appointment else None
-                ),
-            }
-            if next_appointment
-            else None
-        ),
+        "next_appointment": _build_next_appointment_info(next_appointment, now),
     }
 
 
