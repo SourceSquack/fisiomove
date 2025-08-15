@@ -196,28 +196,38 @@ def _handle_email_confirmation_bypass(
     return None
 
 
-@router.post("/login", response_model=dict)
-def login(form: LoginPayload):
-    email = form.email.strip().lower()
-    password = form.password
-
+def _validate_credentials(email: str, password: str) -> None:
+    """Validate that email and password are provided."""
     if not email or not password:
         raise HTTPException(
             status_code=400, detail={"message": "Credenciales inválidas"}
         )
 
+
+def _handle_login_error(email: str, password: str, error: ValueError) -> dict:
+    """Handle login errors and attempt bypass if applicable."""
+    detail = error.args[0] if error.args else {"message": "Error de autenticación"}
+
+    # Try bypass if applicable
+    bypass_result = _handle_email_confirmation_bypass(email, password, detail)
+    if bypass_result:
+        return bypass_result
+
+    code = detail.get("status", 401) if isinstance(detail, dict) else 401
+    raise HTTPException(status_code=code, detail=detail)
+
+
+@router.post("/login", response_model=dict)
+def login(form: LoginPayload):
+    email = form.email.strip().lower()
+    password = form.password
+
+    _validate_credentials(email, password)
+
     try:
         return sign_in_user(email, password)
     except ValueError as e:
-        detail = e.args[0] if e.args else {"message": "Error de autenticación"}
-
-        # Try bypass if applicable
-        bypass_result = _handle_email_confirmation_bypass(email, password, detail)
-        if bypass_result:
-            return bypass_result
-
-        code = detail.get("status", 401) if isinstance(detail, dict) else 401
-        raise HTTPException(status_code=code, detail=detail)
+        return _handle_login_error(email, password, e)
 
 
 @router.post("/refresh", response_model=dict)
