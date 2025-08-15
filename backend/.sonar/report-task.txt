@@ -1,6 +1,0 @@
-projectKey=fisomove-back
-serverUrl=http://localhost:9000
-serverVersion=25.8.0.112029
-dashboardUrl=http://localhost:9000/dashboard?id=fisomove-back
-ceTaskId=a88374e1-43f3-4f75-9c4a-866f370f9620
-ceTaskUrl=http://localhost:9000/api/ce/task?id=a88374e1-43f3-4f75-9c4a-866f370f9620

@@ -520,4 +520,5 @@ backend/supabase/config.json
 #================================================
 # SONARQUBE
 #================================================
-/.scannerwork
+.scannerwork/
+.sonar/
