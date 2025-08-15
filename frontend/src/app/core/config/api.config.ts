@@ -9,7 +9,7 @@ export const API_CONFIG = {
     REGISTER: 'auth/register',
     ME: 'auth/me',
     LOGOUT: 'auth/logout',
-    CHANGE_PASSWORD: 'auth/change-password',
+    CHANGE_PASSWORD: environment.API_ENDPOINTS.AUTH.CHANGE_PASSWORD,
     VERIFY_TOKEN: 'auth/verify-token',
   },
 

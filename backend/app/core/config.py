@@ -27,19 +27,7 @@ class Settings(BaseSettings):
     ENV: str = Field(default="development")  # development | staging | production
 
     # CORS - Configuración más amplia para desarrollo
-    CORS_ORIGINS: List[AnyHttpUrl] | List[str] = [
-        "http://localhost:4200",
-        "http://localhost:4201",
-        "http://localhost:4202",
-        "http://localhost:4203",
-        "http://localhost:3000",
-        "http://127.0.0.1:4200",
-        "http://127.0.0.1:4201",
-        "http://127.0.0.1:4202",
-        "http://127.0.0.1:4203",
-        "http://127.0.0.1:3000",
-        "*",  # Permitir todos los orígenes en desarrollo
-    ]
+    CORS_ORIGINS: List[AnyHttpUrl] | List[str] = ["*"]
 
     # Database (puede omitirse si no se usa)
     DATABASE_URL: Optional[PostgresDsn | str] = None
@@ -72,9 +60,8 @@ class Settings(BaseSettings):
     )
     SUPABASE_PASSWORD: Optional[str] = None
 
-    # Dev-only: bypass email confirmation for selected users
     DEV_BYPASS_EMAIL_CONFIRM: bool = True
-    DEV_BYPASS_EMAILS: str = ""  # CSV en .env (p.ej. admin@x.com,user@y.com)
+    DEV_BYPASS_EMAILS: str = "" 
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
@@ -84,7 +71,6 @@ class Settings(BaseSettings):
         elif isinstance(v, list):
             return v
         return ["*"]
-
 
 @lru_cache()
 def get_settings() -> Settings:
