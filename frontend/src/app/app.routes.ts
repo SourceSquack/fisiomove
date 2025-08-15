@@ -12,7 +12,6 @@ import { AppointmentsComponent } from './pages/appointment/appointments.componen
 import { AppointmentNewComponent } from './pages/appointment/appointment-new/appointment-new.component';
 import { AppointmentDetailComponent } from './pages/appointment/appointment-detail/appointment-detail.component';
 import { AppointmentEditComponent } from './pages/appointment/appointment-edit/appointment-edit.component';
-import { DebugAuthComponent } from './debug-auth/debug-auth.component';
 import { authGuard, guestGuard } from './core/guards';
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -26,8 +25,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
   { path: 'contact', component: ContactComponent },
-
-  { path: 'debug-auth', component: DebugAuthComponent },
 
   {
     path: 'dashboard',
