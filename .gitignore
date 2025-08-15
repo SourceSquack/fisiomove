@@ -517,3 +517,7 @@ postman/
 # Supabase
 backend/supabase/config.json
 
+#================================================
+# SONARQUBE
+#================================================
+/.scannerwork
