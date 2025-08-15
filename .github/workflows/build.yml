@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+      - zetah_dev
+      - nano_dev
+      - dev
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
