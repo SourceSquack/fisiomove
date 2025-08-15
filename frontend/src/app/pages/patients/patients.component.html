@@ -1,11 +1,12 @@
-<!-- Header -->
-<div class="patients-header">
-  <div class="header-left">
-    <div class="header-title">
-      <h1>Gestión de pacientes</h1>
-      <p>Administra la información de todos los pacientes</p>
-    </div>
+<div class="header-container">
+  <div class="header-title">
+    <h1>Gestión de pacientes</h1>
+    <p>Administra la información de todos los pacientes</p>
   </div>
+  <button class="btn-primary" (click)="createNewPatient()">
+    <i class="fas fa-plus"></i>
+    Nuevo paciente
+  </button>
 </div>
 
 <!-- Barra de filtros y acciones -->
@@ -24,11 +25,6 @@
       <option value="Other">Otro</option>
     </select>
   </div>
-
-  <button class="btn-primary" (click)="createNewPatient()">
-    <i class="fas fa-plus"></i>
-    Nuevo paciente
-  </button>
 </div>
 
 <!-- Contenido principal -->

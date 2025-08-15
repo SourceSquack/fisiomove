@@ -8,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class CalendarComponent {
   text: string = 'Calendar works!';
+
+  createNewEvent() {
+    alert('xd');
+  }
 }
