@@ -1,62 +1,48 @@
 <div class="modal-overlay" (click)="onClose()" (keydown)="onClose()"></div>
 <div class="modal-content">
   <div class="modal-header">
-    <h3>🔍 Resultados de búsqueda</h3>
+    <h3>Resultados de búsqueda</h3>
     <button class="close-btn" (click)="onClose()" aria-label="Cerrar modal">
       <i class="fas fa-times"></i>
     </button>
   </div>
   <div class="modal-body">
-    <!-- Estado de carga -->
-    <div *ngIf="loading" class="search-loading">
+    @if(loading){
+    <div class="search-loading">
       <i class="fas fa-spinner fa-spin"></i>
-      <span>Buscando pacientes...</span>
+      <span>Buscando pacientes</span>
     </div>
-
-    <!-- Estado de error -->
-    <div *ngIf="error" class="search-error">
+    } @if(error){
+    <div class="search-error">
       <i class="fas fa-exclamation-triangle"></i>
       <span>{{ error }}</span>
     </div>
-
-    <!-- Resultados -->
-    <ul *ngIf="!loading && !error && results?.length">
+    } @if(!loading && !error && results.length){
+    <ul>
+      @for(patient of results; track patient.id){
       <li
-        *ngFor="let patient of results; trackBy: trackByPatientId"
-        class="search-result-item"
         (click)="onSelect(patient)"
-        role="button"
-        (keydown.enter)="onSelect(patient)"
-        (keydown.space)="onSelect(patient)"
+        (keydown)="onSelect(patient)"
+        class="search-result-item"
       >
         <div class="result-main">
-          <span class="result-name">{{
-            patient.full_name || "Sin nombre"
-          }}</span>
-          <span class="result-email" *ngIf="patient.email">{{
-            patient.email
-          }}</span>
+          <span class="result-name">{{ patient.full_name }}</span>
+          <span class="result-email">{{ patient.email }}</span>
         </div>
-        <div class="result-details" *ngIf="hasPatientDetails(patient)">
-          <span *ngIf="patient.dni">{{ patient.dni }}</span>
-          <span *ngIf="patient.birth_date">{{
-            formatDate(patient.birth_date)
-          }}</span>
-          <span *ngIf="patient.gender">{{
-            getGenderLabel(patient.gender)
-          }}</span>
+        <div class="result-details">
+          <span>{{ patient.dni }}</span>
+          <span>{{ formatDate(patient.birth_date || "") }}</span>
+          <span>{{ getGenderLabel(patient.gender || "") }}</span>
         </div>
       </li>
+      }
     </ul>
-
-    <!-- Sin resultados -->
-    <div
-      *ngIf="!loading && !error && results?.length === 0"
-      class="search-no-results"
-    >
+    } @if(!loading && !error && results.length == 0){
+    <div class="search-no-results">
       <i class="fas fa-search"></i>
       <span>No se encontraron pacientes</span>
       <small>Intenta con otro término de búsqueda</small>
     </div>
+    }
   </div>
 </div>

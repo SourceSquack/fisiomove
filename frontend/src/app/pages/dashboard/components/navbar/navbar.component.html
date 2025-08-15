@@ -20,7 +20,7 @@
       [error]="searchError"
       [results]="searchResults"
       (close)="showSearchDropdown = false"
-      (selectPatient)="openPatientModal($event)"
+      (selectPatient)="goToPatientProfile($event)"
     ></app-patient-search-modal>
   </div>
 
@@ -34,6 +34,7 @@
       <div
         class="user-profile"
         (click)="toggleDropdown()"
+        (keydown)="toggleDropdown()"
         [class.active]="isDropdownOpen"
       >
         @if (isLoading) {
@@ -67,7 +68,11 @@
 
       <!-- Dropdown Menu -->
       @if (isDropdownOpen) {
-      <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div
+        class="dropdown-menu"
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+      >
         <div class="dropdown-header">
           <div class="user-info">
             <div class="avatar-icon-large">
@@ -109,5 +114,9 @@
 </nav>
 
 @if (isDropdownOpen) {
-<div class="dropdown-overlay" (click)="closeDropdown()"></div>
+<div
+  class="dropdown-overlay"
+  (click)="closeDropdown()"
+  (keydown)="closeDropdown()"
+></div>
 }

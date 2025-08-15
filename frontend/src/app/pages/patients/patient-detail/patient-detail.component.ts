@@ -20,7 +20,7 @@ import { Patient } from '../../../core/models/api.models';
   styleUrls: ['./patient-detail.component.css'],
 })
 export class PatientDetailComponent implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   patient: Patient | null = null;
   patientForm: FormGroup;
@@ -30,10 +30,10 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
   error: string | null = null;
   patientId: string;
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private patientsService = inject(PatientsService);
-  private fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly patientsService = inject(PatientsService);
+  private readonly fb = inject(FormBuilder);
 
   constructor() {
     this.patientId = this.route.snapshot.params['id'];
@@ -111,7 +111,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.patientForm.valid && this.patient && this.patient.id) {
+    if (this.patientForm.valid && this.patient?.id) {
       this.isSaving = true;
       this.error = null;
 
@@ -190,7 +190,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
 
   getFieldError(fieldName: string): string {
     const field = this.patientForm.get(fieldName);
-    if (!field || !field.errors) return '';
+    if (!field?.errors) return '';
 
     const errors = field.errors;
     if (errors['required']) return 'Este campo es obligatorio';
