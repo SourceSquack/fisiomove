@@ -19,6 +19,7 @@ prompts/
 .env.production
 .env.staging
 *.env
+.environments/
 
 # ==============================================
 # PYTHON / BACKEND (FastAPI)
@@ -522,3 +523,4 @@ backend/supabase/config.json
 #================================================
 .scannerwork/
 .sonar/
+
