@@ -24,5 +24,6 @@ export class SidebarComponent {
     { name: 'Historial', icon: "fas fa-file-medical", route: '/dashboard/historic' },
     { name: 'Operativos', icon: "fas fa-box", route: '/dashboard/operatives' },
     { name: 'Configuración', icon: "fas fa-cog", route: '/dashboard/settings' },
+    { name: 'Perfil', icon: "fas fa-user", route: '/dashboard/profile' }
   ]
 }

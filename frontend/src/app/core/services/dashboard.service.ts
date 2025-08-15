@@ -25,9 +25,8 @@ export interface AppointmentsByStatus {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:8000/api/v1/dashboard';
-
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = 'http://localhost:8000/api/v1/dashboard';
+  constructor(private readonly http: HttpClient) { }
 
   // Obtener resumen general del dashboard
   getDashboardSummary(): Observable<DashboardSummary> {

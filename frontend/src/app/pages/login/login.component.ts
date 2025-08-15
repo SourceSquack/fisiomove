@@ -26,7 +26,10 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
-  private returnUrl = '/dashboard';
+  private readonly returnUrl = '/dashboard';
+
+  termsModalisActive = false;
+  privacyModalisActive = false;
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -98,5 +101,13 @@ export class LoginComponent {
   }
   get password() {
     return this.loginForm.get('password');
+  }
+
+  changeStatusTermsModal(): void {
+    this.termsModalisActive = !this.termsModalisActive;
+  }
+
+  changeStatusPrivacyModal(): void {
+    this.privacyModalisActive = !this.privacyModalisActive;
   }
 }

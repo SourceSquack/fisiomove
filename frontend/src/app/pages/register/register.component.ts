@@ -42,6 +42,8 @@ export class RegisterComponent {
   successMessage = '';
   showPassword = false;
   showConfirmPassword = false;
+  termsModalisActive = false;
+  privacyModalisActive = false;
 
   constructor() {
     this.registerForm = this.fb.group(
@@ -142,5 +144,12 @@ export class RegisterComponent {
   }
   get terms() {
     return this.registerForm.get('terms');
+  }
+  changeStatusTermsModal(): void {
+    this.termsModalisActive = !this.termsModalisActive;
+  }
+
+  changeStatusPrivacyModal(): void {
+    this.privacyModalisActive = !this.privacyModalisActive;
   }
 }

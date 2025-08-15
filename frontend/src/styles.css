@@ -1,10 +1,6 @@
 @import "bulma/css/bulma.css";
 
 :root {
-  --bulma-primary-h: 217deg;
-  --bulma-primary-s: 91%;
-  --bulma-primary-l: 60%;
-
   --bulma-link-h: 217deg;
   --bulma-link-s: 91%;
   --bulma-link-l: 60%;
@@ -18,8 +14,9 @@
   --success-color: #28a745;
 
   --text-color: #000000;
-  --background-color: #f8f8f8;
   --footer-text-color: #ffffff;
+
+  background: linear-gradient(135deg, #f0f4ff, #d9e6ff);
 }
 
 @font-face {

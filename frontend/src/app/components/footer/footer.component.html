@@ -1,13 +1,37 @@
 <footer>
   <div class="container footer-top">
     <div class="footer-section footer-logo">
-      <img src="assets/logo.png" alt="FisioMove Logo" />
-      <h2>FISIOMOVE</h2>
-      <p>¡A UN MOVIMIENTO DE TU BIENESTAR!</p>
-      <p>
-        Tu centro de confianza para tratamientos de fisioterapia especializados.
-        Comprometidos con tu bienestar y recuperación integral.
-      </p>
+      <!-- <img src="assets/logo.png" alt="FisioMove Logo" /> -->
+      <div class="center">
+        <h2><b>FISIOMOVE</b></h2>
+        <p>¡A un movimiento de tu bienestar!</p>
+        <p>
+          Tu centro de confianza para tratamientos de fisioterapia
+          especializados. Comprometidos con tu bienestar y recuperación
+          integral.
+        </p>
+      </div>
+    </div>
+    <div class="footer-section footer-links">
+      <h3>Enlaces rápidos</h3>
+      <ul>
+        @for (option of footerOptions; track option) {
+        <li>
+          <a href="{{ option.route }}">{{ option.label }}</a>
+        </li>
+        }
+      </ul>
+    </div>
+    <div class="footer-section footer-contact">
+      <h3>Contacto</h3>
+      <ul>
+        <li>
+          <i class="fas fa-map-marker-alt"></i> Cra 26 # 83-58 Corales, Pereira,
+          Risaralda
+        </li>
+        <li><i class="fas fa-phone"></i> +57 310 505 5633</li>
+        <li><i class="fas fa-envelope"></i> info@fisiomove.com</li>
+      </ul>
       <div class="social">
         @for (social of footerOptionsSocial; track social) {
         <a
@@ -20,27 +44,9 @@
         }
       </div>
     </div>
-    <div class="footer-section footer-links">
-      <h3>Enlaces Rápidos</h3>
-      <ul>
-        @for (option of footerOptions; track option) {
-        <li>
-          <a href="{{ option.route }}">{{ option.label }}</a>
-        </li>
-        }
-      </ul>
-    </div>
-    <div class="footer-section footer-contact">
-      <h3>Contacto</h3>
-      <ul>
-        <li><i class="fas fa-map-marker-alt"></i> Cra 26 # 83-58 Corales, Pereira, Risaralda</li>
-        <li><i class="fas fa-phone"></i> +57 310 505 5633</li>
-        <li><i class="fas fa-envelope"></i> info@fisiomove.com</li>
-      </ul>
-    </div>
   </div>
   <hr class="footer-separator" />
   <div class="footer-bottom">
-    <p>&copy; 2025 FisioMove. Todos los derechos reservados. |</p>
+    <p>&copy; 2025 Fisiomove. Todos los derechos reservados.</p>
   </div>
 </footer>

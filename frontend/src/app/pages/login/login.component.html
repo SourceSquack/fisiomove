@@ -45,7 +45,6 @@
             type="password"
             id="password"
             formControlName="password"
-            placeholder="********"
             [class.error]="password?.invalid && password?.touched"
           />
         </div>
@@ -75,7 +74,7 @@
       >
         @if (isLoading) {
         <i class="fas fa-spinner fa-spin"></i>
-        Iniciando sesión... } @else { Iniciar sesión }
+        Iniciando sesión } @else { Iniciar sesión }
       </button>
 
       <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
@@ -84,8 +83,74 @@
       ¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a>
     </p>
     <p class="terms">
-      Al iniciar sesión, aceptas nuestros términos de servicio y política de
-      privacidad
+      Al iniciar sesión, aceptas nuestros
+      <b
+        class="text-link"
+        (click)="changeStatusTermsModal()"
+        (keydown)="changeStatusTermsModal()"
+      >
+        términos de servicio
+      </b>
+      y nuestra
+      <b
+        class="text-link"
+        (click)="changeStatusPrivacyModal()"
+        (keydown)="changeStatusPrivacyModal()"
+      >
+        política de privacidad.
+      </b>
     </p>
+  </div>
+</div>
+
+<!-- Modal: Términos de servicio -->
+<div [ngClass]="'modal' + (termsModalisActive ? ' is-active' : '')">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="card">
+      <div class="card-content">
+        <p class="title">Términos de servicio</p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam,
+          possimus quisquam! Temporibus repellendus non itaque accusantium,
+          culpa architecto. Repellendus ea minus nobis nostrum nisi deserunt
+          numquam adipisci magni, quasi optio.
+        </p>
+        <br />
+        <div class="has-text-centered">
+          <button
+            class="delete"
+            aria-label="close"
+            (click)="changeStatusTermsModal()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Política de privacidad -->
+<div [ngClass]="'modal' + (privacyModalisActive ? ' is-active' : '')">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="card">
+      <div class="card-content">
+        <p class="title">Política de privacidad</p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam,
+          possimus quisquam! Temporibus repellendus non itaque accusantium,
+          culpa architecto. Repellendus ea minus nobis nostrum nisi deserunt
+          numquam adipisci magni, quasi optio.
+        </p>
+        <br />
+        <div class="has-text-centered">
+          <button
+            class="delete"
+            aria-label="close"
+            (click)="changeStatusPrivacyModal()"
+          ></button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

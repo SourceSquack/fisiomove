@@ -3,24 +3,13 @@
   <div
     class="overlay"
     [class.show]="sidebarOpen"
-    (click)="closeSidebar()"
+    (click)="toggleSidebar()"
+    (keydown)="toggleSidebar()"
   ></div>
   <main class="main-content">
     <app-navbar (sidebarToggle)="toggleSidebar()"></app-navbar>
     <div class="page-content">
-
       <router-outlet></router-outlet>
-
-      <!-- <div class="main-grid">
-        <div class="left-column">
-          <app-appointments-list [selectedDate]="selectedDate"></app-appointments-list>
-          <app-appointments-chart></app-appointments-chart>
-        </div>
-        <div class="right-column">
-          <app-calendar (dateSelected)="onDateSelected($event)"></app-calendar>
-          <app-reminders></app-reminders>
-        </div>
-      </div> -->
     </div>
   </main>
 </div>

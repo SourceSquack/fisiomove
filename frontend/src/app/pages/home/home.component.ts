@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
     },
     {
       id: '2',
-      title: 'Rehabilitación Ortopédica',
+      title: 'Rehabilitación ortopédica',
       description: 'Tratamiento integral para lesiones musculoesqueléticas',
       icon: 'fa-bone',
       detailedDescription:
@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit {
     },
     {
       id: '3',
-      title: 'Terapia Manual',
+      title: 'Terapia manual',
       description: 'Técnicas manuales avanzadas para el alivio del dolor',
       icon: 'fa-hand-paper',
       detailedDescription:
@@ -141,7 +141,7 @@ export class HomeComponent implements OnInit {
     },
     {
       id: '4',
-      title: 'Fisioterapia Neurológica',
+      title: 'Fisioterapia neurológica',
       description: 'Especializada en trastornos del sistema nervioso',
       icon: 'fa-brain',
       detailedDescription:

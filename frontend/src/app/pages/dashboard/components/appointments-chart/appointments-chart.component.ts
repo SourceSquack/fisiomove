@@ -30,7 +30,7 @@ export class AppointmentsChartComponent implements OnInit, OnChanges {
   public appointmentsChartType: ChartType = 'doughnut';
 
   public appointmentsChartData: ChartConfiguration<'doughnut'>['data'] = {
-    labels: ['Confirmadas', 'Pendientes', 'Canceladas', 'Completadas', 'No Asistidas'],
+    labels: ['Confirmadas', 'Pendientes', 'Canceladas', 'Completadas', 'No asistidas'],
     datasets: [
       {
         data: [0, 0, 0, 0, 0],
@@ -39,7 +39,7 @@ export class AppointmentsChartComponent implements OnInit, OnChanges {
           '#f59e0b', // Amarillo - Pendientes
           '#ef4444', // Rojo - Canceladas
           '#3b82f6', // Azul - Completadas
-          '#ab47bc', // Morado - No Asistidas
+          '#ab47bc', // Morado - No asistidas
         ],
         borderWidth: 0,
       },

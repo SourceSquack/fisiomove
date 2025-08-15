@@ -45,10 +45,9 @@ export class FooterComponent {
   ];
 
   footerOptions: FooterOption[] = [
-    { label: 'Inicio', route: '/' },
     { label: 'Servicios', route: '/services' },
     { label: 'Nosotros', route: '/about' },
-    { label: 'Ubicación', route: '/location' },
+    { label: 'Ubicación', route: 'https://www.google.com/maps/dir//Cra.+25+%23+82-96+Pereira,+Risaralda/@4.801674,-75.747584,1736m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x8e387db834f386d1:0x39a9704f655cab3d!2m2!1d-75.747584!2d4.801674?entry=ttu&g_ep=EgoyMDI1MDgxMi4wIKXMDSoASAFQAw%3D%3D' },
     { label: 'Contacto', route: '/contact' },
   ];
 }

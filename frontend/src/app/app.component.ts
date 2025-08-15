@@ -16,14 +16,24 @@ import { AuthStore } from './core/stores/auth.store';
     CommonModule,
     LoaderComponent,
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  template: `
+  @if (isDashboardRoute) {
+    <router-outlet />
+  }@else{
+    <app-navbar />
+    <router-outlet />
+    <app-footer />
+  }
+  <!-- Loader Global para operaciones de autenticación -->
+  @if (authStore.isLoading()) {
+    <app-loader [message]="getLoadingMessage()" [fullscreen]="true"> </app-loader>
+  } `,
 })
 export class AppComponent implements OnInit {
   protected title = 'Fisiomove';
   isDashboardRoute = false;
 
-  private router = inject(Router);
+  private readonly router = inject(Router);
   protected authStore = inject(AuthStore);
 
   ngOnInit() {

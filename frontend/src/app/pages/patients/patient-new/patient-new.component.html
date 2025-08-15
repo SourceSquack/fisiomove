@@ -1,221 +1,220 @@
-<div class="patient-new-container">
-  <!-- Header -->
-  <div class="patient-new-header">
-    <div class="header-left">
+<div class="patient-new-header">
+  <div class="header-left level">
+    <div class="header-title">
+      <h1>Nuevo paciente</h1>
+      <p>Completa la información para registrar un nuevo paciente</p>
+    </div>
+    <div class="level-right">
       <button class="back-button" (click)="goBack()">
         <i class="fas fa-arrow-left"></i>
-        <span>Volver a Pacientes</span>
+        <span>Volver</span>
       </button>
-      <div class="header-title">
-        <h1>Nuevo Paciente</h1>
-        <p>Completa la información para registrar un nuevo paciente</p>
-      </div>
     </div>
   </div>
+</div>
 
-  <!-- Contenido principal -->
-  <div class="patient-new-content">
-    <!-- Formulario -->
-    <div class="form-section">
-      <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
-        <!-- Información Personal -->
-        <div class="form-group-section">
-          <h3>Información Personal</h3>
+<!-- Contenido principal -->
+<div class="patient-new-content">
+  <!-- Formulario -->
+  <div class="form-section">
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+      <!-- Información Personal -->
+      <div class="form-group-section">
+        <h3>Información personal</h3>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="first_name">Nombre *</label>
-              <input
-                type="text"
-                id="first_name"
-                formControlName="first_name"
-                class="form-control"
-                [class.error]="first_name?.invalid && first_name?.touched"
-                placeholder="Ingresa el nombre"
-              />
-              @if (first_name?.invalid && first_name?.touched) {
-              <div class="error-message">
-                @if (first_name?.errors?.['required']) { El nombre es requerido
-                } @if (first_name?.errors?.['minlength']) { El nombre debe tener
-                al menos 2 caracteres }
-              </div>
-              }
-            </div>
-
-            <div class="form-group">
-              <label for="last_name">Apellidos *</label>
-              <input
-                type="text"
-                id="last_name"
-                formControlName="last_name"
-                class="form-control"
-                [class.error]="last_name?.invalid && last_name?.touched"
-                placeholder="Ingresa los apellidos"
-              />
-              @if (last_name?.invalid && last_name?.touched) {
-              <div class="error-message">
-                @if (last_name?.errors?.['required']) { Los apellidos son
-                requeridos } @if (last_name?.errors?.['minlength']) { Los
-                apellidos deben tener al menos 2 caracteres }
-              </div>
-              }
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                formControlName="email"
-                class="form-control"
-                [class.error]="email?.invalid && email?.touched"
-                placeholder="correo@ejemplo.com"
-              />
-              @if (email?.invalid && email?.touched) {
-              <div class="error-message">
-                @if (email?.errors?.['email']) { Ingresa un email válido }
-              </div>
-              }
-            </div>
-
-            <div class="form-group">
-              <label for="phone">Teléfono</label>
-              <input
-                type="tel"
-                id="phone"
-                formControlName="phone"
-                class="form-control"
-                [class.error]="phone?.invalid && phone?.touched"
-                placeholder="+34 123 456 789"
-              />
-              @if (phone?.invalid && phone?.touched) {
-              <div class="error-message">
-                @if (phone?.errors?.['pattern']) { Ingresa un número de teléfono
-                válido }
-              </div>
-              }
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="dni">Cédula *</label>
-              <input
-                type="text"
-                id="dni"
-                formControlName="dni"
-                class="form-control"
-                [class.error]="dni?.invalid && dni?.touched"
-                placeholder="1112776418"
-              />
-              @if (dni?.invalid && dni?.touched) {
-              <div class="error-message">
-                @if (dni?.errors?.['required']) { La cédula es requerida } @if
-                (dni?.errors?.['pattern']) { Formato de cédula incorrecto (debe
-                tener 10 dígitos) }
-              </div>
-              }
-            </div>
-
-            <div class="form-group">
-              <label for="birth_date">Fecha de Nacimiento</label>
-              <input
-                type="date"
-                id="birth_date"
-                formControlName="birth_date"
-                class="form-control"
-              />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="gender">Género</label>
-              <select id="gender" formControlName="gender" class="form-control">
-                <option value="">Seleccionar género</option>
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-                <option value="Other">Otro</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="address">Dirección</label>
-              <input
-                type="text"
-                id="address"
-                formControlName="address"
-                class="form-control"
-                placeholder="Calle, número, ciudad..."
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Información Médica -->
-        <div class="form-group-section">
-          <h3>Información Médica</h3>
-
+        <div class="form-row">
           <div class="form-group">
-            <label for="emergency_contact">Contacto de Emergencia</label>
+            <label for="first_name">Nombre *</label>
             <input
               type="text"
-              id="emergency_contact"
-              formControlName="emergency_contact"
+              id="first_name"
+              formControlName="first_name"
               class="form-control"
-              placeholder="Nombre y teléfono del contacto de emergencia"
+              [class.error]="first_name?.invalid && first_name?.touched"
+              placeholder="Ingresa el nombre"
+            />
+            @if (first_name?.invalid && first_name?.touched) {
+            <div class="error-message">
+              @if (first_name?.errors?.['required']) { El nombre es requerido }
+              @if (first_name?.errors?.['minlength']) { El nombre debe tener al
+              menos 2 caracteres }
+            </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="last_name">Apellidos *</label>
+            <input
+              type="text"
+              id="last_name"
+              formControlName="last_name"
+              class="form-control"
+              [class.error]="last_name?.invalid && last_name?.touched"
+              placeholder="Ingresa los apellidos"
+            />
+            @if (last_name?.invalid && last_name?.touched) {
+            <div class="error-message">
+              @if (last_name?.errors?.['required']) { Los apellidos son
+              requeridos } @if (last_name?.errors?.['minlength']) { Los
+              apellidos deben tener al menos 2 caracteres }
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control"
+              [class.error]="email?.invalid && email?.touched"
+              placeholder="correo@ejemplo.com"
+            />
+            @if (email?.invalid && email?.touched) {
+            <div class="error-message">
+              @if (email?.errors?.['email']) { Ingresa un email válido }
+            </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Teléfono</label>
+            <input
+              type="tel"
+              id="phone"
+              formControlName="phone"
+              class="form-control"
+              [class.error]="phone?.invalid && phone?.touched"
+              placeholder="+34 123 456 789"
+            />
+            @if (phone?.invalid && phone?.touched) {
+            <div class="error-message">
+              @if (phone?.errors?.['pattern']) { Ingresa un número de teléfono
+              válido }
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dni">Cédula *</label>
+            <input
+              type="text"
+              id="dni"
+              formControlName="dni"
+              class="form-control"
+              [class.error]="dni?.invalid && dni?.touched"
+              placeholder="1112776418"
+            />
+            @if (dni?.invalid && dni?.touched) {
+            <div class="error-message">
+              @if (dni?.errors?.['required']) { La cédula es requerida } @if
+              (dni?.errors?.['pattern']) { Formato de cédula incorrecto (debe
+              tener 10 dígitos) }
+            </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="birth_date">Fecha de nacimiento</label>
+            <input
+              type="date"
+              id="birth_date"
+              formControlName="birth_date"
+              class="form-control"
             />
           </div>
+        </div>
 
+        <div class="form-row">
           <div class="form-group">
-            <label for="medical_history">Historia Médica</label>
-            <textarea
-              id="medical_history"
-              formControlName="medical_history"
-              class="form-control"
-              rows="4"
-              placeholder="Describe el historial médico relevante, alergias, medicamentos, etc."
-            ></textarea>
+            <label for="gender">Género</label>
+            <select id="gender" formControlName="gender" class="form-control">
+              <option value="">Seleccionar género</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="Other">Otro</option>
+            </select>
           </div>
 
           <div class="form-group">
-            <label for="notes">Notas Adicionales</label>
-            <textarea
-              id="notes"
-              formControlName="notes"
+            <label for="address">Dirección</label>
+            <input
+              type="text"
+              id="address"
+              formControlName="address"
               class="form-control"
-              rows="3"
-              placeholder="Cualquier información adicional relevante"
-            ></textarea>
+              placeholder="Calle, número, ciudad..."
+            />
           </div>
         </div>
+      </div>
 
-        <!-- Botones de acción -->
-        <div class="form-actions">
-          <button
-            type="button"
-            class="btn-secondary"
-            (click)="goBack()"
-            [disabled]="isSubmitting"
-          >
-            Cancelar
-          </button>
+      <!-- Información médica -->
+      <div class="form-group-section">
+        <h3>Información médica</h3>
 
-          <button
-            type="submit"
-            class="btn-primary"
-            [disabled]="patientForm.invalid || isSubmitting"
-          >
-            @if (isSubmitting) {
-            <i class="fas fa-spinner fa-spin"></i>
-            Creando... } @else {
-            <i class="fas fa-save"></i>
-            Crear Paciente }
-          </button>
+        <div class="form-group">
+          <label for="emergency_contact">Contacto de emergencia</label>
+          <input
+            type="text"
+            id="emergency_contact"
+            formControlName="emergency_contact"
+            class="form-control"
+            placeholder="Nombre y teléfono del contacto de emergencia"
+          />
         </div>
-      </form>
-    </div>
+
+        <div class="form-group">
+          <label for="medical_history">Historia médica</label>
+          <textarea
+            id="medical_history"
+            formControlName="medical_history"
+            class="form-control"
+            rows="4"
+            placeholder="Describe el historial médico relevante, alergias, medicamentos, etc."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notas adicionales</label>
+          <textarea
+            id="notes"
+            formControlName="notes"
+            class="form-control"
+            rows="3"
+            placeholder="Cualquier información adicional relevante"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="goBack()"
+          [disabled]="isSubmitting"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="patientForm.invalid || isSubmitting"
+        >
+          @if (isSubmitting) {
+          <i class="fas fa-spinner fa-spin"></i>
+          Creando... } @else {
+          <i class="fas fa-save"></i>
+          Crear paciente }
+        </button>
+      </div>
+    </form>
   </div>
 </div>

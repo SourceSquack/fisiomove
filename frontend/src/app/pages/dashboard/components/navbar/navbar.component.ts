@@ -33,11 +33,12 @@ export class NavbarComponent implements OnInit {
   searchLoading = false;
   searchError: string | null = null;
   showSearchDropdown = false;
-  private searchInput$ = new Subject<string>();
+  private readonly searchInput$ = new Subject<string>();
   private readonly patientsService = inject(PatientsService);
   currentUser: User | null = null;
   isDropdownOpen = false;
   isLoading = true;
+
 
   ngOnInit(): void {
     this.loadUserProfile();
@@ -178,7 +179,6 @@ export class NavbarComponent implements OnInit {
       }
       return names[0][0];
     }
-
     return 'U';
   }
 }

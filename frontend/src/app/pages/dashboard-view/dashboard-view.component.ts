@@ -1,23 +1,19 @@
 import { Component } from '@angular/core';
 import { StatCardComponent } from '../dashboard/components/stat-card/stat-card.component';
+import { DashboardService, DashboardSummary } from '../../core/services/dashboard.service';
 import { AppointmentsListComponent } from '../dashboard/components/appointments-list/appointments-list.component';
-import { CalendarComponent } from '../calendar/calendar.component';
 import { AppointmentsChartComponent } from '../dashboard/components/appointments-chart/appointments-chart.component';
+import { CalendarComponent } from '../calendar/calendar.component';
 import { RemindersComponent } from '../dashboard/components/reminders/reminders.component';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { DashboardService, DashboardSummary } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard-view',
   imports: [
     StatCardComponent,
     AppointmentsListComponent,
-    CalendarComponent,
-    RemindersComponent,
     AppointmentsChartComponent,
-
-    RouterOutlet,
-    RouterLink
+    CalendarComponent,
+    RemindersComponent
   ],
   templateUrl: './dashboard-view.component.html',
   styleUrl: './dashboard-view.component.css'
@@ -29,7 +25,7 @@ export class DashboardViewComponent {
   loading = false;
   selectedDate: Date = new Date();
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private readonly dashboardService: DashboardService) { }
 
   ngOnInit() {
     this.loadDashboardData();
@@ -49,4 +45,8 @@ export class DashboardViewComponent {
     });
   }
 
+  onDateSelected(date: Date): void {
+    console.log('📅 Fecha seleccionada en el calendario:', date);
+    this.selectedDate = date;
+  }
 }

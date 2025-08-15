@@ -158,9 +158,25 @@
       <div class="form-group terms-group">
         <input type="checkbox" id="terms" formControlName="terms" />
         <label for="terms" [class.error]="terms?.invalid && terms?.touched">
-          Acepto los <a href="#" target="_blank">términos de servicio</a> y la
-          <a href="#" target="_blank">política de privacidad</a>
         </label>
+        <p>
+          Acepto los
+          <b
+            class="text-link"
+            (click)="changeStatusTermsModal()"
+            (keydown)="changeStatusTermsModal()"
+          >
+            términos de servicio
+          </b>
+          y la
+          <b
+            class="text-link"
+            (click)="changeStatusPrivacyModal()"
+            (keydown)="changeStatusPrivacyModal()"
+          >
+            política de privacidad.
+          </b>
+        </p>
         @if (terms?.invalid && terms?.touched) {
         <div class="field-error">Debes aceptar los términos y condiciones</div>
         }
@@ -168,17 +184,69 @@
 
       <button
         type="submit"
-        class="btn-register"
+        class="button is-link is-fullwidth"
         [disabled]="isLoading"
         [class.loading]="isLoading"
       >
         @if (isLoading) {
         <i class="fas fa-spinner fa-spin"></i>
-        Creando cuenta... } @else { Crear cuenta }
+        Creando cuenta} @else { Crear cuenta }
       </button>
     </form>
     <p class="login-link">
       ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a>
     </p>
+  </div>
+</div>
+
+<!-- Modal: Términos de servicio -->
+<div [ngClass]="'modal' + (termsModalisActive ? ' is-active' : '')">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="card">
+      <div class="card-content">
+        <p class="title">Términos de servicio</p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam,
+          possimus quisquam! Temporibus repellendus non itaque accusantium,
+          culpa architecto. Repellendus ea minus nobis nostrum nisi deserunt
+          numquam adipisci magni, quasi optio.
+        </p>
+        <br />
+        <div class="has-text-centered">
+          <button
+            class="delete"
+            aria-label="close"
+            (click)="changeStatusTermsModal()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Política de privacidad -->
+<div [ngClass]="'modal' + (privacyModalisActive ? ' is-active' : '')">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="card">
+      <div class="card-content">
+        <p class="title">Política de privacidad</p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam,
+          possimus quisquam! Temporibus repellendus non itaque accusantium,
+          culpa architecto. Repellendus ea minus nobis nostrum nisi deserunt
+          numquam adipisci magni, quasi optio.
+        </p>
+        <br />
+        <div class="has-text-centered">
+          <button
+            class="delete"
+            aria-label="close"
+            (click)="changeStatusPrivacyModal()"
+          ></button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

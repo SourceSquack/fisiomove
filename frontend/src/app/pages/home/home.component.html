@@ -12,20 +12,6 @@
             profesionales te acompañará en tu camino hacia la recuperación
             completa.
           </p>
-          <div class="hero-buttons">
-            <button
-              class="btn-primary"
-              (click)="scrollToSection('reservation-section')"
-            >
-              <i class="fas fa-phone"></i> Contactar ahora
-            </button>
-            <button
-              class="btn-secondary"
-              (click)="scrollToSection('about-section')"
-            >
-              <i class="fas fa-info-circle"></i> Conocer más
-            </button>
-          </div>
         </div>
         <div class="hero-image">
           <img
@@ -95,7 +81,7 @@
     <div class="about-container">
       <div class="about-content">
         <div class="about-text">
-          <h2>Sobre FisioMove</h2>
+          <h2>Sobre Fisiomove</h2>
           <p class="about-description">
             Con más de 10 años de experiencia en el sector de la fisioterapia,
             FisioMove se ha consolidado como un centro de referencia en
@@ -154,15 +140,13 @@
   <!-- Sección Nuestra Ubicación -->
   <div class="location-section">
     <div class="location-container">
-      <h2>Nuestra Ubicación</h2>
+      <h2>Contáctanos</h2>
       <p class="location-subtitle">
         Nos encontramos en una ubicación céntrica y accesible para tu comodidad
       </p>
 
       <div class="location-content">
         <div class="contact-info">
-          <h3>Información de Contacto</h3>
-
           <div class="contact-item">
             <div class="contact-icon">
               <i class="fas fa-map-marker-alt"></i>
@@ -199,7 +183,7 @@
               <i class="fas fa-clock"></i>
             </div>
             <div class="contact-details">
-              <h4>Horarios de Atención</h4>
+              <h4>Horarios de atención</h4>
               <p>{{ contactInfo.schedule.weekdays }}</p>
               <p>{{ contactInfo.schedule.saturday }}</p>
               <p>{{ contactInfo.schedule.sunday }}</p>
@@ -242,9 +226,9 @@
     </div>
   </div>
 
-  <!-- Sección Reserva tu Cita -->
+  <!-- Sección Reserva tu cita -->
   <section id="reservation-section" class="reservation-section">
-    <h2>Reserva tu Cita</h2>
+    <h2>Reserva tu cita</h2>
     <p>
       Estamos aquí para ayudarte. Contáctanos y comienza tu camino hacia el
       bienestar
@@ -290,9 +274,7 @@
           rows="4"
         ></textarea>
       </div>
-      <button type="submit" class="btn-primary">
-        <i class="fas fa-paper-plane"></i> Enviar consulta
-      </button>
+      <button type="submit" class="button is-link">Enviar consulta</button>
     </form>
   </section>
 </div>

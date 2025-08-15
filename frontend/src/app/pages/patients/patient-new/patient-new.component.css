@@ -48,6 +48,7 @@
   padding: 8px 0;
   margin-bottom: 16px;
   transition: color 0.2s ease;
+  margin-right: 1.5rem;
 }
 
 .back-button:hover {

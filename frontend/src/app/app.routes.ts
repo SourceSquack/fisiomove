@@ -5,9 +5,9 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { PatientsComponent } from './pages/patient/patients.component';
-import { PatientNewComponent } from './pages/patient/patient-new/patient-new.component';
-import { PatientDetailComponent } from './pages/patient/patient-detail/patient-detail.component';
+import { PatientsComponent } from './pages/patients/patients.component';
+import { PatientNewComponent } from './pages/patients/patient-new/patient-new.component';
+import { PatientDetailComponent } from './pages/patients/patient-detail/patient-detail.component';
 import { AppointmentsComponent } from './pages/appointment/appointments.component';
 import { AppointmentNewComponent } from './pages/appointment/appointment-new/appointment-new.component';
 import { AppointmentDetailComponent } from './pages/appointment/appointment-detail/appointment-detail.component';
@@ -18,6 +18,7 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { HistoricComponent } from './pages/historic/historic.component';
 import { DashboardViewComponent } from './pages/dashboard-view/dashboard-view.component';
+import { OperativesComponent } from './pages/operatives/operatives.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -26,61 +27,26 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
   { path: 'contact', component: ContactComponent },
 
-  // Debug route (temporary)
   { path: 'debug-auth', component: DebugAuthComponent },
 
-  // Rutas protegidas
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
       { path: 'dashboard-view', component: DashboardViewComponent },
-      { path: 'calendar', component: CalendarComponent },
       { path: 'patients', component: PatientsComponent },
-      { path: 'historic', component: HistoricComponent },
+      { path: 'patients/new', component: PatientNewComponent },
+      { path: 'patients/:id', component: PatientDetailComponent, },
       { path: 'appointments', component: AppointmentsComponent },
+      { path: 'appointments/new', component: AppointmentNewComponent },
+      { path: 'appointments/:id', component: AppointmentDetailComponent, },
+      { path: 'appointments/edit/:id', component: AppointmentEditComponent, },
+      { path: 'calendar', component: CalendarComponent },
+      { path: 'historic', component: HistoricComponent },
+      { path: 'operatives', component: OperativesComponent },
       { path: 'settings', component: SettingsComponent },
+      { path: 'profile', component: ProfileComponent, },
     ],
-  },
-  {
-    path: 'dashboard/profile',
-    component: ProfileComponent,
-    canActivate: [authGuard],
-  },
-  // {
-  //   path: 'dashboard/patients',
-  //   component: PatientsComponent,
-  //   canActivate: [authGuard],
-  // },
-  {
-    path: 'dashboard/patients/new',
-    component: PatientNewComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'dashboard/patients/:id',
-    component: PatientDetailComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'dashboard/appointments',
-    component: AppointmentsComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'dashboard/appointments/new',
-    component: AppointmentNewComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'dashboard/appointments/edit/:id',
-    component: AppointmentEditComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'dashboard/appointments/:id',
-    component: AppointmentDetailComponent,
-    canActivate: [authGuard],
   },
 ];

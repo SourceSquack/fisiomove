@@ -1,7 +1,7 @@
 <div class="appointments-card">
   <div class="card-header">
     <div class="header-content">
-      <h2>Citas del Día</h2>
+      <h2>Citas del día</h2>
       <p class="selected-date" *ngIf="selectedDate">{{ getFormattedDate() }}</p>
     </div>
   </div>
@@ -27,17 +27,17 @@
       <p *ngIf="selectedDate">No hay citas para el {{ getFormattedDate() }}</p>
       <button class="btn-primary" (click)="createNewAppointment()">
         <i class="fas fa-plus"></i>
-        Programar Nueva Cita
+        Programar nueva cita
       </button>
     </div>
 
     <!-- Lista de citas -->
     <ul *ngIf="appointments.length > 0" class="appointments-list">
-      <li *ngFor="let appointment of appointments; trackBy: trackByAppointmentId" 
+      <li *ngFor="let appointment of appointments; trackBy: trackByAppointmentId"
           class="appointment-item"
           (click)="viewAppointment(appointment.id!)"
           [title]="'Ver detalles de la cita de ' + getPatientFullName(appointment)">
-        
+
         <div class="patient-info">
           <div class="patient-avatar">
             <i class="fas fa-user"></i>
@@ -47,10 +47,10 @@
             <span class="appointment-type">{{ getAppointmentTypeLabel(appointment.appointment_type) }}</span>
           </div>
         </div>
-        
+
         <div class="appointment-details">
           <span class="appointment-time">{{ formatTime(appointment.start_time) }}</span>
-          <span class="appointment-status" 
+          <span class="appointment-status"
                 [style.background-color]="getStatusColor(appointment.status)"
                 [ngClass]="appointment.status">
             {{ getStatusLabel(appointment.status) }}
@@ -58,7 +58,7 @@
         </div>
 
         <div class="appointment-actions" (click)="$event.stopPropagation()">
-          <button class="btn-action" 
+          <button class="btn-action"
                   (click)="editAppointment(appointment.id!)"
                   title="Editar cita">
             <i class="fas fa-edit"></i>
