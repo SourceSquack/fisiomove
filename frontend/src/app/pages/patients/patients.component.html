@@ -13,7 +13,7 @@
 <div class="filters-actions-bar">
   <!-- Filtros compactos -->
   <div class="compact-filters">
-    <label>Género:</label>
+    <span>Género:</span>
     <select
       [(ngModel)]="selectedGender"
       (change)="onFilterChange()"
@@ -69,7 +69,7 @@
     @if (patients.length > 0) {
     <div class="patients-grid">
       @for (patient of patients; track patient.id) {
-      <div class="patient-card" (click)="viewPatient(patient.id!)">
+      <div class="patient-card" (click)="viewPatient(patient.id!)" (keydown)="viewPatient(patient.id!)">
         <div class="patient-avatar">
           {{ (patient.full_name || "U").charAt(0).toUpperCase() }}
         </div>

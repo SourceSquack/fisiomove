@@ -91,9 +91,7 @@
       <div class="patient-details-grid">
         @if (patient.birth_date) {
         <div class="detail-item">
-          <label
-            ><i class="fas fa-birthday-cake"></i> Fecha de nacimiento:</label
-          >
+          <span><i class="fas fa-birthday-cake"></i> Fecha de nacimiento:</span>
           <span>{{ formatDate(patient.birth_date) }}</span>
           @if (getAge(patient.birth_date)) {
           <small>({{ getAge(patient.birth_date) }} años)</small>
@@ -101,19 +99,17 @@
         </div>
         } @if (patient.gender) {
         <div class="detail-item">
-          <label><i class="fas fa-venus-mars"></i> Género:</label>
+          <span><i class="fas fa-venus-mars"></i> Género:</span>
           <span>{{ getGenderLabel(patient.gender) }}</span>
         </div>
         } @if (patient.address) {
         <div class="detail-item">
-          <label><i class="fas fa-map-marker-alt"></i> Dirección:</label>
+          <span><i class="fas fa-map-marker-alt"></i> Dirección:</span>
           <span>{{ patient.address }}</span>
         </div>
         } @if (patient.emergency_contact) {
         <div class="detail-item">
-          <label
-            ><i class="fas fa-phone-alt"></i> Contacto de emergencia:</label
-          >
+          <span><i class="fas fa-phone-alt"></i> Contacto de emergencia:</span>
           <span>{{ patient.emergency_contact }}</span>
         </div>
         }
