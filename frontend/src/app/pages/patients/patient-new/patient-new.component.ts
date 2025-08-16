@@ -79,7 +79,7 @@ export class PatientNewComponent implements OnInit {
           console.log('Paciente creado exitosamente:', response);
 
           // Agregar el paciente al store para actualizar la lista
-          if (response && response.data) {
+          if (response?.data) {
             this.patientsStore.addPatient(response.data);
           }
 

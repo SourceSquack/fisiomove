@@ -112,7 +112,7 @@
             placeholder="********"
             [class.error]="password?.invalid && password?.touched"
           />
-          <span class="input-icon-right" (click)="togglePasswordVisibility()">
+          <span class="input-icon-right" (click)="togglePasswordVisibility()" (keydown)="togglePasswordVisibility()">
             <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </span>
         </div>
@@ -139,6 +139,7 @@
           <span
             class="input-icon-right"
             (click)="toggleConfirmPasswordVisibility()"
+            (keydown)="toggleConfirmPasswordVisibility()"
           >
             <i
               [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
@@ -158,6 +159,7 @@
       <div class="form-group terms-group">
         <input type="checkbox" id="terms" formControlName="terms" />
         <label for="terms" [class.error]="terms?.invalid && terms?.touched">
+          Acepto los términos y condiciones
         </label>
         <p>
           Acepto los

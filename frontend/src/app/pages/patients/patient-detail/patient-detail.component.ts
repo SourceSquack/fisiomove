@@ -185,7 +185,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.patientForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
+    return !!(field?.invalid && (field?.dirty || field?.touched));
   }
 
   getFieldError(fieldName: string): string {
