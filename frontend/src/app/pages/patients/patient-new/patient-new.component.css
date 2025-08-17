@@ -162,58 +162,6 @@ textarea.form-control {
   border-top: 1px solid #e5e7eb;
 }
 
-/* Botones */
-.btn-primary,
-.btn-secondary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  min-width: 140px;
-}
-
-.btn-primary {
-  background: var(--primary-dark-color);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #047857;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.btn-secondary {
-  background: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #f9fafb;
-  border-color: #9ca3af;
-}
-
-.btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .patient-new-container {
@@ -234,8 +182,8 @@ textarea.form-control {
     gap: 12px;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .button .is-link,
+  .button .is-link .is-light {
     width: 100%;
     min-width: auto;
   }

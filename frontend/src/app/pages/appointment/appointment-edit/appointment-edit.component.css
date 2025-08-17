@@ -131,12 +131,6 @@
   margin-top: 1rem;
 }
 
-.btn-primary:disabled,
-.btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .appointment-edit-container {

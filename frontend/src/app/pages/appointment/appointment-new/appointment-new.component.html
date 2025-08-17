@@ -1,11 +1,11 @@
 <div class="appointment-new-container">
   <div class="header">
     <div class="title-section">
-      <button class="btn-back" (click)="goBack()">
+      <button (click)="goBack()">
         <i class="fas fa-arrow-left"></i>
         Volver
       </button>
-      <h1>Nueva Cita</h1>
+      <h1>Nueva cita</h1>
       <p>Programar una nueva cita de fisioterapia</p>
     </div>
   </div>
@@ -229,7 +229,7 @@
       <div class="form-actions">
         <button
           type="button"
-          class="btn-secondary"
+          class="button is-link is-light"
           (click)="goBack()"
           [disabled]="isSubmitting"
         >
@@ -237,16 +237,16 @@
         </button>
         <button
           type="submit"
-          class="btn-primary"
+          class="button is-link"
           [disabled]="appointmentForm.invalid || isSubmitting"
         >
           <span *ngIf="isSubmitting">
             <i class="fas fa-spinner fa-spin"></i>
-            Creando...
+            Creando
           </span>
           <span *ngIf="!isSubmitting">
             <i class="fas fa-calendar-plus"></i>
-            Crear Cita
+            Crear cita
           </span>
         </button>
       </div>

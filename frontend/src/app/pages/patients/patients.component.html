@@ -3,9 +3,9 @@
     <h1>Gestión de pacientes</h1>
     <p>Administra la información de todos los pacientes</p>
   </div>
-  <button class="btn-primary" (click)="createNewPatient()">
-    <i class="fas fa-plus"></i>
-    Nuevo paciente
+  <button class="button is-link" (click)="createNewPatient()">
+    <span class="icon is-small"> <i class="fas fa-plus"></i> </span>
+    <span> Nuevo paciente </span>
   </button>
 </div>
 
@@ -46,7 +46,9 @@
     <div class="error-state">
       <i class="fas fa-exclamation-triangle"></i>
       <span>{{ error }}</span>
-      <button class="btn-secondary" (click)="loadPatients()">Reintentar</button>
+      <button class="button is-link is-light" (click)="loadPatients()">
+        Reintentar
+      </button>
     </div>
     }
 
@@ -58,9 +60,9 @@
       <i class="fas fa-users"></i>
       <h3>No se encontraron pacientes</h3>
       <p>Intenta ajustar los filtros o agregar un nuevo paciente</p>
-      <button class="btn-primary" (click)="createNewPatient()">
+      <button class="button is-link" (click)="createNewPatient()">
         <i class="fas fa-plus"></i>
-        Agregar Primer Paciente
+        Agregar primer paciente
       </button>
     </div>
     }
@@ -69,7 +71,11 @@
     @if (patients.length > 0) {
     <div class="patients-grid">
       @for (patient of patients; track patient.id) {
-      <div class="patient-card" (click)="viewPatient(patient.id!)" (keydown)="viewPatient(patient.id!)">
+      <div
+        class="patient-card"
+        (click)="viewPatient(patient.id!)"
+        (keydown)="viewPatient(patient.id!)"
+      >
         <div class="patient-avatar">
           {{ (patient.full_name || "U").charAt(0).toUpperCase() }}
         </div>
