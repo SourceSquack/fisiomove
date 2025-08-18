@@ -1,21 +1,24 @@
 @import "bulma/css/bulma.css";
 
+/* Bulma.io config */
 :root {
+  --bulma-scheme-main: white;
   --bulma-link-h: 217deg;
   --bulma-link-s: 91%;
   --bulma-link-l: 60%;
+  --bulma-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
+/* general style configs */
+:root {
   --primary-color: #3b82f6;
   --secondary-color: #6c757d;
   --primary-dark-color: #003065;
-
   --error-color: #dc3545;
   --warning-color: #ffc107;
   --success-color: #28a745;
-
   --text-color: #000000;
   --footer-text-color: #ffffff;
-
   background: linear-gradient(135deg, #f0f4ff, #d9e6ff);
 }
 
@@ -26,17 +29,12 @@
   font-weight: normal;
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
+  min-width: 300px;
   font-family: "Monserrat", sans-serif;
-  background-color: var(--background-color);
-  /* color: var(--text-color); */
-}
-
-html,
-body {
-  min-width: 300px; /* ancho mínimo */
 }
 
 /* =================================
@@ -142,14 +140,12 @@ body {
   }
 }
 
-/* ESTILOS GLOBALES */
-
+/* Header por defecto de las páginas */
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .header-title {
   margin-bottom: 2rem;
 }
@@ -162,4 +158,49 @@ body {
 .header-title p {
   margin: 0;
   color: #5a647e;
+}
+
+/* Header estilizados para páginas de detalles */
+.header-styled-container {
+  display: flex;
+  /* align-items: flex-start; */
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+}
+@media only screen and (max-width: 1000px) {
+  .header-styled-container {
+    justify-content: space-evenly;
+  }
+}
+.header-styled-avatar {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.styled-header-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  gap: 1rem;
+}
+.styled-patient-name {
+  margin: 0 0 12px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  background-clip: text;
+}
+
+.header-loader {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  gap: 1rem;
 }

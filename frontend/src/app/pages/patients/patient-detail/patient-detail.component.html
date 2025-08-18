@@ -1,285 +1,325 @@
-<div class="patient-detail-container">
-  <!-- Header -->
-  <div class="patient-header">
-    <div class="header-navigation">
-      <button (click)="goBack()">
-        <i class="fas fa-arrow-left"></i>
-        Volver a pacientes
-      </button>
-    </div>
-
-    <div class="header-actions">
-      @if (!isLoading && patient) { @if (!isEditing) {
-      <button class="button is-link is-light" (click)="toggleEdit()">
-        <i class="fas fa-edit"></i>
-        Editar
-      </button>
-      } @if (isEditing) {
-      <div class="edit-actions">
-        <button
-          class="button is-link is-light"
-          (click)="toggleEdit()"
-          [disabled]="isSaving"
-        >
-          <i class="fas fa-times"></i>
-          Cancelar
-        </button>
-        <button
-          class="button is-link"
-          (click)="onSubmit()"
-          [disabled]="isSaving || patientForm.invalid"
-        >
-          <i class="fas fa-save"></i>
-          @if (!isSaving) {
-          <span>Guardar</span>
-          } @if (isSaving) {
-          <span>Guardando</span>
-          }
-        </button>
+<div class="box">
+  <div class="header-styled-container">
+    <div class="header-styled-avatar">
+      <div class="patient-avatar">
+        <i class="fas fa-user"></i>
       </div>
-      } }
-    </div>
-  </div>
-
-  <!-- Estado de carga -->
-  @if (isLoading) {
-  <div class="loading-state">
-    <i class="fas fa-spinner fa-spin"></i>
-    <p>Cargando información del paciente...</p>
-  </div>
-  }
-
-  <!-- Estado de error -->
-  @if (error && !isLoading) {
-  <div class="error-state">
-    <i class="fas fa-exclamation-triangle"></i>
-    <h3>Error</h3>
-    <p>{{ error }}</p>
-    <button class="button is-link" (click)="ngOnInit()">
-      <i class="fas fa-refresh"></i>
-      Reintentar
-    </button>
-  </div>
-  }
-
-  <!-- Contenido del paciente -->
-  @if (!isLoading && !error && patient) {
-  <div class="patient-content">
-    <!-- Panel de información del paciente -->
-    <div class="patient-info-panel">
-      <div class="patient-avatar-section">
-        <div class="patient-avatar">
-          <i class="fas fa-user"></i>
-        </div>
-        <div class="patient-basic-info">
-          <h1 class="patient-name">{{ patient.full_name }}</h1>
-          <p class="patient-email">
-            <i class="fas fa-envelope"></i>
-            {{ patient.email }}
-          </p>
-          @if (patient.dni) {
-          <p class="patient-dni">
-            <i class="fas fa-id-card"></i>
-            DNI: {{ patient.dni }}
-          </p>
-          }
-        </div>
-      </div>
-
-      <!-- Información adicional -->
-      @if (!isEditing) {
-      <div class="patient-details-grid">
-        @if (patient.birth_date) {
-        <div class="detail-item">
-          <span><i class="fas fa-birthday-cake"></i> Fecha de nacimiento:</span>
-          <span>{{ formatDate(patient.birth_date) }}</span>
-          @if (getAge(patient.birth_date)) {
-          <small>({{ getAge(patient.birth_date) }} años)</small>
-          }
-        </div>
-        } @if (patient.gender) {
-        <div class="detail-item">
-          <span><i class="fas fa-venus-mars"></i> Género:</span>
-          <span>{{ getGenderLabel(patient.gender) }}</span>
-        </div>
-        } @if (patient.address) {
-        <div class="detail-item">
-          <span><i class="fas fa-map-marker-alt"></i> Dirección:</span>
-          <span>{{ patient.address }}</span>
-        </div>
-        } @if (patient.emergency_contact) {
-        <div class="detail-item">
-          <span><i class="fas fa-phone-alt"></i> Contacto de emergencia:</span>
-          <span>{{ patient.emergency_contact }}</span>
-        </div>
-        }
-      </div>
-      } @if (!isEditing) {
-      <div class="patient-additional-info">
-        @if (patient.medical_history) {
-        <div class="info-section">
-          <h3><i class="fas fa-notes-medical"></i> Historial médico</h3>
-          <p>{{ patient.medical_history }}</p>
-        </div>
-        } @if (patient.notes) {
-        <div class="info-section">
-          <h3><i class="fas fa-sticky-note"></i> Notas</h3>
-          <p>{{ patient.notes }}</p>
-        </div>
-        }
+      @if(!isLoading){
+      <div>
+        <h1 class="styled-patient-name">{{ patient?.full_name }}</h1>
+        <span>
+          <i class="fas fa-id-card"></i>
+          {{ patient?.dni }}
+        </span>
+        -
+        <span>
+          <i class="fas fa-envelope"></i>
+          {{ patient?.email }}
+        </span>
       </div>
       }
     </div>
+    <div class="styled-header-buttons">
+      @if(isLoading){
+      <div class="header-loader">
+        <i class="fas fa-spinner fa-spin"></i>
+        Cargando información del paciente
+      </div>
+      }@else {
+      <button (click)="goBack()">
+        <span class="icon is-small"> <i class="fas fa-arrow-left"></i></span>
+        <span> Volver </span>
+      </button>
+      @if(isEditing) {
+      <button class="button is-link" (click)="updatePatient()">
+        <span class="icon is-small"> <i class="fas fa-save"></i> </span>
+        <span> Guardar </span>
+      </button>
+      }@else{
+      <button class="button is-link" (click)="toggleEdit()">
+        <span class="icon is-small"> <i class="fas fa-edit"></i> </span>
+        <span> Editar </span>
+      </button>
+      } }
+    </div>
+  </div>
+</div>
 
-    <!-- Panel de edición -->
-    @if (isEditing) {
-    <div class="patient-edit-panel">
-      <h3><i class="fas fa-edit"></i> Editar información del paciente</h3>
+<br />
 
-      <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="full_name">
-              <i class="fas fa-user"></i>
-              Nombre completo *
-            </label>
-            <input
-              type="text"
-              id="full_name"
-              formControlName="full_name"
-              class="form-control"
-              placeholder="Ingrese el nombre completo"
-            />
-            @if (isFieldInvalid('full_name')) {
-            <span class="error-message"> El nombre completo es requerido </span>
-            }
-          </div>
+<div class="patient-header">
+  <div class="header-navigation">
+    <button (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Volver a pacientes
+    </button>
+  </div>
 
-          <div class="form-group">
-            <label for="email">
-              <i class="fas fa-envelope"></i>
-              Email *
-            </label>
-            <input
-              type="email"
-              id="email"
-              formControlName="email"
-              class="form-control"
-              placeholder="ejemplo@correo.com"
-            />
-            @if (isFieldInvalid('email')) {
-            <span class="error-message">
-              El email es requerido y debe ser válido
-            </span>
-            }
-          </div>
-        </div>
+  <div class="header-actions">
+    @if (!isLoading && patient) { @if (!isEditing) {
+    <button class="button is-link is-light" (click)="toggleEdit()">
+      <i class="fas fa-edit"></i>
+      Editar
+    </button>
+    } @if (isEditing) {
+    <div class="edit-actions">
+      <button
+        class="button is-link is-light"
+        (click)="toggleEdit()"
+        [disabled]="isSaving"
+      >
+        <i class="fas fa-times"></i>
+        Cancelar
+      </button>
+      <button
+        class="button is-link"
+        (click)="onSubmit()"
+        [disabled]="isSaving || patientForm.invalid"
+      >
+        <i class="fas fa-save"></i>
+        @if (!isSaving) {
+        <span>Guardar</span>
+        } @if (isSaving) {
+        <span>Guardando</span>
+        }
+      </button>
+    </div>
+    } }
+  </div>
+</div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="dni">
-              <i class="fas fa-id-card"></i>
-              DNI *
-            </label>
-            <input
-              type="text"
-              id="dni"
-              formControlName="dni"
-              class="form-control"
-              placeholder="Número de documento"
-            />
-            @if (isFieldInvalid('dni')) {
-            <span class="error-message"> El DNI es requerido </span>
-            }
-          </div>
+<!-- Estado de carga -->
+<!-- @if (isLoading) {
+<div class="loading-state">
+  <i class="fas fa-spinner fa-spin"></i>
+  <p>Cargando información del paciente...</p>
+</div>
+} -->
 
-          <div class="form-group">
-            <label for="birth_date">
-              <i class="fas fa-birthday-cake"></i>
-              Fecha de nacimiento
-            </label>
-            <input
-              type="date"
-              id="birth_date"
-              formControlName="birth_date"
-              class="form-control"
-            />
-          </div>
-        </div>
+<!-- Estado de error -->
+<!-- @if (error && !isLoading) {
+<div class="error-state">
+  <i class="fas fa-exclamation-triangle"></i>
+  <h3>Error</h3>
+  <p>{{ error }}</p>
+  <button class="button is-link" (click)="ngOnInit()">
+    <i class="fas fa-refresh"></i>
+    Reintentar
+  </button>
+</div>
+} -->
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="gender">
-              <i class="fas fa-venus-mars"></i>
-              Género
-            </label>
-            <select id="gender" formControlName="gender" class="form-control">
-              <option value="">Seleccionar género</option>
-              <option value="masculino">Masculino</option>
-              <option value="femenino">Femenino</option>
-              <option value="otro">Otro</option>
-            </select>
-          </div>
+<!-- Contenido del paciente -->
+@if (!isLoading && !error && patient) {
+<div class="patient-info-panel">
+  <div class="patient-avatar-section">
+    <div class="patient-avatar">
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="patient-basic-info">
+      <h1 class="patient-name">{{ patient.full_name }}</h1>
+      <p class="patient-email">
+        <i class="fas fa-envelope"></i>
+        {{ patient.email }}
+      </p>
+      <p class="patient-dni">
+        <i class="fas fa-id-card"></i>
+        DNI: {{ patient.dni }}
+      </p>
+    </div>
+  </div>
 
-          <div class="form-group">
-            <label for="emergency_contact">
-              <i class="fas fa-phone-alt"></i>
-              Contacto de emergencia
-            </label>
-            <input
-              type="text"
-              id="emergency_contact"
-              formControlName="emergency_contact"
-              class="form-control"
-              placeholder="Nombre y teléfono de contacto"
-            />
-          </div>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="address">
-            <i class="fas fa-map-marker-alt"></i>
-            Dirección
-          </label>
-          <textarea
-            id="address"
-            formControlName="address"
-            class="form-control"
-            rows="2"
-            placeholder="Dirección completa..."
-          ></textarea>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="medical_history">
-            <i class="fas fa-notes-medical"></i>
-            Historial médico
-          </label>
-          <textarea
-            id="medical_history"
-            formControlName="medical_history"
-            class="form-control"
-            rows="4"
-            placeholder="Historial médico relevante..."
-          ></textarea>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="notes">
-            <i class="fas fa-sticky-note"></i>
-            Notas adicionales
-          </label>
-          <textarea
-            id="notes"
-            formControlName="notes"
-            class="form-control"
-            rows="3"
-            placeholder="Notas adicionales..."
-          ></textarea>
-        </div>
-      </form>
+  <!-- Información adicional -->
+  @if (!isEditing) {
+  <div class="patient-details-grid">
+    @if (patient.birth_date) {
+    <div class="detail-item">
+      <span><i class="fas fa-birthday-cake"></i> Fecha de nacimiento:</span>
+      <span>{{ formatDate(patient.birth_date) }}</span>
+      @if (getAge(patient.birth_date)) {
+      <small>({{ getAge(patient.birth_date) }} años)</small>
+      }
+    </div>
+    } @if (patient.gender) {
+    <div class="detail-item">
+      <span><i class="fas fa-venus-mars"></i> Género:</span>
+      <span>{{ getGenderLabel(patient.gender) }}</span>
+    </div>
+    } @if (patient.address) {
+    <div class="detail-item">
+      <span><i class="fas fa-map-marker-alt"></i> Dirección:</span>
+      <span>{{ patient.address }}</span>
+    </div>
+    } @if (patient.emergency_contact) {
+    <div class="detail-item">
+      <span><i class="fas fa-phone-alt"></i> Contacto de emergencia:</span>
+      <span>{{ patient.emergency_contact }}</span>
+    </div>
+    }
+  </div>
+  } @if (!isEditing) {
+  <div class="patient-additional-info">
+    @if (patient.medical_history) {
+    <div class="info-section">
+      <h3><i class="fas fa-notes-medical"></i> Historial médico</h3>
+      <p>{{ patient.medical_history }}</p>
+    </div>
+    } @if (patient.notes) {
+    <div class="info-section">
+      <h3><i class="fas fa-sticky-note"></i> Notas</h3>
+      <p>{{ patient.notes }}</p>
     </div>
     }
   </div>
   }
 </div>
+
+<!-- Panel de edición -->
+@if (isEditing) {
+<div class="patient-edit-panel">
+  <h3><i class="fas fa-edit"></i> Editar información del paciente</h3>
+
+  <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="full_name">
+          <i class="fas fa-user"></i>
+          Nombre completo *
+        </label>
+        <input
+          type="text"
+          id="full_name"
+          formControlName="full_name"
+          class="form-control"
+          placeholder="Ingrese el nombre completo"
+        />
+        @if (isFieldInvalid('full_name')) {
+        <span class="error-message"> El nombre completo es requerido </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">
+          <i class="fas fa-envelope"></i>
+          Email *
+        </label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="ejemplo@correo.com"
+        />
+        @if (isFieldInvalid('email')) {
+        <span class="error-message">
+          El email es requerido y debe ser válido
+        </span>
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="dni">
+          <i class="fas fa-id-card"></i>
+          DNI *
+        </label>
+        <input
+          type="text"
+          id="dni"
+          formControlName="dni"
+          class="form-control"
+          placeholder="Número de documento"
+        />
+        @if (isFieldInvalid('dni')) {
+        <span class="error-message"> El DNI es requerido </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="birth_date">
+          <i class="fas fa-birthday-cake"></i>
+          Fecha de nacimiento
+        </label>
+        <input
+          type="date"
+          id="birth_date"
+          formControlName="birth_date"
+          class="form-control"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="gender">
+          <i class="fas fa-venus-mars"></i>
+          Género
+        </label>
+        <select id="gender" formControlName="gender" class="form-control">
+          <option value="">Seleccionar género</option>
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="emergency_contact">
+          <i class="fas fa-phone-alt"></i>
+          Contacto de emergencia
+        </label>
+        <input
+          type="text"
+          id="emergency_contact"
+          formControlName="emergency_contact"
+          class="form-control"
+          placeholder="Nombre y teléfono de contacto"
+        />
+      </div>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="address">
+        <i class="fas fa-map-marker-alt"></i>
+        Dirección
+      </label>
+      <textarea
+        id="address"
+        formControlName="address"
+        class="form-control"
+        rows="2"
+        placeholder="Dirección completa..."
+      ></textarea>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="medical_history">
+        <i class="fas fa-notes-medical"></i>
+        Historial médico
+      </label>
+      <textarea
+        id="medical_history"
+        formControlName="medical_history"
+        class="form-control"
+        rows="4"
+        placeholder="Historial médico relevante..."
+      ></textarea>
+    </div>
+
+    <div class="form-group full-width">
+      <label for="notes">
+        <i class="fas fa-sticky-note"></i>
+        Notas adicionales
+      </label>
+      <textarea
+        id="notes"
+        formControlName="notes"
+        class="form-control"
+        rows="3"
+        placeholder="Notas adicionales..."
+      ></textarea>
+    </div>
+  </form>
+</div>
+} }

@@ -217,7 +217,7 @@
 }
 
 /* Tema oscuro */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .loader-overlay {
     background: rgba(26, 26, 26, 0.95);
   }
@@ -225,7 +225,7 @@
   .loader-message {
     color: #e1e1e1;
   }
-}
+} */
 
 /* Estados de carga */
 .loader-overlay.loading-success {

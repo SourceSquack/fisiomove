@@ -79,13 +79,13 @@ export const UIStore = signalStore(
       );
     }),
 
-    isDarkMode: computed(() => {
-      const theme = store.theme();
-      if (theme === 'auto') {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches;
-      }
-      return theme === 'dark';
-    }),
+    // isDarkMode: computed(() => {
+    //   const theme = store.theme();
+    //   if (theme === 'auto') {
+    //     return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    //   }
+    //   return theme === 'dark';
+    // }),
   })),
   withMethods((store) => ({
     toggleSidebar(): void {
@@ -103,15 +103,15 @@ export const UIStore = signalStore(
     setTheme(theme: 'light' | 'dark' | 'auto'): void {
       patchState(store, { theme });
 
-      if (
-        theme === 'dark' ||
-        (theme === 'auto' &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      // if (
+      //   theme === 'dark' ||
+      //   (theme === 'auto' &&
+      //     window.matchMedia('(prefers-color-scheme: dark)').matches)
+      // ) {
+      //   document.documentElement.classList.add('dark');
+      // } else {
+      //   document.documentElement.classList.remove('dark');
+      // }
     },
 
     addNotification(

@@ -12,10 +12,6 @@
   transition: color 0.2s ease;
 }
 
-.back-button:hover {
-  color: var(--primary-dark-color);
-}
-
 /* Barra de filtros y acciones */
 .filters-actions-bar {
   display: flex;
@@ -75,28 +71,6 @@
   font-size: 16px;
 }
 
-/* Contenido principal */
-.patients-content {
-  display: grid;
-  gap: 24px;
-}
-
-/* Lista de pacientes */
-.patients-list-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-}
-
-.patients-list-section h3 {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-}
-
 /* Estados */
 .loading-state,
 .error-state,
@@ -104,6 +78,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 75%;
   justify-content: center;
   padding: 60px 20px;
   text-align: center;
