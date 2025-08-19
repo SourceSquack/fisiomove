@@ -1,16 +1,12 @@
 @import "bulma/css/bulma.css";
 
-/* Bulma.io config */
+/* general style configs */
 :root {
   --bulma-scheme-main: white;
   --bulma-link-h: 217deg;
   --bulma-link-s: 91%;
   --bulma-link-l: 60%;
   --bulma-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* general style configs */
-:root {
   --primary-color: #3b82f6;
   --secondary-color: #6c757d;
   --primary-dark-color: #003065;
@@ -163,7 +159,6 @@ body {
 /* Header estilizados para páginas de detalles */
 .header-styled-container {
   display: flex;
-  /* align-items: flex-start; */
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 24px;
