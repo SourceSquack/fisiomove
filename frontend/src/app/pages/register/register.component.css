@@ -118,24 +118,6 @@
   text-decoration: underline;
 }
 
-.btn-register {
-  width: 100%;
-  padding: 0.9rem;
-  background: var(--primary-dark-color);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.3s;
-  margin-top: 1rem;
-}
-
-.btn-register:hover {
-  background: var(--primary-color);
-}
-
 .login-link {
   margin-top: 1.5rem;
   font-size: 0.9rem;
@@ -204,16 +186,6 @@
 
 .input-icon-right:hover {
   color: var(--primary-color);
-}
-
-/* Estilos para estado de loading */
-.btn-register:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-register.loading {
-  background-color: #5a67d8;
 }
 
 .fa-spinner {

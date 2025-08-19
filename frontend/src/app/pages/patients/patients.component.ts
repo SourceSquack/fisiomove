@@ -5,28 +5,39 @@ import { FormsModule } from '@angular/forms';
 import { PatientsService } from '../../core/services/patients.service';
 import { PatientsStore } from '../../core/stores/patients.store';
 import { Patient } from '../../core/models/api.models';
+import { AgGridAngular } from 'ag-grid-angular';
+import type { ColDef } from 'ag-grid-community';
 
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AgGridAngular],
   templateUrl: './patients.component.html',
   styleUrls: ['./patients.component.css'],
 })
 export class PatientsComponent implements OnInit {
+  [x: string]: any;
   private readonly patientsService = inject(PatientsService);
   private readonly patientsStore = inject(PatientsStore);
   private readonly router = inject(Router);
 
-  // Signals del store
   private readonly patientsSignal = this.patientsStore.filteredPatients;
   private readonly isLoadingSignal = this.patientsStore.isLoading;
   private readonly errorSignal = this.patientsStore.error;
 
-  // Filtros
   selectedGender: 'M' | 'F' | 'Other' | '' = '';
+  //TODO crear interface para filas
+  rowsData: any[] = [];
+  colsData: ColDef[] = [
+    { field: "is_active", headerName: "Activo", maxWidth: 100 },
+    { field: "full_name", headerName: "Nombre" },
+    { field: "birth_date", headerName: "Edad", valueFormatter: (params) => this.getAge(params.data.birth_date), maxWidth: 75, cellStyle: { textAlign: 'center' } },
+    { field: "email", headerName: "Correo" },
+    { field: "phone", headerName: "Teléfono" },
+    { field: "gender", headerName: "Género", cellStyle: { textAlign: 'center' } },
+    { field: "allergies", headerName: "Alérgias" },
+  ];
 
-  // Getters para el template
   get patients(): Patient[] {
     return this.patientsSignal();
   }
@@ -40,9 +51,8 @@ export class PatientsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Limpiar filtros al inicializar el componente para evitar filtros activos
     this.patientsStore.clearFilters();
-    this.selectedGender = ''; // Resetear el select del template
+    this.selectedGender = '';
     this.loadPatients();
   }
 
@@ -54,6 +64,8 @@ export class PatientsComponent implements OnInit {
       next: (patients) => {
         this.patientsStore.setPatients(patients || []);
         this.patientsStore.setLoading(false);
+        this.rowsData = patients;
+        console.log(`➡️ ~ loadPatients ~ patients:`, patients)
       },
       error: (err) => {
         const errorMessage =
@@ -73,8 +85,9 @@ export class PatientsComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
-  viewPatient(patientId: string): void {
-    this.router.navigate(['/dashboard/patients', patientId]);
+  //TODO Cambiar Any por una Interface
+  viewPatient(rowData: any) {
+    this.router.navigate(['/dashboard/patients', String(rowData?.id)]);
   }
 
   createNewPatient(): void {
@@ -101,5 +114,19 @@ export class PatientsComponent implements OnInit {
     } catch {
       return dateString;
     }
+  }
+  getAge(birthDate: string | Date | null): string {
+    if (!birthDate) return "";
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+    return String(age);
   }
 }

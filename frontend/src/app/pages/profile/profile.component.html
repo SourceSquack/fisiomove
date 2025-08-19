@@ -158,7 +158,7 @@
 
           <button
             type="submit"
-            class="btn btn-primary"
+            class="btn button is-link is-light"
             [disabled]="profileForm.invalid || isLoading()"
           >
             @if (isLoading()) {
@@ -241,7 +241,7 @@
 
           <button
             type="submit"
-            class="btn btn-primary"
+            class="btn button is-link"
             [disabled]="emailForm.invalid || isLoading()"
           >
             @if (isLoading()) {
@@ -341,7 +341,7 @@
 
           <button
             type="submit"
-            class="btn btn-primary"
+            class="button is-link"
             [disabled]="passwordForm.invalid || isLoading()"
           >
             @if (isLoading()) {
@@ -458,7 +458,7 @@
             @if (canUpgradeToRole(roleForm.value.new_role)) {
             <button
               type="submit"
-              class="btn btn-primary"
+              class="button is-link"
               [disabled]="
                 roleForm.invalid ||
                 isLoading() ||

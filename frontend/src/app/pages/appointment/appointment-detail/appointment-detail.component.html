@@ -2,11 +2,11 @@
   <!-- Header -->
   <div class="header">
     <div class="title-section">
-    <button class="btn-back" (click)="goBack()">
-      <i class="fas fa-arrow-left"></i>
-      <span>Volver a Citas</span>
-    </button>
-    <h1>Detalles de la Cita</h1>
+      <button (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        <span>Volver a Citas</span>
+      </button>
+      <h1>Detalles de la Cita</h1>
     </div>
   </div>
 
@@ -20,7 +20,9 @@
   <div *ngIf="errorMessage && !isLoading" class="error-message">
     <i class="fas fa-exclamation-triangle"></i>
     <span>{{ errorMessage }}</span>
-    <button class="btn-secondary" (click)="goBack()">Volver a Citas</button>
+    <button class="button is-link is-light" (click)="goBack()">
+      Volver a Citas
+    </button>
   </div>
 
   <!-- Appointment Details -->
@@ -37,7 +39,7 @@
             {{ getStatusLabel(appointment.status) }}
           </span>
         </div>
-        <button class="btn-primary" (click)="editAppointment()">
+        <button class="button is-link" (click)="editAppointment()">
           <i class="fas fa-edit"></i>
           Editar Cita
         </button>
@@ -162,13 +164,13 @@
 
     <!-- Actions -->
     <div class="actions-section">
-      <button class="btn-secondary" (click)="goBack()">
+      <button class="button is-link is-light" (click)="goBack()">
         <i class="fas fa-arrow-left"></i>
         Volver a lista
       </button>
-      <button class="btn-primary" (click)="editAppointment()">
+      <button class="button is-link" (click)="editAppointment()">
         <i class="fas fa-edit"></i>
-        Editar Cita
+        Editar cita
       </button>
     </div>
   </div>

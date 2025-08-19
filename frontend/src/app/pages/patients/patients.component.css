@@ -12,10 +12,6 @@
   transition: color 0.2s ease;
 }
 
-.back-button:hover {
-  color: var(--primary-dark-color);
-}
-
 /* Barra de filtros y acciones */
 .filters-actions-bar {
   display: flex;
@@ -75,73 +71,6 @@
   font-size: 16px;
 }
 
-/* Botones */
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--primary-dark-color)
-  );
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 12px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 4, 32, 0.3);
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* Contenido principal */
-.patients-content {
-  display: grid;
-  gap: 24px;
-}
-
-/* Lista de pacientes */
-.patients-list-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-}
-
-.patients-list-section h3 {
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-}
-
 /* Estados */
 .loading-state,
 .error-state,
@@ -149,6 +78,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 75%;
   justify-content: center;
   padding: 60px 20px;
   text-align: center;

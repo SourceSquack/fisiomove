@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="header">
     <div class="title-section">
-    <button class="btn-back" (click)="goBack()">
+    <button (click)="goBack()">
       <i class="fas fa-arrow-left"></i>
       <span>Volver</span>
     </button>
@@ -198,7 +198,7 @@
       <div class="form-actions">
         <button
           type="button"
-          class="btn-secondary"
+          class="button is-link is-light"
           (click)="goBack()"
           [disabled]="isSubmitting"
         >
@@ -208,16 +208,16 @@
 
         <button
           type="submit"
-          class="btn-primary"
+          class="button is-link"
           [disabled]="appointmentForm.invalid || isSubmitting"
         >
           <span *ngIf="isSubmitting">
             <i class="fas fa-spinner fa-spin"></i>
-            Guardando...
+            Guardando
           </span>
           <span *ngIf="!isSubmitting">
             <i class="fas fa-save"></i>
-            Guardar Cambios
+            Guardar cambios
           </span>
         </button>
       </div>

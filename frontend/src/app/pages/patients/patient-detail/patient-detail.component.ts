@@ -8,7 +8,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-
 import { PatientsService } from '../../../core/services/patients.service';
 import { Patient } from '../../../core/models/api.models';
 
@@ -20,7 +19,12 @@ import { Patient } from '../../../core/models/api.models';
   styleUrls: ['./patient-detail.component.css'],
 })
 export class PatientDetailComponent implements OnInit, OnDestroy {
+
   private readonly destroy$ = new Subject<void>();
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly patientsService = inject(PatientsService);
+  private readonly fb = inject(FormBuilder);
 
   patient: Patient | null = null;
   patientForm: FormGroup;
@@ -29,11 +33,6 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
   isSaving = false;
   error: string | null = null;
   patientId: string;
-
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly patientsService = inject(PatientsService);
-  private readonly fb = inject(FormBuilder);
 
   constructor() {
     this.patientId = this.route.snapshot.params['id'];
@@ -72,7 +71,7 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          this.patient = response.data || response; // Handle both ApiResponse and direct Patient
+          this.patient = response.data || response;
           if (this.patient) {
             this.populateForm(this.patient);
           }
@@ -110,6 +109,10 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  updatePatient() {
+    alert("Actualizar paciente. \n xd")
+  }
+
   onSubmit(): void {
     if (this.patientForm.valid && this.patient?.id) {
       this.isSaving = true;
@@ -145,7 +148,6 @@ export class PatientDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard/patients']);
   }
 
-  // Helpers para el template
   getAge(birthDate: string | Date | null): number | null {
     if (!birthDate) return null;
     const birth = new Date(birthDate);

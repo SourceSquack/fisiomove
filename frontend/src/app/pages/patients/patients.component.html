@@ -3,15 +3,35 @@
     <h1>Gestión de pacientes</h1>
     <p>Administra la información de todos los pacientes</p>
   </div>
-  <button class="btn-primary" (click)="createNewPatient()">
-    <i class="fas fa-plus"></i>
-    Nuevo paciente
+  <button class="button is-link" (click)="createNewPatient()">
+    <span class="icon is-small"> <i class="fas fa-plus"></i> </span>
+    <span> Nuevo paciente </span>
   </button>
 </div>
 
+@if (loading) {
+<div class="loading-state">
+  <i class="fas fa-spinner fa-spin"></i>
+  <span>Cargando pacientes</span>
+</div>
+}@else{
+<ag-grid-angular
+  [rowData]="rowsData"
+  [columnDefs]="colsData"
+  style="width: 100%; height: 500px"
+  [pagination]="true"
+  (rowClicked)="viewPatient($event.data)"
+  [defaultColDef]="{
+    cellStyle: { cursor: 'pointer' },
+    headerStyle: { color: 'grey', fontWeight: 'bold', fontSize: '16px' }
+  }"
+/>
+}
+
+<br />
+
 <!-- Barra de filtros y acciones -->
-<div class="filters-actions-bar">
-  <!-- Filtros compactos -->
+<!-- <div class="box">
   <div class="compact-filters">
     <span>Género:</span>
     <select
@@ -25,85 +45,75 @@
       <option value="Other">Otro</option>
     </select>
   </div>
-</div>
-
-<!-- Contenido principal -->
-<div class="patients-content">
-  <!-- Sección de lista de pacientes -->
-  <div class="patients-list-section">
-    <h3>Lista de pacientes</h3>
-
-    <!-- Loading State -->
-    @if (loading) {
-    <div class="loading-state">
-      <i class="fas fa-spinner fa-spin"></i>
-      <span>Cargando pacientes</span>
-    </div>
-    }
-
-    <!-- Error State -->
-    @if (error && !loading) {
-    <div class="error-state">
-      <i class="fas fa-exclamation-triangle"></i>
-      <span>{{ error }}</span>
-      <button class="btn-secondary" (click)="loadPatients()">Reintentar</button>
-    </div>
-    }
-
-    <!-- Patients List -->
-    @if (!loading && !error) {
-    <!-- Empty State -->
-    @if (patients.length === 0) {
-    <div class="empty-state">
-      <i class="fas fa-users"></i>
-      <h3>No se encontraron pacientes</h3>
-      <p>Intenta ajustar los filtros o agregar un nuevo paciente</p>
-      <button class="btn-primary" (click)="createNewPatient()">
-        <i class="fas fa-plus"></i>
-        Agregar Primer Paciente
-      </button>
-    </div>
-    }
-
-    <!-- Patients Cards -->
-    @if (patients.length > 0) {
-    <div class="patients-grid">
-      @for (patient of patients; track patient.id) {
-      <div class="patient-card" (click)="viewPatient(patient.id!)" (keydown)="viewPatient(patient.id!)">
-        <div class="patient-avatar">
-          {{ (patient.full_name || "U").charAt(0).toUpperCase() }}
-        </div>
-
-        <div class="patient-info">
-          <h3 class="patient-name">
-            {{ patient.full_name || "Sin nombre" }}
-          </h3>
-          @if (patient.email) {
-          <p class="patient-email">
-            <i class="fas fa-envelope"></i>
-            {{ patient.email }}
-          </p>
-          } @if (patient.dni) {
-          <p class="patient-dni">
-            <i class="fas fa-id-card"></i>
-            {{ patient.dni }}
-          </p>
-          }
-        </div>
-
-        <div class="patient-actions">
-          <button
-            class="btn-action btn-view"
-            (click)="viewPatient(patient.id!); $event.stopPropagation()"
-            title="Ver detalles"
-          >
-            <i class="fas fa-eye"></i>
-            Ver
-          </button>
-        </div>
-      </div>
-      }
-    </div>
-    } }
+</div> -->
+<!--
+<div class="box">
+  <h3>Lista de pacientes</h3>
+  @if (loading) {
+  <div class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Cargando pacientes</span>
   </div>
-</div>
+  } @if (error && !loading) {
+  <div class="error-state">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>{{ error }}</span>
+    <button class="button is-link is-light" (click)="loadPatients()">
+      Reintentar
+    </button>
+  </div>
+  } @if (!loading && !error) {
+  @if (patients.length === 0) {
+  <div class="empty-state">
+    <i class="fas fa-users"></i>
+    <h3>No se encontraron pacientes</h3>
+    <p>Intenta ajustar los filtros o agregar un nuevo paciente</p>
+    <button class="button is-link" (click)="createNewPatient()">
+      <i class="fas fa-plus"></i>
+      Agregar primer paciente
+    </button>
+  </div>
+  } @if (patients.length > 0) {
+  <div class="patients-grid">
+    @for (patient of patients; track patient.id) {
+    <div
+      class="patient-card"
+      (click)="viewPatient(patient.id!)"
+      (keydown)="viewPatient(patient.id!)"
+    >
+      <div class="patient-avatar">
+        {{ (patient.full_name || "U").charAt(0).toUpperCase() }}
+      </div>
+
+      <div class="patient-info">
+        <h3 class="patient-name">
+          {{ patient.full_name || "Sin nombre" }}
+        </h3>
+        @if (patient.email) {
+        <p class="patient-email">
+          <i class="fas fa-envelope"></i>
+          {{ patient.email }}
+        </p>
+        } @if (patient.dni) {
+        <p class="patient-dni">
+          <i class="fas fa-id-card"></i>
+          {{ patient.dni }}
+        </p>
+        }
+      </div>
+
+      <div class="patient-actions">
+        <button
+          class="btn-action btn-view"
+          (click)="viewPatient(patient.id!); $event.stopPropagation()"
+          title="Ver detalles"
+        >
+          <i class="fas fa-eye"></i>
+          Ver
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  } }
+</div> -->

@@ -238,8 +238,8 @@
 
 /* Print Styles */
 @media print {
-  .header .btn-back,
-  .card-header .btn-primary,
+  .header,
+  .card-header,
   .actions-section {
     display: none;
   }

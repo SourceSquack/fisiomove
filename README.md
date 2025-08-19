@@ -1,25 +1,27 @@
-# FisioMove 🏥
+# 🏥 Fisiomove
 
 ## Descripción del Proyecto
 
-FisioMove es una aplicación web completa para la gestión de consultorios de fisioterapia. Permite la administración de pacientes, citas, historiales clínicos y notificaciones, con diferentes roles de usuario (administradores, fisioterapeutas y pacientes).
+Fisiomove es una aplicación web completa para la gestión de consultorios de fisioterapia. Permite la administración de pacientes, citas, historiales clínicos y notificaciones, con diferentes roles de usuario (administradores, fisioterapeutas y pacientes).
+
+**Componentes principales**:
+
+- Página pública (homepage, login)
+- Frontend protegido para administración, fisioterapeutas y pacientes
+- Módulos: Dashboard, citas, pacientes, historial, notificaciones.
 
 ## 🏗️ Arquitectura del Proyecto
 
-### Frontend (Angular)
+### Frontend
 
 - **Framework**: Angular + RxJS
-- **Componentes principales**:
-  - Página pública (homepage, login)
-  - Frontend protegido para administración, fisioterapeutas y pacientes
-  - Módulos: auth, dashboard, citas, pacientes, historial, notificaciones, shared
 - **Características**:
   - TypeScript estricto
   - Diseño responsive (móvil, tablet)
   - Componentes reutilizables
   - Rutas protegidas con roles
 
-### Backend (FastAPI)
+### Backend
 
 - **Stack**: FastAPI + Python 3.13 + PostgreSQL + SQLAlchemy/Alembic + Pydantic
 - **Estructura modular**:
