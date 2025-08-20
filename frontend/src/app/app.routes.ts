@@ -31,6 +31,7 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
+      { path: '', component: DashboardViewComponent },
       { path: 'dashboard-view', component: DashboardViewComponent },
       { path: 'patients', component: PatientsComponent },
       { path: 'patients/new', component: PatientNewComponent },
