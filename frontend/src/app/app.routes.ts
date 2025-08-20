@@ -31,20 +31,24 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
+<<<<<<< HEAD
       { path: '', component: DashboardViewComponent },
+=======
+      { path: '', redirectTo: 'dashboard-view', pathMatch: 'full' },
+>>>>>>> 5b581974ebc9ee4d83a546d95bc94b0ca134e7dd
       { path: 'dashboard-view', component: DashboardViewComponent },
       { path: 'patients', component: PatientsComponent },
       { path: 'patients/new', component: PatientNewComponent },
-      { path: 'patients/:id', component: PatientDetailComponent, },
+      { path: 'patients/:id', component: PatientDetailComponent },
       { path: 'appointments', component: AppointmentsComponent },
       { path: 'appointments/new', component: AppointmentNewComponent },
-      { path: 'appointments/:id', component: AppointmentDetailComponent, },
-      { path: 'appointments/edit/:id', component: AppointmentEditComponent, },
+      { path: 'appointments/:id', component: AppointmentDetailComponent },
+      { path: 'appointments/edit/:id', component: AppointmentEditComponent },
       { path: 'calendar', component: CalendarComponent },
       { path: 'historic', component: HistoricComponent },
       { path: 'operatives', component: OperativesComponent },
       { path: 'settings', component: SettingsComponent },
-      { path: 'profile', component: ProfileComponent, },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
 ];

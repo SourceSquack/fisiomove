@@ -146,7 +146,7 @@ if (Test-Path (Join-Path $RepoRoot 'frontend')) {
             npm ci
         } else {
             Write-Info "Running npm install"
-            npm install
+            bun install
         }
         Write-Success "Frontend dependencies installed"
     } catch {

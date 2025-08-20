@@ -29,13 +29,23 @@ export class PatientsComponent implements OnInit {
   //TODO crear interface para filas
   rowsData: any[] = [];
   colsData: ColDef[] = [
-    { field: "is_active", headerName: "Activo", maxWidth: 100 },
-    { field: "full_name", headerName: "Nombre" },
-    { field: "birth_date", headerName: "Edad", valueFormatter: (params) => this.getAge(params.data.birth_date), maxWidth: 75, cellStyle: { textAlign: 'center' } },
-    { field: "email", headerName: "Correo" },
-    { field: "phone", headerName: "Teléfono" },
-    { field: "gender", headerName: "Género", cellStyle: { textAlign: 'center' } },
-    { field: "allergies", headerName: "Alérgias" },
+    { field: 'is_active', headerName: 'Activo', maxWidth: 100 },
+    { field: 'full_name', headerName: 'Nombre' },
+    {
+      field: 'birth_date',
+      headerName: 'Edad',
+      valueFormatter: (params) => this.getAge(params.data.birth_date),
+      maxWidth: 75,
+      cellStyle: { textAlign: 'center' },
+    },
+    { field: 'email', headerName: 'Correo' },
+    { field: 'phone', headerName: 'Teléfono' },
+    {
+      field: 'gender',
+      headerName: 'Género',
+      cellStyle: { textAlign: 'center' },
+    },
+    { field: 'allergies', headerName: 'Alérgias' },
   ];
 
   get patients(): Patient[] {
@@ -65,7 +75,7 @@ export class PatientsComponent implements OnInit {
         this.patientsStore.setPatients(patients || []);
         this.patientsStore.setLoading(false);
         this.rowsData = patients;
-        console.log(`➡️ ~ loadPatients ~ patients:`, patients)
+        console.log(`➡️ ~ loadPatients ~ patients:`, patients);
       },
       error: (err) => {
         const errorMessage =
@@ -116,7 +126,7 @@ export class PatientsComponent implements OnInit {
     }
   }
   getAge(birthDate: string | Date | null): string {
-    if (!birthDate) return "";
+    if (!birthDate) return '';
     const birth = new Date(birthDate);
     const today = new Date();
     let age = today.getFullYear() - birth.getFullYear();
