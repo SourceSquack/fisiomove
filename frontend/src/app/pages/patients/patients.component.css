@@ -1,49 +1,4 @@
-/* Estados */
-.loading-state,
-.error-state,
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 75%;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-  margin: 24px 0;
-}
 
-.loading-state i {
-  font-size: 2rem;
-  color: var(--primary-color);
-  margin-bottom: 16px;
-}
-
-.error-state i {
-  font-size: 2rem;
-  color: #ef4444;
-  margin-bottom: 16px;
-}
-
-.empty-state i {
-  font-size: 3rem;
-  color: #9ca3af;
-  margin-bottom: 16px;
-}
-
-.empty-state h3 {
-  margin: 0 0 8px 0;
-  color: #374151;
-  font-size: 1.5rem;
-}
-
-.empty-state p {
-  margin: 0 0 24px 0;
-  color: #6b7280;
-}
 /* Responsive */
 @media (max-width: 768px) {
   .patients-container {
