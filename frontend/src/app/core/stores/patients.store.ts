@@ -157,3 +157,5 @@ export const PatientsStore = signalStore(
     },
   }))
 );
+
+export type PatientsStoreType = typeof PatientsStore;

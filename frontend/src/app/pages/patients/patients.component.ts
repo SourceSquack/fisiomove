@@ -1,6 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+// ...existing code...
+import { TitleService } from '../../core/services/title.service';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+// ...existing code...
 import { FormsModule } from '@angular/forms';
 import { PatientsService } from '../../core/services/patients.service';
 import { PatientsStore } from '../../core/stores/patients.store';
@@ -16,15 +19,6 @@ import type { ColDef } from 'ag-grid-community';
   styleUrls: ['./patients.component.css'],
 })
 export class PatientsComponent implements OnInit {
-  [x: string]: any;
-  private readonly patientsService = inject(PatientsService);
-  private readonly patientsStore = inject(PatientsStore);
-  private readonly router = inject(Router);
-
-  private readonly patientsSignal = this.patientsStore.filteredPatients;
-  private readonly isLoadingSignal = this.patientsStore.isLoading;
-  private readonly errorSignal = this.patientsStore.error;
-
   selectedGender: 'M' | 'F' | 'Other' | '' = '';
   //TODO crear interface para filas
   rowsData: any[] = [];
@@ -48,19 +42,27 @@ export class PatientsComponent implements OnInit {
     { field: 'allergies', headerName: 'Alérgias' },
   ];
 
+  constructor(
+    private readonly patientsService: PatientsService,
+    @Inject(PatientsStore) private readonly patientsStore: any,
+    private readonly router: Router,
+    @Inject(TitleService) private readonly titleService: TitleService
+  ) {}
+
   get patients(): Patient[] {
-    return this.patientsSignal();
+    return this.patientsStore.filteredPatients();
   }
 
   get loading(): boolean {
-    return this.isLoadingSignal();
+    return this.patientsStore.isLoading();
   }
 
   get error(): string | null {
-    return this.errorSignal();
+    return this.patientsStore.error();
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de pacientes');
     this.patientsStore.clearFilters();
     this.selectedGender = '';
     this.loadPatients();

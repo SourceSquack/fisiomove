@@ -3,25 +3,8 @@
     <i class="fas fa-bars"></i>
   </button>
 
-  <div class="search-bar">
-    <i class="fas fa-search"></i>
-    <input
-      type="text"
-      placeholder="Buscar pacientes..."
-      [(ngModel)]="searchQuery"
-      (input)="onSearchInput()"
-      autocomplete="off"
-    />
-
-    <!-- Modal de resultados -->
-    <app-patient-search-modal
-      *ngIf="showSearchDropdown && searchQuery"
-      [loading]="searchLoading"
-      [error]="searchError"
-      [results]="searchResults"
-      (close)="showSearchDropdown = false"
-      (selectPatient)="goToPatientProfile($event)"
-    ></app-patient-search-modal>
+  <div class="navbar-title">
+    <h1>{{ titleService.title() }}</h1>
   </div>
 
   <div class="user-menu">

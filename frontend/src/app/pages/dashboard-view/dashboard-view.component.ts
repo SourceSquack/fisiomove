@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { TitleService } from '../../core/services/title.service';
 import { StatCardComponent } from '../dashboard/components/stat-card/stat-card.component';
-import { DashboardService, DashboardSummary } from '../../core/services/dashboard.service';
+import {
+  DashboardService,
+  DashboardSummary,
+} from '../../core/services/dashboard.service';
 import { AppointmentsListComponent } from '../dashboard/components/appointments-list/appointments-list.component';
 import { AppointmentsChartComponent } from '../dashboard/components/appointments-chart/appointments-chart.component';
-import { CalendarComponent } from '../calendar/calendar.component';
+// import { CalendarComponent } from '../calendar/calendar.component';
 import { RemindersComponent } from '../dashboard/components/reminders/reminders.component';
 
 @Component({
@@ -12,22 +16,24 @@ import { RemindersComponent } from '../dashboard/components/reminders/reminders.
     StatCardComponent,
     AppointmentsListComponent,
     AppointmentsChartComponent,
-    CalendarComponent,
-    RemindersComponent
+    // CalendarComponent,
+    RemindersComponent,
   ],
   templateUrl: './dashboard-view.component.html',
-  styleUrl: './dashboard-view.component.css'
+  styleUrl: './dashboard-view.component.css',
 })
-export class DashboardViewComponent {
+export class DashboardViewComponent implements OnInit {
+  private readonly titleService = inject(TitleService);
   text: string = 'Dashboard view works!';
   sidebarOpen = false;
   dashboardData: DashboardSummary | null = null;
   loading = false;
   selectedDate: Date = new Date();
 
-  constructor(private readonly dashboardService: DashboardService) { }
+  constructor(private readonly dashboardService: DashboardService) {}
 
   ngOnInit() {
+    this.titleService.setTitle('Dashboard');
     this.loadDashboardData();
   }
 

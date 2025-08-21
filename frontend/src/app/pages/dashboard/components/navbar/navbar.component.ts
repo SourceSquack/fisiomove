@@ -1,17 +1,17 @@
 import { Component, Output, EventEmitter, inject, OnInit } from '@angular/core';
+import { TitleService } from '../../../../core/services/title.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PatientSearchModalComponent } from '../../../../components/patient-search-modal/patient-search-modal.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Patient, User } from '../../../../core/models/api.models';
 import { PatientsService } from '../../../../core/services/patients.service';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, FormsModule, PatientSearchModalComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
@@ -20,6 +20,7 @@ export class NavbarComponent implements OnInit {
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  public readonly titleService = inject(TitleService);
 
   searchQuery: string = '';
   searchResults: Patient[] = [];
@@ -35,13 +36,6 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserProfile();
-
-    // Suscribirse a cambios en el input de búsqueda con debounce
-    this.searchInput$
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((query) => {
-        this.performPatientSearch(query);
-      });
   }
 
   onSearchInput(): void {
@@ -52,7 +46,6 @@ export class NavbarComponent implements OnInit {
   }
 
   onSearchBlur(): void {
-    // Ocultar dropdown tras pequeño delay para permitir click
     setTimeout(() => {
       this.showSearchDropdown = false;
     }, 200);
@@ -176,3 +169,7 @@ export class NavbarComponent implements OnInit {
     return 'U';
   }
 }
+function distinctUntilChanged(): import("rxjs").OperatorFunction<string, unknown> {
+  throw new Error('Function not implemented.');
+}
+

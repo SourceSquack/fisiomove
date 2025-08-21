@@ -42,7 +42,7 @@ export class AppointmentsComponent implements OnInit {
     { value: 'confirmada', label: 'Confirmada' },
     { value: 'completada', label: 'Completada' },
     { value: 'cancelada', label: 'Cancelada' },
-    { value: 'no_show', label: 'No asistió' },
+    { value: 'no_show', label: 'No asistió' }
   ];
 
   ngOnInit(): void {
