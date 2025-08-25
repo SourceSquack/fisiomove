@@ -1,4 +1,6 @@
 <div class="notifications">
   <i class="fas fa-bell"></i>
-  <span class="notification-badge" *ngIf="count > 0">{{ count }}</span>
+  @if(count){
+    <span class="notification-badge"> 0">{{ count }}</span>
+  }
 </div>
