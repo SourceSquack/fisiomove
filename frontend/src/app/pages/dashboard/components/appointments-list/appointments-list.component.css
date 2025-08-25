@@ -202,20 +202,6 @@
   }
 }
 
-/* Nuevos estilos para el calendario interactivo */
-.loading-state,
-.error-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 2rem;
-  color: #666;
-}
-
-.error-state {
-  color: #e74c3c;
-}
 
 .spinner {
   width: 20px;

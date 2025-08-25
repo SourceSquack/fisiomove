@@ -46,9 +46,11 @@
 </div>
 
 @if(isLoading) {
-<div class="loading-state">
-  <i class="fas fa-spinner fa-spin"></i>
-  <span>Cargando información del paciente</span>
+<div class="box">
+  <div class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <span>Cargando información del paciente</span>
+  </div>
 </div>
 }
 
@@ -57,7 +59,10 @@
 
 <!-- panel de información del paciente -->
 @if(!isEditing) {
-<div class="box"></div>
+<div class="box">
+  nombre correo DNI genero sexo edad alergias história médica historial de citas
+  teléfono contacto de emergencia tipo de sangre estatura peso IMC apróximado
+</div>
 }
 
 <!-- panel de edición de información del paciente -->

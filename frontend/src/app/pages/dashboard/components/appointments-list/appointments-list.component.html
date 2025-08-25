@@ -19,17 +19,17 @@
   </div>
 
   <!-- Lista de citas -->
-  <div *ngIf="!isLoading && !errorMessage" class="appointments-content">
-    <!-- Cuando no hay citas -->
-    <div *ngIf="appointments.length === 0" class="empty-state">
+  @if(!isLoading && !errorMessage){
+  <div class="appointments-content">
+    @if(appointments.length === 0){
+    <div class="empty-state">
       <i class="fas fa-calendar-times"></i>
       <h3>No hay citas programadas</h3>
-      <p *ngIf="selectedDate">No hay citas para el {{ getFormattedDate() }}</p>
-      <button class="button is-link" (click)="createNewAppointment()">
-        <i class="fas fa-plus"></i>
-        Programar nueva cita
-      </button>
+      @if(selectedDate){
+      <p>No hay citas para el {{ getFormattedDate() }}</p>
+      }
     </div>
+    }
 
     <!-- Lista de citas -->
     <ul *ngIf="appointments.length > 0" class="appointments-list">
@@ -100,4 +100,5 @@
       </div>
     </div>
   </div>
+  }
 </div>
