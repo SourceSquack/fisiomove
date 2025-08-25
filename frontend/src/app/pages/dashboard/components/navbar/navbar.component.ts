@@ -6,11 +6,17 @@ import { SearchComponent } from '../search/search.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { User } from '../../../../core/models/api.models';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SearchComponent,
+    NotificationBellComponent,
+  ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
@@ -24,6 +30,7 @@ export class NavbarComponent implements OnInit {
   currentUser: User | null = null;
   isDropdownOpen = false;
   isLoading = true;
+  notificationCount: number = 4; // TODO: Replace with real notification count from service
 
   ngOnInit(): void {
     this.loadUserProfile();

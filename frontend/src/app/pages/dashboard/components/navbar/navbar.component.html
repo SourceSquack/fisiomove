@@ -9,10 +9,7 @@
 
   <div class="user-menu">
     <app-search></app-search>
-    <div class="notifications">
-      <i class="fas fa-bell"></i>
-      <span class="notification-badge">4</span>
-    </div>
+    <app-notification-bell [count]="notificationCount"></app-notification-bell>
 
     <div class="user-profile-container">
       <div
