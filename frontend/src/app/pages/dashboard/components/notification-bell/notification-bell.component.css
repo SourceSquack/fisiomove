@@ -1,19 +1,28 @@
 .notifications {
   position: relative;
-  display: flex;
-  align-items: center;
+  color: #6b7280;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.notifications:hover {
+  color: #4b5563;
 }
 
 .notification-badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #e74c3c;
-  color: #fff;
+  top: 2px;
+  right: 2px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
   border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  min-width: 18px;
-  text-align: center;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
