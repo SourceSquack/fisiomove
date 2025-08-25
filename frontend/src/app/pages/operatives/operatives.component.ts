@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { TitleService } from '../../core/services/title.service';
 
 @Component({
   selector: 'app-operatives',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './operatives.component.css'
 })
 export class OperativesComponent {
-  text: string = 'Operatives works!';
+  private readonly TitleService = inject(TitleService);
+
+  ngOnInit(): void{
+    this.TitleService.setTitle('Operativo')
+  }
+
 }
