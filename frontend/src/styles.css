@@ -199,3 +199,44 @@ body {
   align-content: center;
   gap: 1rem;
 }
+
+/* Estados */
+.loading-state,
+.error-state,
+.empty-state {
+  height: 75%;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+.loading-state i {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 16px;
+}
+.error-state i {
+  font-size: 2rem;
+  color: #ef4444;
+  margin-bottom: 16px;
+}
+.empty-state i {
+  font-size: 3rem;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+.empty-state h3 {
+  margin: 0 0 8px 0;
+  color: #374151;
+  font-size: 1.5rem;
+}
+.empty-state p {
+  margin: 0 0 24px 0;
+  color: #6b7280;
+}
