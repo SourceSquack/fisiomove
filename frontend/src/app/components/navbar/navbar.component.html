@@ -11,6 +11,9 @@
     <div class="nav-options">
       @if(isAuthenticated()){
       <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+      <app-notification-bell
+        [count]="(unreadCount$ | async) ?? 0"
+      ></app-notification-bell>
       @if (currentUser$ | async; as user) {
       <div class="user-dropdown">
         <span class="user-name">{{ user.full_name }}</span>

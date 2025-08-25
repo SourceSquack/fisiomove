@@ -4,8 +4,7 @@ import { HttpParams } from '@angular/common/http';
 import { HttpClientService } from './http-client.service';
 import {
   Appointment,
-  ApiResponse,
-  PaginatedResponse,
+  ApiResponse
 } from '../models/api.models';
 
 export interface AppointmentFilters {
@@ -49,6 +48,21 @@ export interface BackendAppointmentCreate {
   providedIn: 'root',
 })
 export class AppointmentsService {
+  /**
+   * Verificar disponibilidad de horario para cita
+   */
+  checkTimeSlotAvailability(payload: {
+    start_time: string;
+    duration_minutes: number;
+    patient_id: string;
+    fisio_id?: string;
+    exclude_id?: number;
+  }): Observable<{ available: boolean }> {
+    return this.httpClient.post<{ available: boolean }>(
+      'appointments/check-availability',
+      payload
+    );
+  }
   private readonly httpClient = inject(HttpClientService);
 
   /**
@@ -233,15 +247,15 @@ export class AppointmentsService {
     // Formato: YYYY-MM (mes es 1-indexado)
     const monthStr = month.toString().padStart(2, '0');
     const startDate = `${year}-${monthStr}-01`;
-    
+
     // Último día del mes
     const lastDay = new Date(year, month, 0).getDate();
     const endDate = `${year}-${monthStr}-${lastDay.toString().padStart(2, '0')}`;
-    
+
     const params = new HttpParams()
       .set('date_from', startDate)
       .set('date_to', endDate);
-    
+
     return this.httpClient.get<Appointment[]>('appointments/', params);
   }
 }

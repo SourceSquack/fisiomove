@@ -8,7 +8,7 @@ import { Notification } from '../models/notification.model';
 export class NotificationsService {
   private readonly apiUrl = '/api/v1/notifications';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getUserNotifications(): Observable<Notification[]> {
     return this.http.get<Notification[]>(this.apiUrl);

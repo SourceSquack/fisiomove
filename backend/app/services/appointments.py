@@ -20,6 +20,46 @@ from app.schemas.notifications import NotificationCreate
 from app.schemas.appointments import AppointmentRead, PatientInfo, FisioInfo
 
 
+def is_time_slot_available(
+    db: Session,
+    *,
+    start_time: datetime,
+    duration_minutes: int,
+    patient_id: str,
+    fisio_id: Optional[str] = None,
+    exclude_id: Optional[int] = None,
+) -> bool:
+    """
+    Verifica si el horario está disponible para el paciente y el fisioterapeuta (si aplica).
+    No debe haber citas que se solapen para el paciente ni para el fisio.
+    """
+    start_n = _naive_utc(start_time)
+    end_n = start_n + timedelta(minutes=duration_minutes)
+
+    # Verificar conflictos para el paciente
+    q_patient = db.query(Appointment).filter(Appointment.patient_id == patient_id)
+    if exclude_id is not None:
+        q_patient = q_patient.filter(Appointment.id != exclude_id)
+    for ap in q_patient:
+        ap_start = _naive_utc(ap.start_time)
+        ap_end = ap_start + timedelta(minutes=ap.duration_minutes)
+        if start_n < ap_end and end_n > ap_start:
+            return False
+
+    # Verificar conflictos para el fisio (si aplica)
+    if fisio_id:
+        q_fisio = db.query(Appointment).filter(Appointment.fisio_id == fisio_id)
+        if exclude_id is not None:
+            q_fisio = q_fisio.filter(Appointment.id != exclude_id)
+        for ap in q_fisio:
+            ap_start = _naive_utc(ap.start_time)
+            ap_end = ap_start + timedelta(minutes=ap.duration_minutes)
+            if start_n < ap_end and end_n > ap_start:
+                return False
+
+    return True
+
+
 def _naive_utc(dt: datetime) -> datetime:
     if dt.tzinfo is None:
         return dt

@@ -1,8 +1,9 @@
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime,timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -18,10 +19,34 @@ from app.services.appointments import (
     get_appointment,
     cancel_appointment,
     delete_appointment,
+    is_time_slot_available,
 )
 from app.services.auth import get_current_user
 
 router = APIRouter()
+
+class CheckAvailabilityRequest(BaseModel):
+    start_time: datetime
+    duration_minutes: int
+    patient_id: str
+    fisio_id: Optional[str] = None
+    exclude_id: Optional[int] = None
+
+@router.post("/check-availability")
+def check_availability(
+    payload: CheckAvailabilityRequest,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user),
+):
+    available = is_time_slot_available(
+        db,
+        start_time=payload.start_time,
+        duration_minutes=payload.duration_minutes,
+        patient_id=payload.patient_id,
+        fisio_id=payload.fisio_id,
+        exclude_id=payload.exclude_id,
+    )
+    return {"available": available}
 
 quote_not_found_message = "Cita no encontrada"
 
@@ -33,15 +58,55 @@ def create_cita(
     user: dict = Depends(get_current_user),
 ):
     try:
+        # 1. Validar fecha (no en el pasado, formato correcto)
+        now = datetime.now(timezone.utc)
+        if payload.start_time < now:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "message": "La fecha/hora de la cita no puede ser en el pasado."
+                },
+            )
+
+        # 2. Validar disponibilidad de horario (no hay otra cita en ese rango para el paciente/fisio)
+        from app.services.appointments import is_time_slot_available
+
+        slot_available = is_time_slot_available(
+            db,
+            start_time=payload.start_time,
+            duration_minutes=payload.duration_minutes,
+            patient_id=payload.patient_id,
+            fisio_id=(
+                payload.fisio_id
+                if payload.fisio_id not in ["current_user", "string", ""]
+                else None
+            ),
+        )
+        if not slot_available:
+            raise HTTPException(
+                status_code=409,
+                detail={"message": "El horario solicitado no está disponible."},
+            )
+
+        # 3. Validar tipo de proceso
+        tipos_validos = {
+            "rehabilitacion",
+            "consulta",
+            "evaluacion",
+            "fisioterapia",
+            "seguimiento",
+        }
+        if payload.appointment_type not in tipos_validos:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "message": f"Tipo de cita inválido: {payload.appointment_type}"
+                },
+            )
+
         # Permitir citas sin fisioterapeuta asignado (pendientes de asignación)
         fisio_id = payload.fisio_id
-
-        # Si se proporciona un fisio_id válido, usarlo; si no, dejar como None para asignación posterior
-        if fisio_id and fisio_id not in ["current_user", "string", ""]:
-            # Fisioterapeuta específico asignado
-            pass
-        else:
-            # Cita pendiente de asignación
+        if not (fisio_id and fisio_id not in ["current_user", "string", ""]):
             fisio_id = None
 
         ap = create_appointment(
@@ -80,7 +145,9 @@ def get_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
+        raise HTTPException(
+            status_code=404, detail={"message": quote_not_found_message}
+        )
     return ap
 
 
@@ -93,7 +160,9 @@ def update_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
+        raise HTTPException(
+            status_code=404, detail={"message": quote_not_found_message}
+        )
     try:
         ap = update_appointment(
             db,
@@ -116,7 +185,9 @@ def cancel_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
+        raise HTTPException(
+            status_code=404, detail={"message": quote_not_found_message}
+        )
     ap = cancel_appointment(db, ap)
     return ap
 
@@ -127,6 +198,8 @@ def delete_cita(
 ):
     ap = get_appointment(db, cita_id)
     if not ap:
-        raise HTTPException(status_code=404, detail={"message": quote_not_found_message})
+        raise HTTPException(
+            status_code=404, detail={"message": quote_not_found_message}
+        )
     ap = delete_appointment(db, ap)
     return ap
