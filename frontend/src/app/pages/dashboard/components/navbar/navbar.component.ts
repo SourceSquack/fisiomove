@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { User } from '../../../../core/models/api.models';
 import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
+import { NotificationsService } from '../../../../core/services/notifications.service';
 
 @Component({
   selector: 'app-navbar',
@@ -26,14 +27,16 @@ export class NavbarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   public readonly titleService = inject(TitleService);
+  private readonly notificationsService = inject(NotificationsService);
 
   currentUser: User | null = null;
   isDropdownOpen = false;
   isLoading = true;
-  notificationCount: number = 4; // TODO: Replace with real notification count from service
+  notificationCount: number = 0;
 
   ngOnInit(): void {
     this.loadUserProfile();
+    this.loadNotificationCount();
   }
 
   toggleSidebar(): void {
@@ -83,6 +86,18 @@ export class NavbarComponent implements OnInit {
         console.error('Error cargando perfil:', error);
         this.isLoading = false;
         this.currentUser = this.authService.getCurrentUser();
+      },
+    });
+  }
+
+  private loadNotificationCount(): void {
+    this.notificationsService.getUnreadCount().subscribe({
+      next: (count) => {
+        this.notificationCount = count;
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+        this.notificationCount = 0;
       },
     });
   }

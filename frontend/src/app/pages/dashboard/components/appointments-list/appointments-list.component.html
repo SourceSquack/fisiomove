@@ -2,41 +2,43 @@
   <div class="card-header">
     <div class="header-content">
       <h2>Citas del día</h2>
-      <p class="selected-date" *ngIf="selectedDate">{{ getFormattedDate() }}</p>
+      @if (selectedDate) {
+      <p class="selected-date">{{ getFormattedDate() }}</p>
+      }
     </div>
   </div>
 
-  <!-- Estado de carga -->
-  <div *ngIf="isLoading" class="loading-state">
+  @if (isLoading) {
+  <div class="loading-state">
     <div class="spinner"></div>
     <span>Cargando citas...</span>
   </div>
-
-  <!-- Error -->
-  <div *ngIf="errorMessage && !isLoading" class="error-state">
+  } @if (errorMessage && !isLoading) {
+  <div class="error-state">
     <i class="fas fa-exclamation-triangle"></i>
     <span>{{ errorMessage }}</span>
   </div>
-
-  <!-- Lista de citas -->
-  <div *ngIf="!isLoading && !errorMessage" class="appointments-content">
-    <!-- Cuando no hay citas -->
-    <div *ngIf="appointments.length === 0" class="empty-state">
+  } @if (!isLoading && !errorMessage) {
+  <div class="appointments-content">
+    @if (appointments.length === 0) {
+    <div class="empty-state">
       <i class="fas fa-calendar-times"></i>
       <h3>No hay citas programadas</h3>
-      <p *ngIf="selectedDate">No hay citas para el {{ getFormattedDate() }}</p>
+      @if (selectedDate) {
+      <p>No hay citas para el {{ getFormattedDate() }}</p>
+      }
       <button class="button is-link" (click)="createNewAppointment()">
         <i class="fas fa-plus"></i>
         Programar nueva cita
       </button>
     </div>
-
-    <!-- Lista de citas -->
-    <ul *ngIf="appointments.length > 0" class="appointments-list">
+    } @if (appointments.length > 0) {
+    <ul class="appointments-list">
+      @for (appointment of appointments; track appointment.id!) {
       <li
-        *ngFor="let appointment of appointments; trackBy: trackByAppointmentId"
         class="appointment-item"
         (click)="viewAppointment(appointment.id!)"
+        (keydown)="viewAppointment(appointment.id!)"
         [title]="
           'Ver detalles de la cita de ' + getPatientFullName(appointment)
         "
@@ -68,7 +70,11 @@
           </span>
         </div>
 
-        <div class="appointment-actions" (click)="$event.stopPropagation()">
+        <div
+          class="appointment-actions"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
           <button
             class="btn-action"
             (click)="editAppointment(appointment.id!)"
@@ -78,10 +84,10 @@
           </button>
         </div>
       </li>
+      }
     </ul>
-
     <!-- Resumen del día -->
-    <div *ngIf="appointments.length > 0" class="day-summary">
+    <div class="day-summary">
       <div class="summary-item">
         <span class="summary-label">Total citas:</span>
         <span class="summary-value">{{ appointments.length }}</span>
@@ -99,5 +105,7 @@
         </span>
       </div>
     </div>
+    }
   </div>
+  }
 </div>
