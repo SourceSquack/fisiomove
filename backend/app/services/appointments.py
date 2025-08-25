@@ -5,8 +5,15 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
+from app.models.user import User
 from app.models.appointment import Appointment, AppointmentStatus, AppointmentType
-from app.services.notifications import create_notification
+from app.services.notifications import (
+    create_notification,
+    notify_cita_asignada,
+    notify_cita_pendiente_asignacion,
+    notify_cita_modificada,
+    notify_cita_cancelada,
+)
 from app.services.users import get_users_by_ids
 from app.services.patients import get_patients_by_ids
 from app.schemas.notifications import NotificationCreate
@@ -95,36 +102,16 @@ def create_appointment(
     db.commit()
     db.refresh(ap)
 
-    # Crear notificaciones apropiadas
     if fisio_id:
-        # Cita asignada: notificar al paciente y fisioterapeuta
-        notify_on_appointment_change(db, patient_id, "Se ha creado una nueva cita")
-        notify_on_appointment_change(db, fisio_id, "Se ha creado una nueva cita")
+        # Notificar cita asignada (paciente y fisioterapeuta)
+        notify_cita_asignada(db, ap.id, int(patient_id), int(fisio_id))
     else:
-        # Cita sin asignar: notificar al paciente y a todos los fisioterapeutas/admins
-        notify_on_appointment_change(
-            db,
-            patient_id,
-            "Su cita ha sido programada y está pendiente de asignación de fisioterapeuta",
-        )
-
-        # Obtener todos los usuarios con rol de admin o fisioterapeuta
-        from app.models.user import User
-
-        admins_and_fisios = (
-            db.query(User).filter(User.role.in_(["admin", "fisioterapeuta"])).all()
-        )
-
-        # Crear notificación para cada admin y fisioterapeuta
-        for user in admins_and_fisios:
-            message = f"Nueva cita pendiente de asignación para el {start_time.strftime('%d/%m/%Y a las %H:%M')}"
-            notification = NotificationCreate(
-                tipo="cita_pendiente", mensaje=message, usuario_id=user.id
-            )
-            try:
-                create_notification(db, notification)
-            except Exception as e:
-                print(f"Error al crear notificación para usuario {user.id}: {e}")
+        # Notificar cita pendiente de asignación (paciente, admins y fisios)
+        admins = db.query(User).filter(User.role == "admin").all()
+        fisios = db.query(User).filter(User.role == "fisioterapeuta").all()
+        admin_ids = [u.id for u in admins]
+        fisio_ids = [u.id for u in fisios]
+        notify_cita_pendiente_asignacion(db, ap.id, admin_ids, fisio_ids)
 
     return ap
 
@@ -269,8 +256,13 @@ def update_appointment(
     db.add(ap)
     db.commit()
     db.refresh(ap)
-    notify_on_appointment_change(db, ap.patient_id, "Se ha modificado una cita")
-    notify_on_appointment_change(db, ap.fisio_id, "Se ha modificado una cita")
+    # Notificar modificación a todos los involucrados
+    user_ids = []
+    if ap.patient_id:
+        user_ids.append(int(ap.patient_id))
+    if ap.fisio_id:
+        user_ids.append(int(ap.fisio_id))
+    notify_cita_modificada(db, ap.id, user_ids)
     return ap
 
 
@@ -283,8 +275,13 @@ def cancel_appointment(db: Session, ap: Appointment) -> AppointmentRead:
     db.add(ap)
     db.commit()
     db.refresh(ap)
-    notify_on_appointment_change(db, ap.patient_id, "Se ha cancelado una cita")
-    notify_on_appointment_change(db, ap.fisio_id, "Se ha cancelado una cita")
+    # Notificar cancelación a todos los involucrados
+    user_ids = []
+    if ap.patient_id:
+        user_ids.append(int(ap.patient_id))
+    if ap.fisio_id:
+        user_ids.append(int(ap.fisio_id))
+    notify_cita_cancelada(db, ap.id, user_ids)
 
     # Obtener información del paciente y fisioterapeuta para la respuesta
     users_info = get_users_by_ids(
@@ -373,8 +370,12 @@ def delete_appointment(db: Session, ap: Appointment) -> AppointmentRead:
     )
 
     # Notificar antes de eliminar
-    notify_on_appointment_change(db, ap.patient_id, "Se ha eliminado una cita")
-    notify_on_appointment_change(db, ap.fisio_id, "Se ha eliminado una cita")
+    user_ids = []
+    if ap.patient_id:
+        user_ids.append(int(ap.patient_id))
+    if ap.fisio_id:
+        user_ids.append(int(ap.fisio_id))
+    notify_cita_cancelada(db, ap.id, user_ids)
 
     # Eliminar la cita de la base de datos
     db.delete(ap)
@@ -382,27 +383,4 @@ def delete_appointment(db: Session, ap: Appointment) -> AppointmentRead:
 
     return appointment_read
 
-
-def notify_on_appointment_change(db: Session, user_id: str, message: str):
-    """
-    Crea una notificación si el usuario existe en la base de datos
-    """
-    if not user_id:
-        return
-
-    # Verificar que el usuario existe antes de crear la notificación
-    from app.models.user import User
-
-    user_exists = db.query(User).filter(User.id == user_id).first()
-    if not user_exists:
-        print(f"Usuario {user_id} no existe, no se creará notificación")
-        return
-
-    try:
-        notification = NotificationCreate(
-            tipo="cita", mensaje=message, usuario_id=user_id
-        )
-        create_notification(db, notification)
-    except Exception as e:
-        print(f"Error al crear notificación para usuario {user_id}: {e}")
-        # No fallar la operación principal si falla la notificación
+    # ...existing code...
