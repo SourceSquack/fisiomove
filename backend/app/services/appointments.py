@@ -1,5 +1,6 @@
 from __future__ import annotations
 from datetime import datetime, timedelta, timezone
+import logging
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
@@ -20,6 +21,48 @@ from app.schemas.notifications import NotificationCreate
 from app.schemas.appointments import AppointmentRead, PatientInfo, FisioInfo
 
 
+def has_overlap(ap: Appointment, start_n: datetime, end_n: datetime) -> bool:
+    """Return True if appointment 'ap' overlaps the interval [start_n, end_n).
+
+    Parameters:
+    - ap: Appointment instance from DB
+    - start_n, end_n: naive datetimes in UTC used for comparison
+    """
+    try:
+        ap_start = _naive_utc(ap.start_time)
+    except Exception:
+        # fallback if start_time is malformed
+        return False
+    ap_end = ap_start + timedelta(minutes=getattr(ap, "duration_minutes", 0) or 0)
+    return start_n < ap_end and end_n > ap_start
+
+
+def _check_query_conflicts(
+    query,
+    start_n: datetime,
+    end_n: datetime,
+    logger: logging.Logger,
+    message_prefix: str,
+    exclude_id: Optional[int] = None,
+) -> bool:
+    """Iterate `query` (SQLAlchemy query or iterable) and return True when a conflicting appointment is found.
+
+    Logs a debug message with `message_prefix` when a conflict is detected.
+    """
+    if exclude_id is not None:
+        query = query.filter(Appointment.id != exclude_id)
+
+    for ap in query:
+        if getattr(ap, "status", None) == AppointmentStatus.cancelada:
+            continue
+        if has_overlap(ap, start_n, end_n):
+            logger.debug(
+                f"{message_prefix} id={ap.id} start={ap.start_time.isoformat()} duration={ap.duration_minutes}"
+            )
+            return True
+    return False
+
+
 def is_time_slot_available(
     db: Session,
     *,
@@ -29,33 +72,42 @@ def is_time_slot_available(
     fisio_id: Optional[str] = None,
     exclude_id: Optional[int] = None,
 ) -> bool:
-    """
-    Verifica si el horario está disponible para el paciente y el fisioterapeuta (si aplica).
+    """Verifica si el horario está disponible para el paciente y el fisioterapeuta (si aplica).
     No debe haber citas que se solapen para el paciente ni para el fisio.
     """
     start_n = _naive_utc(start_time)
     end_n = start_n + timedelta(minutes=duration_minutes)
 
-    # Verificar conflictos para el paciente
-    q_patient = db.query(Appointment).filter(Appointment.patient_id == patient_id)
-    if exclude_id is not None:
-        q_patient = q_patient.filter(Appointment.id != exclude_id)
-    for ap in q_patient:
-        ap_start = _naive_utc(ap.start_time)
-        ap_end = ap_start + timedelta(minutes=ap.duration_minutes)
-        if start_n < ap_end and end_n > ap_start:
-            return False
+    logger = logging.getLogger(__name__)
+    logger.debug(
+        f"Checking availability start_time={start_time.isoformat() if hasattr(start_time, 'isoformat') else str(start_time)} duration_minutes={duration_minutes} patient_id={patient_id} fisio_id={fisio_id}"
+    )
 
-    # Verificar conflictos para el fisio (si aplica)
+    checks = []
+
+    # paciente
+    checks.append(
+        (
+            db.query(Appointment).filter(Appointment.patient_id == patient_id),
+            "Conflicto con cita del paciente",
+        )
+    )
+
+    # global
+    checks.append((db.query(Appointment), "Conflicto global detectado"))
+
+    # fisio (opcional)
     if fisio_id:
-        q_fisio = db.query(Appointment).filter(Appointment.fisio_id == fisio_id)
-        if exclude_id is not None:
-            q_fisio = q_fisio.filter(Appointment.id != exclude_id)
-        for ap in q_fisio:
-            ap_start = _naive_utc(ap.start_time)
-            ap_end = ap_start + timedelta(minutes=ap.duration_minutes)
-            if start_n < ap_end and end_n > ap_start:
-                return False
+        checks.append(
+            (
+                db.query(Appointment).filter(Appointment.fisio_id == fisio_id),
+                "Conflicto con cita del fisio",
+            )
+        )
+
+    for query, msg in checks:
+        if _check_query_conflicts(query, start_n, end_n, logger, msg, exclude_id):
+            return False
 
     return True
 
