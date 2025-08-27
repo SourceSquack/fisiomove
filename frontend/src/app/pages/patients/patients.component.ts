@@ -73,12 +73,8 @@ export class PatientsComponent implements OnInit {
         const list = patients || [];
         this.patientsStore.setPatients(list);
         this.patientsStore.setLoading(false);
-        // Map patients to PatientRow with derived fields
-        this.rowsData = list.map((p) => ({
-          ...p,
-          age: this.getAge(p.birth_date ?? null),
-          birth_date_display: this.formatDate(p.birth_date ?? ''),
-        }));
+        // Build rowsData from the store's filteredPatients so filters apply
+        this.updateRowsFromStore();
         console.log(`➡️ ~ loadPatients ~ patients:`, list);
       },
       error: (err) => {
@@ -93,6 +89,18 @@ export class PatientsComponent implements OnInit {
   onFilterChange(): void {
     // Usar el store para establecer el filtro de género
     this.patientsStore.setFilters({ gender: this.selectedGender || undefined });
+    // Rebuild rows from the store after changing filters
+    this.updateRowsFromStore();
+  }
+
+  // Recompute rowsData from the store's filtered patients
+  updateRowsFromStore(): void {
+    const list = this.patients || [];
+    this.rowsData = list.map((p) => ({
+      ...p,
+      age: this.getAge(p.birth_date ?? null),
+      birth_date_display: this.formatDate(p.birth_date ?? ''),
+    }));
   }
 
   goToDashboard(): void {
