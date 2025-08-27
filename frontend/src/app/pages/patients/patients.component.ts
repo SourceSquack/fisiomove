@@ -18,15 +18,13 @@ import type { ColDef } from 'ag-grid-community';
 })
 export class PatientsComponent implements OnInit {
   selectedGender: 'M' | 'F' | 'Other' | '' = '';
-  //TODO crear interface para filas
-  rowsData: any[] = [];
+  rowsData: PatientRow[] = [];
   colsData: ColDef[] = [
     { field: 'is_active', headerName: 'Activo', maxWidth: 100 },
     { field: 'full_name', headerName: 'Nombre' },
     {
-      field: 'birth_date',
+      field: 'age',
       headerName: 'Edad',
-      valueFormatter: (params) => this.getAge(params.data.birth_date),
       maxWidth: 75,
       cellStyle: { textAlign: 'center' },
     },
@@ -72,10 +70,16 @@ export class PatientsComponent implements OnInit {
 
     this.patientsService.getAllPatients().subscribe({
       next: (patients) => {
-        this.patientsStore.setPatients(patients || []);
+        const list = patients || [];
+        this.patientsStore.setPatients(list);
         this.patientsStore.setLoading(false);
-        this.rowsData = patients;
-        console.log(`➡️ ~ loadPatients ~ patients:`, patients);
+        // Map patients to PatientRow with derived fields
+        this.rowsData = list.map((p) => ({
+          ...p,
+          age: this.getAge(p.birth_date ?? null),
+          birth_date_display: this.formatDate(p.birth_date ?? ''),
+        }));
+        console.log(`➡️ ~ loadPatients ~ patients:`, list);
       },
       error: (err) => {
         const errorMessage =
@@ -95,8 +99,8 @@ export class PatientsComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
-  //TODO Cambiar Any por una Interface
-  viewPatient(rowData: any) {
+  // Navegar a la vista del paciente (rowData tipado)
+  viewPatient(rowData: Patient) {
     this.router.navigate(['/dashboard/patients', String(rowData?.id)]);
   }
 
@@ -139,4 +143,10 @@ export class PatientsComponent implements OnInit {
     }
     return String(age);
   }
+}
+
+// Interfaz local para filas con campos derivados (edad y fecha formateada)
+interface PatientRow extends Patient {
+  age: string;
+  birth_date_display: string;
 }

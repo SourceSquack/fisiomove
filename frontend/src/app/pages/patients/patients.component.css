@@ -1,4 +1,3 @@
-
 /* Responsive */
 @media (max-width: 768px) {
   .patients-container {
@@ -31,4 +30,45 @@
       padding: 16px;
     }
   }
+}
+
+/* Patients toolbar specific tweaks */
+.toolbar {
+  align-items: center;
+}
+
+/* Change filter label color to a more visible, brand-friendly blue */
+.toolbar .label {
+  color: #2b6cb0; /* blue-600 */
+  font-weight: 600;
+}
+
+/* Make the Bulma select look cleaner and avoid the previous grey background */
+.toolbar .select select {
+  background-color: #ffffff; /* pure white for better contrast */
+  border: 1px solid #d1d5db; /* light neutral border */
+  color: #1f2937; /* dark gray text */
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* Hover & focus affordances */
+.toolbar .select select:hover {
+  border-color: #9fb3d8;
+}
+.toolbar .select select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); /* subtle blue focus ring */
+  border-color: #2b6cb0;
+}
+
+/* Slight spacing polish for toolbar buttons */
+.toolbar .button {
+  margin-left: 6px;
+}
+
+/* Make the select slightly larger and readable */
+.toolbar .select {
+  min-width: 160px;
 }
