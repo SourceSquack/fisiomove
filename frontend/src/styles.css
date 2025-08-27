@@ -34,7 +34,7 @@ body {
 }
 
 /* =================================
-   GLOBAL COMPONENT STYLES
+  GLOBAL COMPONENT STYLES
    ================================= */
 
 /* Form Controls */
@@ -240,3 +240,5 @@ body {
   margin: 0 0 24px 0;
   color: #6b7280;
 }
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,9 @@
+<mat-card>
+  <mat-card-title>Selecciona una fecha para tu cita</mat-card-title>
+  <input
+    matInput
+    [matDatepicker]="picker"
+    (dateChange)="onDateSelected($event.value)"
+  />
+  <mat-datepicker #picker></mat-datepicker>
+</mat-card>

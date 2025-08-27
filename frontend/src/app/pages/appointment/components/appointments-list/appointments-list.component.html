@@ -1,0 +1,111 @@
+<div class="appointments-card">
+  <div class="card-header">
+    <div class="header-content">
+      <h2>Citas del día</h2>
+      @if (selectedDate) {
+      <p class="selected-date">{{ getFormattedDate() }}</p>
+      }
+    </div>
+  </div>
+
+  @if (isLoading) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <span>Cargando citas...</span>
+  </div>
+  } @if (errorMessage && !isLoading) {
+  <div class="error-state">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+  } @if (!isLoading && !errorMessage) {
+  <div class="appointments-content">
+    @if (appointments.length === 0) {
+    <div class="empty-state">
+      <i class="fas fa-calendar-times"></i>
+      <h3>No hay citas programadas</h3>
+      @if (selectedDate) {
+      <p>No hay citas para el {{ getFormattedDate() }}</p>
+      }
+      <button class="button is-link" (click)="createNewAppointment()">
+        <i class="fas fa-plus"></i>
+        Programar nueva cita
+      </button>
+    </div>
+    } @if (appointments.length > 0) {
+    <ul class="appointments-list">
+      @for (appointment of appointments; track appointment.id!) {
+      <li
+        class="appointment-item"
+        (click)="viewAppointment(appointment.id!)"
+        (keydown)="viewAppointment(appointment.id!)"
+        [title]="
+          'Ver detalles de la cita de ' + getPatientFullName(appointment)
+        "
+      >
+        <div class="patient-info">
+          <div class="patient-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="patient-details">
+            <span class="patient-name">{{
+              getPatientFullName(appointment)
+            }}</span>
+            <span class="appointment-type">{{
+              getAppointmentTypeLabel(appointment.appointment_type)
+            }}</span>
+          </div>
+        </div>
+
+        <div class="appointment-details">
+          <span class="appointment-time">{{
+            formatTime(appointment.start_time)
+          }}</span>
+          <span
+            class="appointment-status"
+            [style.background-color]="getStatusColor(appointment.status)"
+            [ngClass]="appointment.status"
+          >
+            {{ getStatusLabel(appointment.status) }}
+          </span>
+        </div>
+
+        <div
+          class="appointment-actions"
+          (click)="$event.stopPropagation()"
+          (keydown)="$event.stopPropagation()"
+        >
+          <button
+            class="btn-action"
+            (click)="editAppointment(appointment.id!)"
+            title="Editar cita"
+          >
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+      </li>
+      }
+    </ul>
+    <!-- Resumen del día -->
+    <div class="day-summary">
+      <div class="summary-item">
+        <span class="summary-label">Total citas:</span>
+        <span class="summary-value">{{ appointments.length }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Confirmadas:</span>
+        <span class="summary-value confirmed">
+          {{ getConfirmedAppointmentsCount() }}
+        </span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Pendientes:</span>
+        <span class="summary-value pending">
+          {{ getPendingAppointmentsCount() }}
+        </span>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

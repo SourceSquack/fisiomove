@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { LoaderComponent } from './components/loader/loader.component';
 import { AuthStore } from './core/stores/auth.store';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -15,19 +18,24 @@ import { AuthStore } from './core/stores/auth.store';
     FooterComponent,
     CommonModule,
     LoaderComponent,
+    MatCardModule,
+    MatDatepickerModule,
+    MatDialogModule,
   ],
   template: `
-  @if (isDashboardRoute) {
+    @if (isDashboardRoute) {
     <router-outlet />
-  }@else{
+    }@else{
     <app-navbar />
     <router-outlet />
     <app-footer />
-  }
-  <!-- Loader Global para operaciones de autenticación -->
-  @if (authStore.isLoading()) {
-    <app-loader [message]="getLoadingMessage()" [fullscreen]="true"> </app-loader>
-  } `,
+    }
+    <!-- Loader Global para operaciones de autenticación -->
+    @if (authStore.isLoading()) {
+    <app-loader [message]="getLoadingMessage()" [fullscreen]="true">
+    </app-loader>
+    }
+  `,
 })
 export class AppComponent implements OnInit {
   protected title = 'Fisiomove';

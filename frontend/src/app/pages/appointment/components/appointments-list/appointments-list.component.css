@@ -45,21 +45,38 @@
 }
 
 .appointment-item {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: "info details actions";
   align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid #f0f2f5;
   gap: 1rem;
 }
 
-.appointment-item:last-child {
-  border-bottom: none;
-}
-
 .patient-info {
+  grid-area: info;
   display: flex;
   align-items: center;
+}
+
+.appointment-details {
+  grid-area: details;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.appointment-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.appointment-item:last-child {
+  border-bottom: none;
 }
 
 .patient-avatar {
@@ -92,10 +109,6 @@
   color: #5a647e;
 }
 
-.appointment-details {
-  text-align: right;
-}
-
 .appointment-time {
   font-weight: 600;
   color: #1e2a4a;
@@ -110,18 +123,20 @@
 }
 
 .appointment-status.confirmada {
-  background-color: #e6f7f0;
-  color: #28a745;
+  color: var(--footer-text-color);
+}
+
+.appointment-status.programada {
+  color:var(--footer-text-color)
+
 }
 
 .appointment-status.pendiente {
-  background-color: #fff8e1;
-  color: #ffc107;
+  color: var(--footer-text-color);
 }
 
 .appointment-status.nueva {
-  background-color: #e0f7ff;
-  color: #007bff;
+  color: var(--footer-text-color);
 }
 
 /* Responsive Design */
@@ -255,12 +270,6 @@
 .empty-state p {
   margin: 0.5rem 0 1.5rem 0;
   font-size: 0.9rem;
-}
-
-.appointment-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .btn-action {

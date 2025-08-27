@@ -5,10 +5,9 @@ import {
   DashboardService,
   DashboardSummary,
 } from '../../core/services/dashboard.service';
-import { AppointmentsListComponent } from '../dashboard/components/appointments-list/appointments-list.component';
-import { AppointmentsChartComponent } from '../dashboard/components/appointments-chart/appointments-chart.component';
-// import { CalendarComponent } from '../calendar/calendar.component';
+import { AppointmentsListComponent } from '../appointment/components/appointments-list/appointments-list.component';
 import { RemindersComponent } from '../dashboard/components/reminders/reminders.component';
+import { AppointmentsChartComponent } from '../appointment/components/appointments-chart/appointments-chart.component';
 
 @Component({
   selector: 'app-dashboard-view',

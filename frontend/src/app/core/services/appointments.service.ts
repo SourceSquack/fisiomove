@@ -2,10 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { HttpClientService } from './http-client.service';
-import {
-  Appointment,
-  ApiResponse
-} from '../models/api.models';
+import { Appointment, ApiResponse } from '../models/api.models';
 
 export interface AppointmentFilters {
   patient_id?: string;
@@ -109,7 +106,8 @@ export class AppointmentsService {
     const backendData: BackendAppointmentCreate = {
       patient_id: appointmentData.patient_id,
       // No enviar fisio_id para que se autoasigne en el backend
-      start_time: `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00`,
+      // Añadir offset de Bogotá (-05:00) para que el backend reciba un datetime con zona
+      start_time: `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00-05:00`,
       duration_minutes: appointmentData.duration_minutes || 60,
     };
 
@@ -133,7 +131,8 @@ export class AppointmentsService {
 
     // Construir start_time si se proporcionan fecha y hora
     if (appointmentData.appointment_date && appointmentData.appointment_time) {
-      backendData.start_time = `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00`;
+      // Incluir offset de Bogotá (-05:00)
+      backendData.start_time = `${appointmentData.appointment_date}T${appointmentData.appointment_time}:00-05:00`;
     }
 
     // Mapear campos
@@ -243,19 +242,59 @@ export class AppointmentsService {
   /**
    * Obtener todas las citas del mes para marcar días en calendario
    */
-  getAppointmentsByMonth(year: number, month: number): Observable<Appointment[]> {
+  getAppointmentsByMonth(
+    year: number,
+    month: number
+  ): Observable<Appointment[]> {
     // Formato: YYYY-MM (mes es 1-indexado)
     const monthStr = month.toString().padStart(2, '0');
     const startDate = `${year}-${monthStr}-01`;
 
     // Último día del mes
     const lastDay = new Date(year, month, 0).getDate();
-    const endDate = `${year}-${monthStr}-${lastDay.toString().padStart(2, '0')}`;
+    const endDate = `${year}-${monthStr}-${lastDay
+      .toString()
+      .padStart(2, '0')}`;
 
     const params = new HttpParams()
       .set('date_from', startDate)
       .set('date_to', endDate);
 
     return this.httpClient.get<Appointment[]>('appointments/', params);
+  }
+
+  /**
+   * Obtener franjas disponibles para una fecha dada (API consolidada)
+   */
+  getAvailability(params: {
+    date: string; // YYYY-MM-DD
+    duration_minutes?: number;
+    patient_id: string;
+    fisio_id?: string | null;
+    start_hour?: number;
+    end_hour?: number;
+    step_minutes?: number;
+  }) {
+    // Construir query params
+    let httpParams = new HttpParams()
+      .set('date', params.date)
+      .set('duration_minutes', (params.duration_minutes || 60).toString())
+      .set('patient_id', params.patient_id);
+    if (params.fisio_id)
+      httpParams = httpParams.set('fisio_id', params.fisio_id);
+    if (params.start_hour !== undefined)
+      httpParams = httpParams.set('start_hour', params.start_hour.toString());
+    if (params.end_hour !== undefined)
+      httpParams = httpParams.set('end_hour', params.end_hour.toString());
+    if (params.step_minutes !== undefined)
+      httpParams = httpParams.set(
+        'step_minutes',
+        params.step_minutes.toString()
+      );
+
+    return this.httpClient.get<{ available_slots: string[] }>(
+      'appointments/availability',
+      httpParams
+    );
   }
 }

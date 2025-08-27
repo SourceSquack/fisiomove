@@ -1,9 +1,7 @@
-// ...existing code...
 import { TitleService } from '../../core/services/title.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-// ...existing code...
 import { FormsModule } from '@angular/forms';
 import { PatientsService } from '../../core/services/patients.service';
 import { PatientsStore } from '../../core/stores/patients.store';
