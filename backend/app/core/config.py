@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[PostgresDsn | str] = None
 
     # Security
+    # Security
+    # IMPORTANT: This default is insecure. Always set SECRET_KEY via environment
+    # variables or a secrets manager in production. Use a long, random value.
     SECRET_KEY: str = "CHANGE_ME"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
     JWT_ALGORITHM: str = "HS256"
@@ -60,8 +63,11 @@ class Settings(BaseSettings):
     )
     SUPABASE_PASSWORD: Optional[str] = None
 
+    # Development convenience flags — must be disabled in production
+    # DEV_BYPASS_EMAIL_CONFIRM allows creating users without email verification.
+    # Set to False in staging/production to avoid account abuse.
     DEV_BYPASS_EMAIL_CONFIRM: bool = True
-    DEV_BYPASS_EMAILS: str = "" 
+    DEV_BYPASS_EMAILS: str = ""
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
@@ -71,6 +77,7 @@ class Settings(BaseSettings):
         elif isinstance(v, list):
             return v
         return ["*"]
+
 
 @lru_cache()
 def get_settings() -> Settings:

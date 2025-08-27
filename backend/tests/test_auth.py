@@ -7,9 +7,9 @@ def test_auth_me_returns_user(client):
     r = client.get("/api/v1/auth/me")
     assert r.status_code == 200
     body = r.json()
-    assert set(
-        ["id", "email", "first_name", "last_name", "full_name", "role"]
-    ).issubset(body.keys())
+    assert {"id", "email", "first_name", "last_name", "full_name", "role"}.issubset(
+        body.keys()
+    )
 
 
 @pytest.fixture()
