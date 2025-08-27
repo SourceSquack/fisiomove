@@ -4,3 +4,63 @@
     <p>Administra y parametriza la plataforma</p>
   </div>
 </div>
+
+<div class="fixed-grid has-3-cols-desktop has-2-cols-tablet has-1-cols-mobile">
+  <div class="grid">
+    <div class="cell">
+      <div class="box">
+        <div class="card-header">SERVICIOS</div>
+        <br />
+        @for(service of services; track service.id){
+        <div>
+          <p>
+            <b>{{ service.name }}:</b>
+          </p>
+          <p>{{ service.description }}</p>
+          <br />
+        </div>
+        }
+      </div>
+    </div>
+    <div class="cell">
+      <div class="box">
+        <div class="card-header">TIPOS DE CITAS</div>
+        <br />
+        @for(type of appointmentsType; track type.id){
+        <div>
+          <p>
+            <b>{{ type.name }}:</b>
+          </p>
+          <p>{{ type.description }}</p>
+          <br />
+        </div>
+        }
+      </div>
+    </div>
+    <div class="cell">
+      <div class="box">
+        <div class="card-header">UBICACIÓN</div>
+        <br />
+        <p><b>Lunes - viernes: </b>8:00 AM - 7:00 PM</p>
+        <p><b>Sábados: </b>9:00 AM - 2:00 PM</p>
+        <p><b>Domingos: </b>Cerrado</p>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="box">
+        <div class="card-header">CONTACTO</div>
+        <br />
+        <p><b>Dirección: </b>Cra 26 # 83-58 Corales, Pereira, Risaralda.</p>
+        <p><b>Teléfono: </b> +57 310 505 5633.</p>
+        <p><b>Email: </b>info@fisiomove.com</p>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="box">
+        <div class="card-header">ACERCA DE NOSOTROS</div>
+        <br />
+        <p>{{ aboutText }}</p>
+      </div>
+    </div>
+  </div>
+</div>
