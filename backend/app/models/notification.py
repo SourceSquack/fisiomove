@@ -9,10 +9,14 @@ class Notification(Base):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True, index=True)
-    tipo = Column(String, nullable=False)
-    mensaje = Column(String, nullable=False)
-    usuario_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    leida = Column(Boolean, default=False)
-    fecha = Column(DateTime, default=datetime.utcnow)
+    type = Column(String, nullable=False)
+    message = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    related_appointment_id = Column(
+        Integer, ForeignKey("appointments.id"), nullable=True
+    )
 
-    usuario = relationship("User", back_populates="notificaciones")
+    user = relationship("User", back_populates="notifications")
+    appointment = relationship("Appointment", back_populates="notifications")

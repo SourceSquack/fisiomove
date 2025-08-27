@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { TitleService } from '../../core/services/title.service';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,25 +17,14 @@ import type { ColDef } from 'ag-grid-community';
   styleUrls: ['./patients.component.css'],
 })
 export class PatientsComponent implements OnInit {
-  [x: string]: any;
-  private readonly patientsService = inject(PatientsService);
-  private readonly patientsStore = inject(PatientsStore);
-  private readonly router = inject(Router);
-
-  private readonly patientsSignal = this.patientsStore.filteredPatients;
-  private readonly isLoadingSignal = this.patientsStore.isLoading;
-  private readonly errorSignal = this.patientsStore.error;
-
   selectedGender: 'M' | 'F' | 'Other' | '' = '';
-  //TODO crear interface para filas
-  rowsData: any[] = [];
+  rowsData: PatientRow[] = [];
   colsData: ColDef[] = [
     { field: 'is_active', headerName: 'Activo', maxWidth: 100 },
     { field: 'full_name', headerName: 'Nombre' },
     {
-      field: 'birth_date',
+      field: 'age',
       headerName: 'Edad',
-      valueFormatter: (params) => this.getAge(params.data.birth_date),
       maxWidth: 75,
       cellStyle: { textAlign: 'center' },
     },
@@ -48,19 +38,27 @@ export class PatientsComponent implements OnInit {
     { field: 'allergies', headerName: 'Alérgias' },
   ];
 
+  constructor(
+    private readonly patientsService: PatientsService,
+    @Inject(PatientsStore) private readonly patientsStore: any,
+    private readonly router: Router,
+    @Inject(TitleService) private readonly titleService: TitleService
+  ) {}
+
   get patients(): Patient[] {
-    return this.patientsSignal();
+    return this.patientsStore.filteredPatients();
   }
 
   get loading(): boolean {
-    return this.isLoadingSignal();
+    return this.patientsStore.isLoading();
   }
 
   get error(): string | null {
-    return this.errorSignal();
+    return this.patientsStore.error();
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Gestión de pacientes');
     this.patientsStore.clearFilters();
     this.selectedGender = '';
     this.loadPatients();
@@ -72,10 +70,12 @@ export class PatientsComponent implements OnInit {
 
     this.patientsService.getAllPatients().subscribe({
       next: (patients) => {
-        this.patientsStore.setPatients(patients || []);
+        const list = patients || [];
+        this.patientsStore.setPatients(list);
         this.patientsStore.setLoading(false);
-        this.rowsData = patients;
-        console.log(`➡️ ~ loadPatients ~ patients:`, patients);
+        // Build rowsData from the store's filteredPatients so filters apply
+        this.updateRowsFromStore();
+        console.log(`➡️ ~ loadPatients ~ patients:`, list);
       },
       error: (err) => {
         const errorMessage =
@@ -89,14 +89,26 @@ export class PatientsComponent implements OnInit {
   onFilterChange(): void {
     // Usar el store para establecer el filtro de género
     this.patientsStore.setFilters({ gender: this.selectedGender || undefined });
+    // Rebuild rows from the store after changing filters
+    this.updateRowsFromStore();
+  }
+
+  // Recompute rowsData from the store's filtered patients
+  updateRowsFromStore(): void {
+    const list = this.patients || [];
+    this.rowsData = list.map((p) => ({
+      ...p,
+      age: this.getAge(p.birth_date ?? null),
+      birth_date_display: this.formatDate(p.birth_date ?? ''),
+    }));
   }
 
   goToDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
 
-  //TODO Cambiar Any por una Interface
-  viewPatient(rowData: any) {
+  // Navegar a la vista del paciente (rowData tipado)
+  viewPatient(rowData: Patient) {
     this.router.navigate(['/dashboard/patients', String(rowData?.id)]);
   }
 
@@ -139,4 +151,10 @@ export class PatientsComponent implements OnInit {
     }
     return String(age);
   }
+}
+
+// Interfaz local para filas con campos derivados (edad y fecha formateada)
+interface PatientRow extends Patient {
+  age: string;
+  birth_date_display: string;
 }

@@ -41,4 +41,4 @@ class User(Base):
         nullable=False,
     )
 
-    notificaciones = relationship("Notification", back_populates="usuario")
+    notifications = relationship("Notification", back_populates="user")

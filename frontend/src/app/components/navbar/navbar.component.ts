@@ -2,18 +2,23 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationsService } from '../../core/services/notifications.service';
+import { NotificationBellComponent } from '../../pages/dashboard/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule, NotificationBellComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly notificationsService = inject(NotificationsService);
 
   currentUser$ = this.authService.currentUser$;
+  unreadCount$ = this.notificationsService.getUnreadCount();
 
   navOptions = [
     { name: 'Home', route: '/' },

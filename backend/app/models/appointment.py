@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 from sqlalchemy import Column, DateTime, Enum as SAEnum, Integer, String, Index
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.base import Base
@@ -27,6 +28,7 @@ class AppointmentType(str, Enum):
 
 
 class Appointment(Base):
+    notifications = relationship("Notification", back_populates="appointment")
     __tablename__ = "appointments"
 
     id = Column(Integer, primary_key=True, index=True)

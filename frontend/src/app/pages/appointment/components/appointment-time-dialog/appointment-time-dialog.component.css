@@ -1,0 +1,5 @@
+mat-button-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

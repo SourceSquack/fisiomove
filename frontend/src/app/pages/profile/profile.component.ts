@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthStore } from '../../core/stores/auth.store';
 import { User } from '../../core/models/api.models';
+import { TitleService } from '../../core/services/title.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,6 +24,7 @@ export class ProfileComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly titleService = inject(TitleService);
 
   currentUser = this.authStore.user;
   userDisplayName = this.authStore.userDisplayName;
@@ -41,6 +43,7 @@ export class ProfileComponent implements OnInit {
   passwordForm!: FormGroup;
   roleForm!: FormGroup;
 
+
   profileMessage = signal<{ type: 'success' | 'error'; text: string } | null>(
     null
   );
@@ -55,6 +58,7 @@ export class ProfileComponent implements OnInit {
   );
 
   ngOnInit() {
+    this.titleService.setTitle('Perfil');
     this.initializeForms();
     this.loadUserProfile();
   }

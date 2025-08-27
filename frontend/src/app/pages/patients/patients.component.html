@@ -1,12 +1,33 @@
 <div class="header-container">
   <div class="header-title">
-    <h1>Gestión de pacientes</h1>
     <p>Administra la información de todos los pacientes</p>
   </div>
+
   <button class="button is-link" (click)="createNewPatient()">
     <span class="icon is-small"> <i class="fas fa-plus"></i> </span>
     <span> Nuevo paciente </span>
   </button>
+</div>
+<!-- Filters and actions -->
+<div
+  class="toolbar"
+  style="display: flex; gap: 12px; align-items: center; margin: 12px 0"
+>
+  <div>
+    <label class="label" for="gender-select">Filtrar por género</label>
+    <div class="select">
+      <select
+        id="gender-select"
+        [(ngModel)]="selectedGender"
+        (change)="onFilterChange()"
+      >
+        <option value="">Todos</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+        <option value="Other">Otro</option>
+      </select>
+    </div>
+  </div>
 </div>
 
 @if (loading) {
@@ -14,7 +35,11 @@
   <i class="fas fa-spinner fa-spin"></i>
   <span>Cargando pacientes</span>
 </div>
-}@else{
+} @else { @if (error) {
+<div class="notification is-danger">
+  {{ error }}
+</div>
+} @else { @if (rowsData && rowsData.length > 0) {
 <ag-grid-angular
   [rowData]="rowsData"
   [columnDefs]="colsData"
@@ -25,5 +50,12 @@
     cellStyle: { cursor: 'pointer' },
     headerStyle: { color: 'grey', fontWeight: 'bold', fontSize: '16px' }
   }"
-/>
-}
+></ag-grid-angular>
+} @else {
+<div class="empty-state">
+  <p>No hay pacientes registrados aún.</p>
+  <button class="button is-link" (click)="createNewPatient()">
+    Crear primer paciente
+  </button>
+</div>
+} } }

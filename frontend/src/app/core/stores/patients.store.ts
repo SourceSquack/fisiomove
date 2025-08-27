@@ -54,8 +54,32 @@ export const PatientsStore = signalStore(
           }
         }
 
-        if (filters.gender && patient.gender !== filters.gender) {
-          return false;
+        if (filters.gender) {
+          // Normalize patient gender values to canonical 'M' | 'F' | 'Other'
+          const rawGender = (patient.gender ?? '')
+            .toString()
+            .trim()
+            .toLowerCase();
+          let normalized: PatientsState['filters']['gender'] | undefined;
+          if (
+            rawGender === 'm' ||
+            rawGender === 'masculino' ||
+            rawGender.startsWith('m')
+          ) {
+            normalized = 'M';
+          } else if (
+            rawGender === 'f' ||
+            rawGender === 'femenino' ||
+            rawGender.startsWith('f')
+          ) {
+            normalized = 'F';
+          } else {
+            normalized = 'Other';
+          }
+
+          if (normalized !== filters.gender) {
+            return false;
+          }
         }
 
         if (filters.ageRange && patient.birth_date) {
@@ -76,11 +100,29 @@ export const PatientsStore = signalStore(
       const patients = store.patients();
 
       return patients.reduce((acc, patient) => {
-        const gender = patient.gender || 'Other';
-        if (!acc[gender]) {
-          acc[gender] = [];
+        const rawGender = (patient.gender ?? '')
+          .toString()
+          .trim()
+          .toLowerCase();
+        let normalized = 'Other';
+        if (
+          rawGender === 'm' ||
+          rawGender === 'masculino' ||
+          rawGender.startsWith('m')
+        ) {
+          normalized = 'M';
+        } else if (
+          rawGender === 'f' ||
+          rawGender === 'femenino' ||
+          rawGender.startsWith('f')
+        ) {
+          normalized = 'F';
         }
-        acc[gender].push(patient);
+
+        if (!acc[normalized]) {
+          acc[normalized] = [];
+        }
+        acc[normalized].push(patient);
         return acc;
       }, {} as Record<string, Patient[]>);
     }),
@@ -157,3 +199,5 @@ export const PatientsStore = signalStore(
     },
   }))
 );
+
+export type PatientsStoreType = typeof PatientsStore;

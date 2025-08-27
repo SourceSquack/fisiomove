@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { TitleService } from '../../core/services/title.service';
 
 @Component({
   selector: 'app-calendar',
   imports: [],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css'
+  styleUrl: './settings.component.css',
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
+  private readonly titleService = inject(TitleService);
   text: string = 'Settings works!';
 
   services = [
@@ -54,4 +56,8 @@ export class SettingsComponent {
   ]
 
   aboutText = " Con más de 10 años de experiencia en el sector de la fisioterapia, FisioMove se ha consolidado como un centro de referencia en tratamientos de rehabilitación y bienestar físico. Nuestro compromiso es brindar atención personalizada y de calidad, utilizando las técnicas más avanzadas y un enfoque integral que considera tanto los aspectos físicos como emocionales de nuestros pacientes."
+
+  ngOnInit(): void {
+    this.titleService.setTitle('Configuración');
+  }
 }

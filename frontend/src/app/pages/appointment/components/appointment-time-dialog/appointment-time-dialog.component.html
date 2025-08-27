@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Selecciona una hora</h2>
+@if(loading){<div>Cargando horarios...</div>}
+@if (!loading) { @if (availableSlots.length > 0 && hasEnabledSlots()) {
+<mat-button-toggle-group>
+  @for (slot of availableSlots; track slot.time) {
+  <mat-button-toggle
+    [disabled]="slot.disabled"
+    (click)="selectSlot(slot)"
+    (keydown.enter)="selectSlot(slot)"
+    (keydown.space)="selectSlot(slot)"
+  >
+    {{ slot.time }}
+  </mat-button-toggle>
+  }
+</mat-button-toggle-group>
+} @if (availableSlots.length === 0 || !hasEnabledSlots()) {
+<div class="no-slots">
+  No hay horarios disponibles para esta fecha y duración.
+</div>
+} }
