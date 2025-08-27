@@ -1,0 +1,52 @@
+name: Security CI
+
+on:
+  push:
+    branches: [main, zetah_dev]
+  pull_request:
+    branches: [main, zetah_dev]
+
+jobs:
+  security-checks:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Run pip-audit
+        run: |
+          pip-audit --progress none --format json > backend/pip-audit-ci.json || true
+          cat backend/pip-audit-ci.json
+
+      - name: Run bandit
+        run: |
+          bandit -r backend/app -f json -o backend/bandit-report.json || true
+          cat backend/bandit-report.json
+
+      - name: Run tests
+        run: |
+          cd backend
+          pytest -q --maxfail=1
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            backend/pip-audit-ci.json
+            backend/bandit-report.json

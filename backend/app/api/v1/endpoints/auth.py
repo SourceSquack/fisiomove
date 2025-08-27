@@ -5,6 +5,9 @@ from typing import Literal, Optional
 from app.schemas.auth import UserCreate
 from app.services.auth import get_current_user, require_roles, reuseable_oauth
 from app.core.config import settings
+from app.main import limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from supabase_utils.gotrue import (
     sign_up_user,
     sign_in_user,
@@ -153,6 +156,7 @@ def _create_regular_user(user_in: UserCreate, normalized_email: str) -> dict:
 
 
 @router.post("/register", response_model=dict, status_code=status.HTTP_201_CREATED)
+@limiter.limit("5/minute")
 def register(user_in: UserCreate):
     try:
         normalized_email = user_in.email.strip().lower()
@@ -218,6 +222,7 @@ def _handle_login_error(email: str, password: str, error: ValueError) -> dict:
 
 
 @router.post("/login", response_model=dict)
+@limiter.limit("10/minute")
 def login(form: LoginPayload):
     email = form.email.strip().lower()
     password = form.password
@@ -231,6 +236,7 @@ def login(form: LoginPayload):
 
 
 @router.post("/refresh", response_model=dict)
+@limiter.limit("30/minute")
 def refresh(form: dict):
     token = form.get("refresh_token")
     if not token:

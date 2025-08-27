@@ -66,7 +66,7 @@ class Settings(BaseSettings):
     # Development convenience flags — must be disabled in production
     # DEV_BYPASS_EMAIL_CONFIRM allows creating users without email verification.
     # Set to False in staging/production to avoid account abuse.
-    DEV_BYPASS_EMAIL_CONFIRM: bool = True
+    DEV_BYPASS_EMAIL_CONFIRM: bool = False
     DEV_BYPASS_EMAILS: str = ""
 
     @field_validator("CORS_ORIGINS", mode="before")

@@ -392,6 +392,11 @@ settings.local.json
 logs/
 log/
 
+# Security reports and playbooks (local artifacts)
+backend/pip-audit-report.txt
+backend/bandit-report.json
+backend/IR-playbook.md
+
 # ==============================================
 # ARCHIVOS TEMPORALES
 # ==============================================
