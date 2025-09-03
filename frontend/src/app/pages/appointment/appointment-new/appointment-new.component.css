@@ -136,11 +136,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: var(--cm-secondary);
 }
 
-/* Default (non-selected) slot text colors: prefer primary-dark (or black) for legibility.
-   Use !important to override utility classes like .has-text-grey inside the slot.
-   Disabled slots keep their muted color via the [disabled] rule above. */
 .appointment-new__slot .appointment-new__slot-time {
-  /* Use the project primary color (fallback to a friendly green) for non-selected slots */
   color: var(--primary-color, #16a34a) !important;
   font-weight: 600;
 }
@@ -149,7 +145,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-weight: 500;
 }
 
-/* When selected, status and time must remain readable */
 .appointment-new__slot.is-selected .appointment-new__slot-status {
   color: var(--primary-dark-color) !important;
 }
@@ -204,6 +199,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: #111827;
   font-weight: normal;
 }
+/* Espacio entre label e input de fecha */
+.appointment-new .field .control {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+.appointment-new .field .input[type="date"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+}
 
 /* Primary action styling */
 .appointment-new .button.is-primary {
@@ -216,18 +226,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: grayscale(0.2);
 }
 
-/* Secondary (cancel) button — exclude appointment slot buttons to avoid
-   accidentally overriding their selected state backgrounds */
 .appointment-new .button:not(.is-primary):not(.appointment-new__slot) {
   background: #fff;
   border: 1px solid rgba(15, 23, 42, 0.06);
   color: var(--cm-text);
 }
 
-/* Specific override for appointment slot buttons when selected. This is
-   necessary because Bulma's generic button rules are more specific and
-   appear later in the cascade; ensure the gradient and white text are
-   applied for accessibility. */
 .appointment-new .button.appointment-new__slot.is-selected {
   background: linear-gradient(
     180deg,
@@ -240,7 +244,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: #fff !important;
 }
 
-/* Help text and empty state use muted color */
 .appointment-new .has-text-grey,
 .appointment-new .help,
 .appointment-new p.has-text-grey {
@@ -248,12 +251,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-weight: normal;
 }
 
-/* Small helper for right-aligned actions */
 .appointment-new .is-grouped-right {
   justify-content: flex-end;
 }
 
-/* Accessible helper */
 .sr-only {
   position: absolute !important;
   width: 1px;
