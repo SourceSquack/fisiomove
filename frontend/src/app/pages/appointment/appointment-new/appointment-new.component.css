@@ -187,24 +187,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   fill: #fff !important;
 }
 
-/* Title and labels use company colors */
-.appointment-new header .title,
-.appointment-new header .subtitle {
-  color: var(--cm-text);
+.appointment-new .title {
+  color: #111827;
+  font-weight: bold;
 }
-.appointment-new header .title {
-  color: var(--cm-primary);
+.appointment-new .subtitle {
+  color: #111827;
+  font-weight: normal;
 }
+
 .appointment-new .label {
-  color: var(--cm-secondary);
+  color: #111827;
+  font-weight: bold;
 }
 .appointment-new .help {
-  color: var(--cm-secondary);
+  color: #111827;
+  font-weight: normal;
 }
 
 /* Primary action styling */
 .appointment-new .button.is-primary {
-  background: var( --primary-color);
+  background: var(--primary-color);
   border-color: var(--primary-dark-dark);
   color: #fff;
 }
@@ -241,7 +244,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .appointment-new .has-text-grey,
 .appointment-new .help,
 .appointment-new p.has-text-grey {
-  color: var(--cm-secondary) !important;
+  color: #111827 !important;
+  font-weight: normal;
 }
 
 /* Small helper for right-aligned actions */
