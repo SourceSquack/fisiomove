@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Rate limiting
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.middleware import SlowAPIMiddleware
+from app.limiter import limiter
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -16,9 +16,9 @@ import app.models  # noqa: F401 ensure models are imported
 
 app = FastAPI(title="FisioMove API", version="1.0.0")
 
-# Configure limiter (default in-memory). For production, configure RedisStorage.
-# Example: Limiter(key_func=get_remote_address, storage_uri="redis://localhost:6379")
-limiter = Limiter(key_func=get_remote_address)
+# Limiter is configured in app.limiter to avoid circular imports and centralize
+# the storage configuration. For production, update the limiter to use
+# storage_uri="redis://..." (e.g. via environment variable).
 app.state.limiter = limiter
 app.add_exception_handler(429, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)

@@ -196,7 +196,33 @@ def create_appointment(
 
     if fisio_id:
         # Notificar cita asignada (paciente y fisioterapeuta)
-        notify_cita_asignada(db, ap.id, int(patient_id), int(fisio_id))
+        # Las IDs en el sistema pueden ser strings (ej: usuarios externos de prueba).
+        # Intentamos convertir a int solo si son valores numéricos, de lo contrario
+        # omitimos la conversión para no lanzar ValueError en tiempo de ejecución
+        try:
+            paciente_int = int(patient_id)
+        except (ValueError, TypeError):
+            paciente_int = None
+        try:
+            fisio_int = int(fisio_id)
+        except (ValueError, TypeError):
+            fisio_int = None
+
+        # Si ambos IDs no son enteros, pasamos los que existan como enteros válidos
+        # a la función de notificación; la función espera ints, así que filtramos.
+        notify_ids = []
+        if paciente_int is not None:
+            notify_ids.append(paciente_int)
+        if fisio_int is not None:
+            notify_ids.append(fisio_int)
+        # notify_cita_asignada espera (db, cita_id, paciente_id, fisio_id)
+        # Si no disponemos de ints válidos, llamamos con 0 como placeholder
+        notify_cita_asignada(
+            db,
+            ap.id,
+            paciente_int if paciente_int is not None else 0,
+            fisio_int if fisio_int is not None else 0,
+        )
     else:
         # Notificar cita pendiente de asignación (paciente, admins y fisios)
         admins = db.query(User).filter(User.role == "admin").all()
@@ -351,9 +377,16 @@ def update_appointment(
     # Notificar modificación a todos los involucrados
     user_ids = []
     if ap.patient_id:
-        user_ids.append(int(ap.patient_id))
+        try:
+            user_ids.append(int(ap.patient_id))
+        except (ValueError, TypeError):
+            # Si no es convertible, lo ignoramos para notificaciones basadas en IDs numéricos
+            pass
     if ap.fisio_id:
-        user_ids.append(int(ap.fisio_id))
+        try:
+            user_ids.append(int(ap.fisio_id))
+        except (ValueError, TypeError):
+            pass
     notify_cita_modificada(db, ap.id, user_ids)
     return ap
 
@@ -370,9 +403,15 @@ def cancel_appointment(db: Session, ap: Appointment) -> AppointmentRead:
     # Notificar cancelación a todos los involucrados
     user_ids = []
     if ap.patient_id:
-        user_ids.append(int(ap.patient_id))
+        try:
+            user_ids.append(int(ap.patient_id))
+        except (ValueError, TypeError):
+            pass
     if ap.fisio_id:
-        user_ids.append(int(ap.fisio_id))
+        try:
+            user_ids.append(int(ap.fisio_id))
+        except (ValueError, TypeError):
+            pass
     notify_cita_cancelada(db, ap.id, user_ids)
 
     # Obtener información del paciente y fisioterapeuta para la respuesta

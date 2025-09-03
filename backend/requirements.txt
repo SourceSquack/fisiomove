@@ -1,11 +1,12 @@
-fastapi==0.115.0
+fastapi==0.116.1
 uvicorn[standard]==0.30.6
 pydantic[email]==2.8.2
 pydantic-settings==2.4.0
 SQLAlchemy==2.0.32
 psycopg2-binary==2.9.10
 alembic==1.13.2
-python-multipart==0.0.9
+# Upgrade to fix vulnerabilities reported by pip-audit (see backend/pip-audit-report.txt)
+python-multipart==0.0.18
 passlib[bcrypt]==1.7.4
 PyJWT==2.9.0
 python-dotenv==1.0.1
@@ -15,3 +16,10 @@ pytest==8.2.2
 slowapi==0.1.5
 pip-audit==2.8.0
 bandit==1.7.5
+# Pins for transitive vulnerabilities reported (safe targets suggested by audit)
+jinja2==3.1.6
+idna==3.7
+urllib3==2.5.0
+setuptools==78.1.1
+werkzeug==3.0.6
+starlette==0.47.3

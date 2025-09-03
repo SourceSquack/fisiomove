@@ -91,5 +91,5 @@ def test_roles_paciente_no_puede_crear_paciente(client, set_role_paciente):
         "[Roles] Un paciente no debería poder crear registros de paciente (espera 403)"
     )
     payload = {"full_name": "John Doe"}
-    r = client.post("/api/v1/pacientes", json=payload)
+    r = client.post("/api/v1/patients", json=payload)
     assert r.status_code == 403

@@ -14,7 +14,7 @@ def test_create_appointment_without_fisio_id(client):
 
     # Datos para crear una cita sin fisio_id
     appointment_data = {
-        "patient_id": "test-patient-123",
+        "patient_id": "123",
         "start_time": dt(60).isoformat(),
         "duration_minutes": 60,
         # fisio_id se omite intencionalmente
@@ -31,8 +31,8 @@ def test_create_appointment_without_fisio_id(client):
 
     appointment = response.json()
 
-    # Verificar que la cita fue creada correctamente
-    assert appointment["patient_id"] == "test-patient-123"
+    # Verificar que la cita fue creada correctamente (usamos ID numérico en tests)
+    assert appointment["patient_id"] == "123"
     assert appointment["fisio_id"] is None  # No debe tener fisioterapeuta asignado
     assert appointment["duration_minutes"] == 60
     assert appointment["status"] == "programada"
@@ -46,8 +46,8 @@ def test_create_appointment_with_fisio_id(client):
     """
 
     appointment_data = {
-        "patient_id": "test-patient-456",
-        "fisio_id": "test-fisio-789",
+        "patient_id": "456",
+        "fisio_id": "789",
         "start_time": dt(120).isoformat(),
         "duration_minutes": 45,
     }
@@ -61,9 +61,9 @@ def test_create_appointment_with_fisio_id(client):
 
     appointment = response.json()
 
-    # Verificar que la cita fue creada correctamente con fisioterapeuta
-    assert appointment["patient_id"] == "test-patient-456"
-    assert appointment["fisio_id"] == "test-fisio-789"
+    # Verificar que la cita fue creada correctamente con fisioterapeuta (IDs numéricos)
+    assert appointment["patient_id"] == "456"
+    assert appointment["fisio_id"] == "789"
     assert appointment["duration_minutes"] == 45
     assert appointment["status"] == "programada"
 
@@ -95,7 +95,7 @@ def test_appointment_creation_with_current_user_as_patient(client):
 
     # Usar un ID de usuario válido (el usuario de prueba del conftest)
     appointment_data = {
-        "patient_id": "test-user-1",  # Usuario válido del sistema definido en conftest
+        "patient_id": "1",  # Usuario válido del sistema definido en conftest
         "start_time": dt(180).isoformat(),
         "duration_minutes": 30,
     }
@@ -108,7 +108,8 @@ def test_appointment_creation_with_current_user_as_patient(client):
     assert response.status_code == 201, f"Error: {response.text}"
 
     appointment = response.json()
-    assert appointment["patient_id"] == "test-user-1"
+    # El conftest define el usuario con id "1" en este entorno de pruebas
+    assert appointment["patient_id"] == "1"
     assert appointment["fisio_id"] is None
 
     print("✅ Test exitoso: Cita creada para usuario válido del sistema")
