@@ -13,7 +13,6 @@ import { NotificationsService } from '../../../../core/services/notifications.se
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     SearchComponent,
     NotificationBellComponent,
