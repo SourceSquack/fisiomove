@@ -1,0 +1,20 @@
+{
+  "routes": {
+    "/": {},
+    "/contact": {},
+    "/dashboard": {},
+    "/dashboard/appointments": {},
+    "/dashboard/appointments/new": {},
+    "/dashboard/calendar": {},
+    "/dashboard/dashboard-view": {},
+    "/dashboard/historic": {},
+    "/dashboard/operatives": {},
+    "/dashboard/patients": {},
+    "/dashboard/patients/new": {},
+    "/dashboard/profile": {},
+    "/dashboard/settings": {},
+    "/home": {},
+    "/login": {},
+    "/register": {}
+  }
+}
