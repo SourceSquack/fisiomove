@@ -41,3 +41,4 @@ jobs:
           npm install -g angular-cli-ghpages
           npx angular-cli-ghpages --dir=dist/frontend --no-silent --no-build --branch=gh-pages --repo=https://github.com/${{ github.repository }}.git --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
         working-directory: frontend
+        
