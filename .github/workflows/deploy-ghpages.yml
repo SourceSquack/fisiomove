@@ -24,7 +24,7 @@ jobs:
         working-directory: frontend
 
       - name: Build Angular app
-        run: npm run build -- --configuration=production --base-href=/
+        run: npm run build -- --configuration=production --base-href=/fisiomove/
         working-directory: frontend
 
       - name: Deploy to GitHub Pages
@@ -41,4 +41,3 @@ jobs:
           npm install -g angular-cli-ghpages
           npx angular-cli-ghpages --dir=dist/frontend --no-silent --no-build --branch=gh-pages --repo=https://github.com/${{ github.repository }}.git --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
         working-directory: frontend
-        
