@@ -37,7 +37,6 @@
         (click)="selectService(service)"
         [class.selected]="selectedService?.id === service.id"
       >
-        <i class="icon" [ngClass]="service.icon"></i>
         <h3>{{ service.title }}</h3>
         <p>{{ service.description }}</p>
       </div>

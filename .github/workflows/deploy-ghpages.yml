@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+      - zetah_dev
+      - nano_dev
+      - dev
+  workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build Angular app
+        run: npm run build -- --configuration=production --base-href=/
+        working-directory: frontend
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: frontend/dist/frontend
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy with angular-cli-ghpages (optional alternative)
+        if: ${{ false }} # Set to true to use angular-cli-ghpages instead
+        run: |
+          npm install -g angular-cli-ghpages
+          npx angular-cli-ghpages --dir=dist/frontend --no-silent --no-build --branch=gh-pages --repo=https://github.com/${{ github.repository }}.git --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
+        working-directory: frontend
