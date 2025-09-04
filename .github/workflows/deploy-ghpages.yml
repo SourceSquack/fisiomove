@@ -14,11 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use npm v10 and clear npm cache
-        run: |
-          npm install -g npm@10
-          npm cache clean --force
-        shell: bash
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
