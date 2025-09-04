@@ -1,6 +1,6 @@
 
 export default {
-  basePath: '/',
+  basePath: '/fisiomove',
   supportedLocales: {
   "en-US": ""
 },
