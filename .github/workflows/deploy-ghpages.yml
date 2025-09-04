@@ -33,7 +33,7 @@ jobs:
           branch: gh-pages
           folder: frontend/dist/frontend
           clean: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAGES_TOKEN }}
 
       - name: Deploy with angular-cli-ghpages (optional alternative)
         if: ${{ false }} # Set to true to use angular-cli-ghpages instead
